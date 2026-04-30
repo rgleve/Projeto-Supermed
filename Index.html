@@ -200,7 +200,15 @@
       z-index: 100;
     }
     .sidebar-header { padding: 32px 22px 24px; text-align: center; }
-    .logo-img { width: 72px; border-radius: 16px; margin-bottom: 12px; box-shadow: 0 14px 28px rgba(25, 42, 66, 0.1); }
+    .logo-img { width: 72px; border-radius: 16px; margin-bottom: 12px; box-shadow: 0 14px 28px rgba(25, 42, 66, 0.1); transition: width 0.28s ease, margin 0.28s ease, border-radius 0.28s ease; }
+    .sidebar-brand-copy,
+    .nav-label,
+    #theme-text,
+    .user-info {
+      transition: opacity 0.22s ease, transform 0.22s ease, max-width 0.28s ease;
+    }
+    .sidebar-title { font-weight: 800; font-size: 16px; color: var(--text-main); }
+    .sidebar-kicker { color: var(--accent-orange); font-size: 10px; font-weight: 800; letter-spacing: 0.5px; }
     .nav-item { padding: 12px 18px; color: var(--text-muted); margin: 4px 16px; border-radius: 14px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.2s; }
     .nav-item svg { width: 18px; height: 18px; fill: currentColor; }
     .nav-item:hover { background: var(--nav-hover-bg); color: var(--text-main); box-shadow: var(--shadow-soft); }
@@ -236,7 +244,89 @@
     .theme-toggle:hover { background: var(--nav-hover-bg); color: var(--text-main); }
 
     /* MAIN CONTENT */
-    .main-content { flex-grow: 1; height: 100vh; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 20px 28px 88px; display: flex; flex-direction: column; }
+    .main-content { flex-grow: 1; height: 100vh; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 20px 28px 88px; display: flex; flex-direction: column; transition: width 0.28s ease, padding 0.28s ease; }
+
+    /* Desktop retractable sidebar: collapsed by default, expands on hover. */
+    @media (min-width: 992px) {
+      .sidebar {
+        width: 72px;
+      }
+      .sidebar:hover {
+        width: 250px;
+      }
+      .sidebar-header {
+        padding: 24px 10px 18px;
+      }
+      .sidebar .logo-img {
+        width: 34px;
+        margin-bottom: 0;
+        border-radius: 12px;
+      }
+      .sidebar:hover .logo-img {
+        width: 72px;
+        margin-bottom: 12px;
+        border-radius: 16px;
+      }
+      .sidebar-brand-copy,
+      .sidebar .nav-label,
+      .sidebar #theme-text,
+      .sidebar .user-info {
+        opacity: 0;
+        max-width: 0;
+        overflow: hidden;
+        transform: translateX(-8px);
+        pointer-events: none;
+        white-space: nowrap;
+      }
+      .sidebar:hover .sidebar-brand-copy,
+      .sidebar:hover .nav-label,
+      .sidebar:hover #theme-text,
+      .sidebar:hover .user-info {
+        opacity: 1;
+        max-width: 180px;
+        transform: translateX(0);
+        pointer-events: auto;
+      }
+      .sidebar .nav-item,
+      .sidebar .theme-toggle,
+      .sidebar .user-profile {
+        justify-content: center;
+      }
+      .sidebar .nav-item {
+        margin-left: 10px;
+        margin-right: 10px;
+        padding-left: 0;
+        padding-right: 0;
+        gap: 0;
+      }
+      .sidebar:hover .nav-item {
+        justify-content: flex-start;
+        gap: 12px;
+        padding-left: 18px;
+        padding-right: 18px;
+        margin-left: 16px;
+        margin-right: 16px;
+      }
+      .sidebar .theme-toggle,
+      .sidebar .user-profile {
+        padding-left: 0;
+        padding-right: 0;
+        gap: 0;
+      }
+      .sidebar:hover .theme-toggle,
+      .sidebar:hover .user-profile {
+        justify-content: flex-start;
+        gap: 10px;
+      }
+      .sidebar .sidebar-footer {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+      .sidebar:hover .sidebar-footer {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+    }
     .app-view {
       display: none;
       flex-direction: column;
@@ -649,6 +739,22 @@
         inset 0 1px 0 rgba(255,255,255,0.05),
         0 4px 10px rgba(0,0,0,0.18);
     }
+    #view-indicadores-operador .meta-ok {
+      color: #18794e;
+      font-weight: 800;
+    }
+    #view-indicadores-operador .meta-ruim {
+      color: #b9382f;
+      font-weight: 800;
+    }
+    .dark-theme #view-indicadores-operador .meta-ok,
+    [data-theme="dark"] #view-indicadores-operador .meta-ok {
+      color: #4fd18b;
+    }
+    .dark-theme #view-indicadores-operador .meta-ruim,
+    [data-theme="dark"] #view-indicadores-operador .meta-ruim {
+      color: #ff8b7b;
+    }
     .indicadores-table-shell {
       position: relative;
       background:
@@ -711,13 +817,43 @@
       background: var(--pill-bg);
       white-space: nowrap;
     }
-    .indicadores-table-wrap {
-      overflow: auto;
+    #view-indicadores-operador .indicadores-top-scroll {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      height: 18px;
+      display: block;
+      margin: 0 0 6px;
+      border-radius: 999px;
+      background: rgba(210, 220, 230, 0.45);
+      scrollbar-width: auto;
+    }
+    #view-indicadores-operador .indicadores-top-scroll > div {
+      height: 1px;
+    }
+    #view-indicadores-operador .indicadores-top-scroll::-webkit-scrollbar {
+      height: 14px;
+    }
+    #view-indicadores-operador .indicadores-top-scroll::-webkit-scrollbar-track {
+      background: rgba(210, 220, 230, 0.55);
+      border-radius: 999px;
+    }
+    #view-indicadores-operador .indicadores-top-scroll::-webkit-scrollbar-thumb {
+      background: rgba(90, 115, 140, 0.75);
+      border-radius: 999px;
+    }
+    #view-indicadores-operador .indicadores-table-wrap {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto !important;
+      overflow-y: auto;
+      display: block;
       border-radius: 18px;
       background:
         linear-gradient(180deg, rgba(255,255,255,0.66), rgba(249,251,253,0.56));
       border: 1px solid rgba(255,255,255,0.58);
-      padding: 4px 6px 8px;
+      padding: 3px 4px 6px;
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,0.34),
         0 8px 18px rgba(25, 39, 58, 0.04);
@@ -730,29 +866,110 @@
         inset 0 1px 0 rgba(255,255,255,0.04),
         0 8px 18px rgba(0,0,0,0.18);
     }
-    .indicadores-table {
-      width: 100%;
-      min-width: 1180px;
+    #view-indicadores-operador .indicadores-table {
+      table-layout: fixed;
+      width: max-content;
+      min-width: 100%;
       border-collapse: separate;
-      border-spacing: 0 4px;
+      border-spacing: 0 1px;
     }
-
+    .indicadores-table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 4;
+      white-space: normal;
+      word-break: normal;
+      line-height: 1.05;
+      font-size: 8.2px;
+      padding: 3px 3px;
+      height: auto;
+      min-height: 28px;
+      text-align: center;
+      vertical-align: middle;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      color: var(--text-muted);
+      background: var(--table-columns-head-bg);
+      border-bottom: 1px solid var(--border-color);
+      text-transform: uppercase;
+    }
+    .indicadores-table thead th:first-child,
+    .indicadores-table tbody td:first-child {
+      position: sticky;
+      left: 0;
+    }
+    .indicadores-table thead th:first-child {
+      z-index: 7;
+      box-shadow: 10px 0 18px rgba(15, 23, 42, 0.08);
+    }
+    .indicadores-table tbody td:first-child {
+      z-index: 5;
+      box-shadow: 8px 0 16px rgba(15, 23, 42, 0.06);
+    }
+    .indicadores-table thead th.col-tempos,
+    .indicadores-table thead th.col-aderencia,
+    .indicadores-table thead th.col-produtividade,
+    .indicadores-table thead th.col-acw,
+    .indicadores-table thead th.col-telefonia,
+    .indicadores-table thead th.col-pausas,
+    .indicadores-table tbody td.col-tempos,
+    .indicadores-table tbody td.col-aderencia,
+    .indicadores-table tbody td.col-produtividade,
+    .indicadores-table tbody td.col-acw,
+    .indicadores-table tbody td.col-telefonia,
+    .indicadores-table tbody td.col-pausas {
+      border-left: 1px solid rgba(120, 142, 164, 0.18);
+    }
+    .dark-theme .indicadores-table thead th.col-tempos,
+    .dark-theme .indicadores-table thead th.col-aderencia,
+    .dark-theme .indicadores-table thead th.col-produtividade,
+    .dark-theme .indicadores-table thead th.col-acw,
+    .dark-theme .indicadores-table thead th.col-telefonia,
+    .dark-theme .indicadores-table thead th.col-pausas,
+    .dark-theme .indicadores-table tbody td.col-tempos,
+    .dark-theme .indicadores-table tbody td.col-aderencia,
+    .dark-theme .indicadores-table tbody td.col-produtividade,
+    .dark-theme .indicadores-table tbody td.col-acw,
+    .dark-theme .indicadores-table tbody td.col-telefonia,
+    .dark-theme .indicadores-table tbody td.col-pausas,
+    [data-theme="dark"] .indicadores-table thead th.col-tempos,
+    [data-theme="dark"] .indicadores-table thead th.col-aderencia,
+    [data-theme="dark"] .indicadores-table thead th.col-produtividade,
+    [data-theme="dark"] .indicadores-table thead th.col-acw,
+    [data-theme="dark"] .indicadores-table thead th.col-telefonia,
+    [data-theme="dark"] .indicadores-table thead th.col-pausas,
+    [data-theme="dark"] .indicadores-table tbody td.col-tempos,
+    [data-theme="dark"] .indicadores-table tbody td.col-aderencia,
+    [data-theme="dark"] .indicadores-table tbody td.col-produtividade,
+    [data-theme="dark"] .indicadores-table tbody td.col-acw,
+    [data-theme="dark"] .indicadores-table tbody td.col-telefonia,
+    [data-theme="dark"] .indicadores-table tbody td.col-pausas {
+      border-left-color: rgba(148, 163, 184, 0.16);
+    }
     .indicadores-table tbody tr {
       position: relative;
       transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+      background: var(--product-row-bg);
     }
-
     .indicadores-table tbody tr:hover {
       transform: translateY(-1px);
       box-shadow: inset 0 0 0 1px rgba(255,255,255,0.28);
     }
-
     .indicadores-table tbody tr td {
       position: relative;
+      font-size: 9.4px;
+      padding: 2px 3px;
+      line-height: 1.05;
+      height: 22px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--border-color);
     }
     .hierarchy-toggle {
-      width: 22px;
-      height: 22px;
+      width: 18px;
+      height: 18px;
       border: 1px solid rgba(255,255,255,0.5);
       border-radius: 999px;
       background: rgba(255,255,255,0.42);
@@ -760,10 +977,10 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 11px;
+      font-size: 9px;
       font-weight: 800;
       cursor: pointer;
-      margin-right: 8px;
+      margin-right: 5px;
       vertical-align: middle;
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
       transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
@@ -776,10 +993,10 @@
         0 8px 18px rgba(15, 23, 42, 0.08);
     }
     .hierarchy-toggle-placeholder {
-      width: 22px;
-      height: 22px;
+      width: 18px;
+      height: 18px;
       display: inline-block;
-      margin-right: 8px;
+      margin-right: 5px;
       vertical-align: middle;
       opacity: 0;
     }
@@ -804,104 +1021,154 @@
 
     .indicadores-table tbody tr.lvl-0 td {
       background:
-        linear-gradient(180deg, rgba(226,236,243,0.82), rgba(214,226,235,0.72));
+        linear-gradient(180deg, rgba(210,226,240,0.92), rgba(196,214,230,0.84));
       font-weight: 800;
-      color: #22313d;
-      border-top: 1px solid rgba(173,192,206,0.55);
-      border-bottom: 1px solid rgba(173,192,206,0.45);
+      color: #172838;
+      border-top: 1px solid rgba(103,130,154,0.44);
+      border-bottom: 1px solid rgba(103,130,154,0.34);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.38),
+        inset 0 -1px 0 rgba(103,130,154,0.14);
     }
-
     .indicadores-table tbody tr.lvl-0 td:first-child::before {
       content: '';
       position: absolute;
       left: 0;
       top: 0;
       bottom: 0;
-      width: 4px;
-      border-radius: 4px 0 0 4px;
-      background: linear-gradient(180deg, rgba(89,132,166,0.95), rgba(119,159,190,0.85));
+      width: 6px;
+      border-radius: 6px 0 0 6px;
+      background: linear-gradient(180deg, rgba(59,102,138,0.98), rgba(111,156,193,0.92));
     }
-
     .indicadores-table tbody tr.lvl-1 td {
       background:
-        linear-gradient(180deg, rgba(242,246,249,0.96), rgba(236,241,245,0.88));
+        linear-gradient(180deg, rgba(246,238,223,0.92), rgba(239,229,209,0.84));
       font-weight: 700;
-      color: #32424f;
-      border-top: 1px solid rgba(207,218,227,0.6);
-      border-bottom: 1px solid rgba(207,218,227,0.45);
+      color: #4a3a25;
+      border-top: 1px solid rgba(201,175,126,0.36);
+      border-bottom: 1px solid rgba(201,175,126,0.26);
     }
-
     .indicadores-table tbody tr.lvl-1 td:first-child::before {
       content: '';
       position: absolute;
       left: 0;
       top: 6px;
       bottom: 6px;
-      width: 4px;
+      width: 5px;
       border-radius: 4px;
-      background: linear-gradient(180deg, rgba(214,173,91,0.92), rgba(231,198,129,0.82));
+      background: linear-gradient(180deg, rgba(190,143,55,0.96), rgba(225,185,103,0.84));
     }
-
     .indicadores-table tbody tr.lvl-2 td {
       background:
-        linear-gradient(180deg, rgba(255,255,255,0.94), rgba(248,250,252,0.88));
+        linear-gradient(180deg, rgba(229,242,235,0.92), rgba(216,234,224,0.84));
       font-weight: 600;
-      color: #3e4b57;
+      color: #224639;
+      border-top: 1px solid rgba(122,177,149,0.28);
+      border-bottom: 1px solid rgba(122,177,149,0.20);
     }
-
     .indicadores-table tbody tr.lvl-2 td:first-child::before {
       content: '';
       position: absolute;
       left: 0;
       top: 8px;
       bottom: 8px;
-      width: 3px;
+      width: 4px;
       border-radius: 4px;
-      background: linear-gradient(180deg, rgba(120,187,148,0.9), rgba(168,214,183,0.82));
+      background: linear-gradient(180deg, rgba(74,151,114,0.94), rgba(128,196,159,0.84));
     }
-
     .indicadores-table tbody tr.lvl-3 td {
       background:
-        linear-gradient(180deg, rgba(252,253,254,0.96), rgba(246,248,250,0.9));
+        linear-gradient(180deg, rgba(234,240,246,0.90), rgba(224,232,240,0.82));
       font-weight: 500;
-      color: #5a6671;
+      color: #425566;
+      border-top: 1px solid rgba(162,178,193,0.24);
+      border-bottom: 1px solid rgba(162,178,193,0.16);
     }
-
     .indicadores-table tbody tr.lvl-3 td:first-child::before {
       content: '';
       position: absolute;
       left: 0;
       top: 10px;
       bottom: 10px;
-      width: 3px;
+      width: 4px;
       border-radius: 4px;
-      background: linear-gradient(180deg, rgba(156,171,185,0.82), rgba(195,205,214,0.72));
+      background: linear-gradient(180deg, rgba(121,145,168,0.72), rgba(186,201,214,0.74));
     }
-
     .indicadores-table tbody tr.lvl-4 td {
       background:
-        linear-gradient(180deg, rgba(255,255,255,0.98), rgba(251,252,253,0.92));
+        linear-gradient(180deg, rgba(255,255,255,0.96), rgba(247,249,252,0.88));
       font-weight: 500;
-      color: #66727d;
+      color: #566371;
+      border-top: 1px solid rgba(205,216,225,0.12);
+      border-bottom: 1px solid rgba(205,216,225,0.08);
     }
-
     .indicadores-table tbody tr.lvl-4 td:first-child::before {
       content: '';
       position: absolute;
       left: 0;
       top: 12px;
       bottom: 12px;
-      width: 2px;
+      width: 3px;
       border-radius: 4px;
-      background: linear-gradient(180deg, rgba(197,205,213,0.74), rgba(222,228,233,0.68));
+      background: linear-gradient(180deg, rgba(182,194,204,0.72), rgba(221,228,234,0.62));
+    }
+
+    .indicadores-table tbody tr .indicadores-name-cell {
+      z-index: 0;
+    }
+    .indicadores-table tbody tr .indicadores-name-cell > * {
+      position: relative;
+      z-index: 1;
+    }
+    .indicadores-table tbody tr .indicadores-name-cell::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-repeat: no-repeat;
+    }
+    .indicadores-table tbody tr.lvl-1 .indicadores-name-cell::after {
+      background-image:
+        linear-gradient(to bottom, rgba(90,157,163,0.26), rgba(90,157,163,0.26));
+      background-size: 1px 100%;
+      background-position: 16px 0;
+    }
+    .indicadores-table tbody tr.lvl-2 .indicadores-name-cell::after {
+      background-image:
+        linear-gradient(to bottom, rgba(90,157,163,0.22), rgba(90,157,163,0.22)),
+        linear-gradient(to bottom, rgba(79,144,112,0.22), rgba(79,144,112,0.22));
+      background-size: 1px 100%, 1px 100%;
+      background-position: 16px 0, 30px 0;
+    }
+    .indicadores-table tbody tr.lvl-3 .indicadores-name-cell::after {
+      background-image:
+        linear-gradient(to bottom, rgba(90,157,163,0.18), rgba(90,157,163,0.18)),
+        linear-gradient(to bottom, rgba(79,144,112,0.18), rgba(79,144,112,0.18)),
+        linear-gradient(to bottom, rgba(129,151,171,0.22), rgba(129,151,171,0.22));
+      background-size: 1px 100%, 1px 100%, 1px 100%;
+      background-position: 16px 0, 30px 0, 44px 0;
+    }
+    .indicadores-table tbody tr.lvl-4 .indicadores-name-cell::after {
+      background-image:
+        linear-gradient(to bottom, rgba(90,157,163,0.12), rgba(90,157,163,0.12)),
+        linear-gradient(to bottom, rgba(79,144,112,0.12), rgba(79,144,112,0.12)),
+        linear-gradient(to bottom, rgba(129,151,171,0.16), rgba(129,151,171,0.16)),
+        linear-gradient(to bottom, rgba(180,193,204,0.20), rgba(180,193,204,0.20));
+      background-size: 1px 100%, 1px 100%, 1px 100%, 1px 100%;
+      background-position: 16px 0, 30px 0, 44px 0, 58px 0;
     }
 
     .indicadores-table tbody tr.total-row td {
       background:
-        linear-gradient(180deg, rgba(228,235,241,0.95), rgba(217,226,234,0.88));
+        linear-gradient(180deg, rgba(192,208,223,0.98), rgba(174,193,209,0.92));
       font-weight: 800;
-      color: #1f2b35;
-      border-top: 1px solid rgba(180,194,206,0.65);
+      color: #13212c;
+      border-top: 1px solid rgba(91,116,139,0.38);
+      border-bottom: 1px solid rgba(91,116,139,0.28);
+      box-shadow:
+        0 10px 24px rgba(24, 36, 54, 0.08),
+        inset 0 1px 0 rgba(255,255,255,0.30);
     }
 
     .indicadores-table tbody tr.total-row td:first-child::before {
@@ -913,30 +1180,6 @@
       width: 4px;
       border-radius: 4px 0 0 4px;
       background: linear-gradient(180deg, rgba(82,103,121,0.95), rgba(125,146,165,0.85));
-    }
-    .indicadores-table th,
-    .indicadores-table td {
-      padding: 8px 12px;
-      font-size: 12px;
-      white-space: nowrap;
-    }
-    .indicadores-table thead th {
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      background: var(--table-columns-head-bg);
-      border-bottom: 1px solid var(--border-color);
-      padding-top: 10px;
-      padding-bottom: 10px;
-    }
-    .indicadores-table tbody tr {
-      background: var(--product-row-bg);
-    }
-    .indicadores-table tbody td {
-      color: var(--text-main);
-      border-bottom: 1px solid var(--border-color);
     }
     .indicadores-table tbody tr td:first-child {
       border-top-left-radius: 12px;
@@ -954,10 +1197,64 @@
       background: var(--product-row-bg);
       font-weight: 600;
     }
-    .indicadores-indent-1 { padding-left: 22px !important; }
-    .indicadores-indent-2 { padding-left: 38px !important; }
-    .indicadores-indent-3 { padding-left: 54px !important; }
-    .indicadores-indent-4 { padding-left: 70px !important; }
+    .indicadores-indent-1 { padding-left: 18px !important; }
+    .indicadores-indent-2 { padding-left: 34px !important; }
+    .indicadores-indent-3 { padding-left: 50px !important; }
+    .indicadores-indent-4 { padding-left: 66px !important; }
+    .indicadores-table[data-mode="executivo"] th:nth-child(1),
+    .indicadores-table[data-mode="executivo"] td:nth-child(1) { width: 300px; min-width: 300px; max-width: 300px; }
+    .indicadores-table[data-mode="executivo"] th:nth-child(2),
+    .indicadores-table[data-mode="executivo"] td:nth-child(2) { width: 54px; min-width: 54px; max-width: 54px; }
+    .indicadores-table[data-mode="executivo"] th:nth-child(3),
+    .indicadores-table[data-mode="executivo"] td:nth-child(3) { width: 70px; min-width: 70px; max-width: 70px; }
+    .indicadores-table[data-mode="executivo"] th:nth-child(4),
+    .indicadores-table[data-mode="executivo"] td:nth-child(4) { width: 66px; min-width: 66px; max-width: 66px; }
+    .indicadores-table[data-mode="executivo"] th:nth-child(5),
+    .indicadores-table[data-mode="executivo"] td:nth-child(5) { width: 58px; min-width: 58px; max-width: 58px; }
+    .indicadores-table[data-mode="executivo"] th:nth-child(6),
+    .indicadores-table[data-mode="executivo"] td:nth-child(6) { width: 72px; min-width: 72px; max-width: 72px; }
+    .indicadores-table[data-mode="executivo"] th:nth-child(7),
+    .indicadores-table[data-mode="executivo"] td:nth-child(7) { width: 66px; min-width: 66px; max-width: 66px; }
+    .indicadores-table[data-mode="executivo"] th:nth-child(8),
+    .indicadores-table[data-mode="executivo"] td:nth-child(8) { width: 62px; min-width: 62px; max-width: 62px; }
+    .indicadores-table[data-mode="executivo"] th:nth-child(9),
+    .indicadores-table[data-mode="executivo"] td:nth-child(9) { width: 58px; min-width: 58px; max-width: 58px; }
+    .indicadores-table[data-mode="completo"] th:nth-child(1),
+    .indicadores-table[data-mode="completo"] td:nth-child(1) { width: 300px; min-width: 300px; max-width: 300px; }
+    .indicadores-table[data-mode="completo"] th:nth-child(2),
+    .indicadores-table[data-mode="completo"] td:nth-child(2) { width: 54px; min-width: 54px; max-width: 54px; }
+    .indicadores-table[data-mode="completo"] th:nth-child(3),
+    .indicadores-table[data-mode="completo"] td:nth-child(3) { width: 70px; min-width: 70px; max-width: 70px; }
+    .indicadores-table[data-mode="completo"] th:nth-child(4),
+    .indicadores-table[data-mode="completo"] td:nth-child(4) { width: 66px; min-width: 66px; max-width: 66px; }
+    .indicadores-table[data-mode="completo"] th:nth-child(5),
+    .indicadores-table[data-mode="completo"] td:nth-child(5) { width: 58px; min-width: 58px; max-width: 58px; }
+    .indicadores-table[data-mode="completo"] th:nth-child(6),
+    .indicadores-table[data-mode="completo"] td:nth-child(6) { width: 72px; min-width: 72px; max-width: 72px; }
+    .indicadores-table[data-mode="completo"] th:nth-child(7),
+    .indicadores-table[data-mode="completo"] td:nth-child(7) { width: 70px; min-width: 70px; max-width: 70px; }
+    .indicadores-table[data-mode="completo"] th:nth-child(8),
+    .indicadores-table[data-mode="completo"] td:nth-child(8) { width: 66px; min-width: 66px; max-width: 66px; }
+    .indicadores-table[data-mode="completo"] th:nth-child(9),
+    .indicadores-table[data-mode="completo"] td:nth-child(9) { width: 72px; min-width: 72px; max-width: 72px; }
+    .indicadores-table[data-mode="completo"] th:nth-child(10),
+    .indicadores-table[data-mode="completo"] td:nth-child(10) { width: 58px; min-width: 58px; max-width: 58px; }
+    .indicadores-table[data-mode="completo"] th:nth-child(11),
+    .indicadores-table[data-mode="completo"] td:nth-child(11) { width: 58px; min-width: 58px; max-width: 58px; }
+    .indicadores-table[data-mode="completo"] th:nth-child(12),
+    .indicadores-table[data-mode="completo"] td:nth-child(12) { width: 56px; min-width: 56px; max-width: 56px; }
+    .indicadores-table[data-mode="completo"] th:nth-child(13),
+    .indicadores-table[data-mode="completo"] td:nth-child(13) { width: 64px; min-width: 64px; max-width: 64px; }
+    .indicadores-table[data-mode="completo"] th:nth-child(14),
+    .indicadores-table[data-mode="completo"] td:nth-child(14) { width: 66px; min-width: 66px; max-width: 66px; }
+    .indicadores-table[data-mode="completo"] th:nth-child(15),
+    .indicadores-table[data-mode="completo"] td:nth-child(15) { width: 62px; min-width: 62px; max-width: 62px; }
+    .indicadores-table[data-mode="completo"] th:nth-child(16),
+    .indicadores-table[data-mode="completo"] td:nth-child(16) { width: 58px; min-width: 58px; max-width: 58px; }
+    .indicadores-table[data-mode="completo"] th:nth-child(17),
+    .indicadores-table[data-mode="completo"] td:nth-child(17) { width: 64px; min-width: 64px; max-width: 64px; }
+    .indicadores-table[data-mode="completo"] th:nth-child(18),
+    .indicadores-table[data-mode="completo"] td:nth-child(18) { width: 62px; min-width: 62px; max-width: 62px; }
     .indicadores-name-cell {
       min-width: 260px;
     }
@@ -1754,36 +2051,86 @@
     .dark-theme #view-indicadores-operador .indicadores-table tbody tr.lvl-0 td,
     [data-theme="dark"] #view-indicadores-operador .indicadores-table tbody tr.lvl-0 td {
       background:
-        linear-gradient(180deg, rgba(51,65,85,0.44), rgba(30,41,59,0.34));
+        linear-gradient(180deg, rgba(59,76,99,0.62), rgba(35,49,67,0.48));
       color: var(--text-main);
     }
 
     .dark-theme #view-indicadores-operador .indicadores-table tbody tr.lvl-1 td,
     [data-theme="dark"] #view-indicadores-operador .indicadores-table tbody tr.lvl-1 td {
       background:
-        linear-gradient(180deg, rgba(41,53,72,0.34), rgba(30,41,59,0.26));
-      color: var(--color-table-text);
+        linear-gradient(180deg, rgba(83,68,44,0.48), rgba(58,47,32,0.34));
+      color: #f0dfbe;
     }
 
     .dark-theme #view-indicadores-operador .indicadores-table tbody tr.lvl-2 td,
     [data-theme="dark"] #view-indicadores-operador .indicadores-table tbody tr.lvl-2 td {
       background:
-        linear-gradient(180deg, rgba(30,41,59,0.28), rgba(22,32,48,0.22));
-      color: var(--color-table-text);
+        linear-gradient(180deg, rgba(33,72,60,0.42), rgba(22,52,43,0.30));
+      color: #d7f2e7;
     }
 
     .dark-theme #view-indicadores-operador .indicadores-table tbody tr.lvl-3 td,
     [data-theme="dark"] #view-indicadores-operador .indicadores-table tbody tr.lvl-3 td {
       background:
-        linear-gradient(180deg, rgba(24,34,49,0.22), rgba(18,27,41,0.18));
-      color: var(--text-muted);
+        linear-gradient(180deg, rgba(39,52,68,0.34), rgba(25,37,52,0.24));
+      color: #b7c5d2;
     }
 
     .dark-theme #view-indicadores-operador .indicadores-table tbody tr.lvl-4 td,
     [data-theme="dark"] #view-indicadores-operador .indicadores-table tbody tr.lvl-4 td {
       background:
-        linear-gradient(180deg, rgba(19,28,42,0.18), rgba(15,23,42,0.14));
-      color: var(--text-muted);
+        linear-gradient(180deg, rgba(20,29,43,0.20), rgba(13,21,34,0.14));
+      color: #aab7c5;
+    }
+    .dark-theme #view-indicadores-operador .indicadores-table tbody tr.total-row td,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-table tbody tr.total-row td {
+      background:
+        linear-gradient(180deg, rgba(73,88,109,0.58), rgba(43,55,72,0.44));
+      color: var(--text-main);
+    }
+
+    #view-indicadores-operador .indicadores-table tbody tr.lvl-0 > td {
+      background: linear-gradient(180deg, #d8eaf7, #c8deef) !important;
+    }
+    #view-indicadores-operador .indicadores-table tbody tr.lvl-1 > td {
+      background: linear-gradient(180deg, #fff0d5, #f5dfb6) !important;
+    }
+    #view-indicadores-operador .indicadores-table tbody tr.lvl-2 > td {
+      background: linear-gradient(180deg, #def3e8, #ccebdc) !important;
+    }
+    #view-indicadores-operador .indicadores-table tbody tr.lvl-3 > td {
+      background: linear-gradient(180deg, #e7eef6, #d8e3ee) !important;
+    }
+    #view-indicadores-operador .indicadores-table tbody tr.lvl-4 > td {
+      background: linear-gradient(180deg, #ffffff, #f7f9fc) !important;
+    }
+    #view-indicadores-operador .indicadores-table tbody tr.total-row > td {
+      background: linear-gradient(180deg, #c7d9e8, #b5cadc) !important;
+    }
+
+    .dark-theme #view-indicadores-operador .indicadores-table tbody tr.lvl-0 > td,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-table tbody tr.lvl-0 > td {
+      background: linear-gradient(180deg, rgba(64, 93, 126, 0.88), rgba(46, 70, 96, 0.80)) !important;
+    }
+    .dark-theme #view-indicadores-operador .indicadores-table tbody tr.lvl-1 > td,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-table tbody tr.lvl-1 > td {
+      background: linear-gradient(180deg, rgba(113, 91, 52, 0.82), rgba(84, 67, 39, 0.74)) !important;
+    }
+    .dark-theme #view-indicadores-operador .indicadores-table tbody tr.lvl-2 > td,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-table tbody tr.lvl-2 > td {
+      background: linear-gradient(180deg, rgba(47, 101, 80, 0.82), rgba(34, 75, 59, 0.74)) !important;
+    }
+    .dark-theme #view-indicadores-operador .indicadores-table tbody tr.lvl-3 > td,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-table tbody tr.lvl-3 > td {
+      background: linear-gradient(180deg, rgba(63, 80, 101, 0.78), rgba(45, 59, 77, 0.70)) !important;
+    }
+    .dark-theme #view-indicadores-operador .indicadores-table tbody tr.lvl-4 > td,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-table tbody tr.lvl-4 > td {
+      background: linear-gradient(180deg, rgba(27, 35, 49, 0.64), rgba(20, 27, 39, 0.56)) !important;
+    }
+    .dark-theme #view-indicadores-operador .indicadores-table tbody tr.total-row > td,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-table tbody tr.total-row > td {
+      background: linear-gradient(180deg, rgba(86, 108, 133, 0.90), rgba(63, 80, 101, 0.82)) !important;
     }
 
     /* SCROLL FIX - INDICADORES */
@@ -1810,39 +2157,177 @@
       padding-bottom: 32px;
     }
 
+    .auth-shell {
+      position: fixed;
+      inset: 0;
+      z-index: 11000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at top left, rgba(241,129,73,0.12), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(55,96,130,0.12), transparent 30%),
+        var(--bg-main);
+    }
+    .auth-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-strong);
+      border-radius: 26px;
+      box-shadow: var(--shadow-card);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      padding: 28px 28px 24px;
+    }
+    .auth-kicker {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .auth-title {
+      margin: 0 0 10px;
+      font-size: 28px;
+      line-height: 1.08;
+      color: var(--text-main);
+    }
+    .auth-copy {
+      margin: 0 0 18px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-muted);
+    }
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .auth-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.45px;
+    }
+    .auth-input {
+      width: 100%;
+      border: 1px solid var(--border-strong);
+      border-radius: 14px;
+      background: var(--field-bg);
+      color: var(--text-main);
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 14px;
+      outline: none;
+      box-shadow: var(--field-shadow);
+    }
+    .auth-button {
+      margin-top: 6px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(180deg, var(--accent-orange), #d96a36);
+      color: #fff;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 800;
+      padding: 12px 16px;
+      cursor: pointer;
+      box-shadow: 0 12px 24px rgba(241,129,73,0.22);
+    }
+    .auth-feedback {
+      min-height: 20px;
+      margin: 12px 0 0;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    #portalShell {
+      width: 100%;
+      min-height: 100vh;
+      display: none;
+      flex: 1;
+    }
     #loading { position: fixed; inset: 0; background: var(--bg-main); z-index: 9999; display: flex; justify-content: center; align-items: center; font-weight: 600; font-size: 15px; }
   </style>
 </head>
-<body onload="atualizarRelogio()">
+<body onload="iniciarPortal()">
 
   <div id="loading">Sincronizando Sistema...</div>
 
+  <div id="authShell" class="auth-shell">
+    <div class="auth-card" id="loginCard">
+      <div class="auth-kicker">Acesso Seguro</div>
+      <h1 class="auth-title">Entrar no Portal Supermed</h1>
+      <p class="auth-copy">Use CPF e senha para acessar o dashboard administrativo.</p>
+      <form id="loginForm" class="auth-form">
+        <label class="auth-label" for="loginCpf">CPF</label>
+        <input id="loginCpf" class="auth-input" type="text" inputmode="numeric" autocomplete="username" placeholder="000.000.000-00" />
+        <label class="auth-label" for="loginSenha">Senha</label>
+        <input id="loginSenha" class="auth-input" type="password" autocomplete="current-password" placeholder="Sua senha" />
+        <button type="submit" class="auth-button">Entrar</button>
+      </form>
+      <p class="auth-feedback" id="loginFeedback"></p>
+    </div>
+
+    <div class="auth-card" id="changePasswordCard" style="display:none;">
+      <div class="auth-kicker">Primeiro Acesso</div>
+      <h1 class="auth-title">Troca obrigatória de senha</h1>
+      <p class="auth-copy">Defina uma nova senha para liberar o acesso ao portal.</p>
+      <form id="changePasswordForm" class="auth-form">
+        <label class="auth-label" for="currentSenha">Senha atual</label>
+        <input id="currentSenha" class="auth-input" type="password" autocomplete="current-password" placeholder="Senha atual" />
+        <label class="auth-label" for="newSenha">Nova senha</label>
+        <input id="newSenha" class="auth-input" type="password" autocomplete="new-password" placeholder="Mínimo de 8 caracteres" />
+        <label class="auth-label" for="confirmSenha">Confirmar nova senha</label>
+        <input id="confirmSenha" class="auth-input" type="password" autocomplete="new-password" placeholder="Repita a nova senha" />
+        <button type="submit" class="auth-button">Atualizar senha</button>
+      </form>
+      <p class="auth-feedback" id="changePasswordFeedback"></p>
+    </div>
+  </div>
+
+  <div id="portalShell">
+  <!-- Sidebar retratil: recolhida por padrao no desktop e expandida ao hover. -->
   <div class="sidebar">
     <div>
       <div class="sidebar-header">
         <img src="https://crmredeneo2.com.br/assets/image/logo.jpeg" class="logo-img">
-        <div style="font-weight: 800; font-size: 16px; color: var(--text-main);">SUPERMED</div>
-        <div style="color: var(--accent-orange); font-size: 10px; font-weight: 800; letter-spacing: 0.5px;">OPERACIONAL PRO</div>
+        <div class="sidebar-brand-copy">
+          <div class="sidebar-title">SUPERMED</div>
+          <div class="sidebar-kicker">OPERACIONAL PRO</div>
+        </div>
       </div>
-      <div class="nav-item nav-active" data-view-target="resumo-geral" onclick="trocarView('resumo-geral', this)"><svg viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg> Resumo Geral</div>
-      <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/></svg> Tempos & Status</div>
-      <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M16,6L18.29,8.29L13.41,13.17L9.41,9.17L2,16.59L3.41,18L9.41,12L13.41,16L19.71,9.71L22,12V6H16Z"/></svg> Produtividade</div>
-      <div class="nav-item" data-view-target="indicadores-operador" onclick="trocarView('indicadores-operador', this)"><svg viewBox="0 0 24 24"><path d="M16,11V3H8V6H2V18H22V11H16M10,5H14V16H10V5M4,8H8V16H4V8M20,16H16V13H20V16Z"/></svg> Indicadores</div>
+      <div class="nav-item nav-active" data-view-target="resumo-geral" onclick="trocarView('resumo-geral', this)" title="Resumo Geral"><svg viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg><span class="nav-label">Resumo Geral</span></div>
+      <div class="nav-item" title="Tempos & Status"><svg viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/></svg><span class="nav-label">Tempos & Status</span></div>
+      <div class="nav-item" title="Produtividade"><svg viewBox="0 0 24 24"><path d="M16,6L18.29,8.29L13.41,13.17L9.41,9.17L2,16.59L3.41,18L9.41,12L13.41,16L19.71,9.71L22,12V6H16Z"/></svg><span class="nav-label">Produtividade</span></div>
+      <div class="nav-item" data-view-target="indicadores-operador" onclick="trocarView('indicadores-operador', this)" title="Indicadores"><svg viewBox="0 0 24 24"><path d="M16,11V3H8V6H2V18H22V11H16M10,5H14V16H10V5M4,8H8V16H4V8M20,16H16V13H20V16Z"/></svg><span class="nav-label">Indicadores</span></div>
     </div>
     
     <div class="sidebar-footer">
-      <div class="theme-toggle" onclick="toggleTheme()">
+      <div class="theme-toggle" onclick="toggleTheme()" title="Alternar tema">
         <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
         </svg>
         <span id="theme-text">Modo Escuro</span>
       </div>
-      <div class="user-profile">
+      <div class="user-profile" title="Suporte Operacional">
         <div class="avatar-circle">S</div>
         <div class="user-info">
-          <span class="user-name">Suporte Operacional</span>
-          <span class="user-role">Administrativo</span>
+          <span class="user-name" id="sidebarUserName">Suporte Operacional</span>
+          <span class="user-role" id="sidebarUserRole">Administrativo</span>
         </div>
+      </div>
+      <div class="theme-toggle" onclick="executarLogout()" title="Encerrar sessão">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        <span>Sair</span>
       </div>
     </div>
   </div>
@@ -2141,6 +2626,7 @@
       </div>
     </section>
   </div>
+  </div>
 
   <script>
     Chart.register(ChartDataLabels);
@@ -2218,6 +2704,45 @@
       let n = Number(s.replace(',','.')); if(!isNaN(n) && n<1 && !s.includes(':')) return n*86400;
       let p = s.split(':'); if(p.length===3) return (+p[0])*3600+(+p[1])*60+parseFloat(p[2]||0);
       if(p.length===2) return (+p[0])*60+parseFloat(p[1]||0); return 0;
+    }
+
+    function parseNumeroPlanilhaIndicadores(valor) {
+      if (valor === null || valor === undefined || valor === '') return 0;
+      if (typeof valor === 'number') return valor;
+
+      let texto = String(valor).trim();
+      if (!texto) return 0;
+
+      texto = texto
+        .replace(/\s/g, '')
+        .replace(/R\$/g, '')
+        .replace(/%/g, '');
+
+      const temVirgula = texto.includes(',');
+      const temPonto = texto.includes('.');
+
+      if (temVirgula && temPonto) {
+        const ultimaVirgula = texto.lastIndexOf(',');
+        const ultimoPonto = texto.lastIndexOf('.');
+
+        if (ultimaVirgula > ultimoPonto) {
+          // formato brasileiro: 1.234,56
+          texto = texto.replace(/\./g, '').replace(',', '.');
+        } else {
+          // formato americano: 1,234.56
+          texto = texto.replace(/,/g, '');
+        }
+      } else if (temVirgula) {
+        texto = texto.replace(',', '.');
+      } else if (temPonto) {
+        // se for padrão de milhar: 1.234 ou 12.345 ou 1.234.567
+        if (/^\d{1,3}(\.\d{3})+$/.test(texto)) {
+          texto = texto.replace(/\./g, '');
+        }
+      }
+
+      const numero = Number(texto);
+      return Number.isFinite(numero) ? numero : 0;
     }
 
     function sToT(s) {
@@ -2470,8 +2995,8 @@
           site: String(r[COLUNAS_BASE_TABELA.site] || '').trim(),
           produto: String(r[COLUNAS_BASE_TABELA.produto] || '').trim(),
           data: parseDataBase(r[COLUNAS_BASE_TABELA.data]),
-          brutas: Number(String(r[COLUNAS_BASE_TABELA.brutas]).replace(',','.')) || 0,
-          liquidas: Number(String(r[COLUNAS_BASE_TABELA.liquidas]).replace(',','.')) || 0
+          brutas: parseNumeroPlanilhaIndicadores(r[COLUNAS_BASE_TABELA.brutas]),
+          liquidas: parseNumeroPlanilhaIndicadores(r[COLUNAS_BASE_TABELA.liquidas])
         }))
         .filter(item => SITES_EXECUTIVOS.includes(item.site) && item.data);
 
@@ -2504,13 +3029,26 @@
       };
 
       SITES_EXECUTIVOS.forEach(site => {
-        const produtosDoSite = new Set(
-          PRODUTOS_EXECUTIVOS.filter(prod => metasMap[`${site}__${prod}`] || registrosBase.some(item =>
-            item.site === site &&
-            item.produto === prod &&
-            mesmoMesAno(item.data, mesRef)
-          ))
-        );
+        const produtosBaseDoSite = [...new Set(
+          registrosBase
+            .filter(item => item.site === site && mesmoMesAno(item.data, mesRef))
+            .map(item => String(item.produto || '').trim())
+            .filter(Boolean)
+        )];
+
+        const produtosComMeta = Object.keys(metasMap)
+          .filter(chave => chave.startsWith(`${site}__`))
+          .map(chave => chave.split('__')[1])
+          .filter(Boolean);
+
+        const produtosDoSite = [
+          ...PRODUTOS_EXECUTIVOS.filter(prod => produtosBaseDoSite.includes(prod) || produtosComMeta.includes(prod)),
+          ...produtosBaseDoSite.filter(prod => !PRODUTOS_EXECUTIVOS.includes(prod)),
+          ...produtosComMeta.filter(prod =>
+            !PRODUTOS_EXECUTIVOS.includes(prod) &&
+            !produtosBaseDoSite.includes(prod)
+          )
+        ];
 
         const linhasProdutos = [];
         const totalSite = {
@@ -2523,8 +3061,7 @@
           dp: diasUteisPorSite[site] ? diasUteisPorSite[site].dp : 0
         };
 
-        PRODUTOS_EXECUTIVOS.forEach(produto => {
-          if (!produtosDoSite.has(produto)) return;
+        produtosDoSite.forEach(produto => {
           const itens = registrosBase.filter(item =>
             item.site === site &&
             item.produto === produto &&
@@ -2547,6 +3084,14 @@
             projecaoLiquidas,
             meta,
             atingimento
+          });
+
+          console.log('DEBUG_LIQUIDAS_POR_SITE', {
+            site,
+            produto,
+            somaLiquidas: realizadoLiquidas,
+            somaBrutas: realizadoBrutas,
+            linhas: itens.length
           });
 
           totalSite.realizadoBrutas += realizadoBrutas;
@@ -2729,7 +3274,60 @@
       });
     }
 
-    google.script.run
+    let authSession = null;
+    let dashboardCarregado = false;
+
+    function obterTokenSessaoPortal() {
+      return sessionStorage.getItem('portal_supermed_token') || '';
+    }
+
+    function salvarTokenSessaoPortal(token) {
+      sessionStorage.setItem('portal_supermed_token', token);
+    }
+
+    function limparTokenSessaoPortal() {
+      sessionStorage.removeItem('portal_supermed_token');
+    }
+
+    function mostrarTelaAuth(tipo) {
+      const authShell = document.getElementById('authShell');
+      const portalShell = document.getElementById('portalShell');
+      const loginCard = document.getElementById('loginCard');
+      const changePasswordCard = document.getElementById('changePasswordCard');
+      if (authShell) authShell.style.display = 'flex';
+      if (portalShell) portalShell.style.display = 'none';
+      if (loginCard) loginCard.style.display = tipo === 'login' ? 'block' : 'none';
+      if (changePasswordCard) changePasswordCard.style.display = tipo === 'change-password' ? 'block' : 'none';
+    }
+
+    function mostrarDashboard(user) {
+      const authShell = document.getElementById('authShell');
+      const portalShell = document.getElementById('portalShell');
+      if (authShell) authShell.style.display = 'none';
+      if (portalShell) portalShell.style.display = 'flex';
+      if (user) {
+        const userName = document.getElementById('sidebarUserName');
+        const userRole = document.getElementById('sidebarUserRole');
+        const avatar = document.querySelector('.avatar-circle');
+        if (userName) userName.textContent = user.nome || 'Usuário';
+        if (userRole) userRole.textContent = user.cargo || user.perfil || '';
+        if (avatar) avatar.textContent = String(user.nome || 'U').trim().charAt(0).toUpperCase();
+      }
+    }
+
+    function definirFeedbackAuth(id, mensagem, isErro) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = mensagem || '';
+      el.style.color = isErro ? '#b9382f' : '#18794e';
+    }
+
+    function carregarDadosDashboard() {
+      if (dashboardCarregado) return;
+      dashboardCarregado = true;
+      document.getElementById('loading').style.display = 'flex';
+      document.getElementById('loading').textContent = 'Sincronizando Sistema...';
+      google.script.run
     .withSuccessHandler(res => {
       if (!res || !String(res).trim()) {
         exibirErroCarregamento('Erro ao carregar os dados: retorno vazio.');
@@ -2822,12 +3420,148 @@
       processarDados();
     })
     .withFailureHandler(err => {
+      dashboardCarregado = false;
       const msg = err && err.message
         ? `Erro ao carregar os dados: ${err.message}`
         : 'Erro ao carregar os dados.';
       exibirErroCarregamento(msg);
     })
-    .obterDadosExcel();
+    .obterDadosExcelAutenticado(obterTokenSessaoPortal());
+    }
+
+    function validarSessaoFrontend() {
+      const token = obterTokenSessaoPortal();
+      if (!token) {
+        document.getElementById('loading').style.display = 'none';
+        mostrarTelaAuth('login');
+        return;
+      }
+
+      document.getElementById('loading').style.display = 'flex';
+      document.getElementById('loading').textContent = 'Validando acesso...';
+
+      google.script.run
+        .withSuccessHandler(res => {
+          if (!res || !res.ok) {
+            limparTokenSessaoPortal();
+            authSession = null;
+            dashboardCarregado = false;
+            document.getElementById('loading').style.display = 'none';
+            mostrarTelaAuth('login');
+            return;
+          }
+
+          authSession = { token, user: res.user, trocaSenhaObrigatoria: !!res.trocaSenhaObrigatoria };
+          if (res.trocaSenhaObrigatoria) {
+            document.getElementById('loading').style.display = 'none';
+            mostrarTelaAuth('change-password');
+            return;
+          }
+
+          mostrarDashboard(res.user);
+          carregarDadosDashboard();
+        })
+        .withFailureHandler(() => {
+          limparTokenSessaoPortal();
+          authSession = null;
+          dashboardCarregado = false;
+          document.getElementById('loading').style.display = 'none';
+          mostrarTelaAuth('login');
+        })
+        .validarSessao(token);
+    }
+
+    function executarLogin(event) {
+      event.preventDefault();
+      const cpf = document.getElementById('loginCpf').value;
+      const senha = document.getElementById('loginSenha').value;
+      definirFeedbackAuth('loginFeedback', 'Validando acesso...', false);
+
+      google.script.run
+        .withSuccessHandler(res => {
+          if (!res || !res.ok) {
+            definirFeedbackAuth('loginFeedback', res && res.message ? res.message : 'Falha no login.', true);
+            return;
+          }
+
+          salvarTokenSessaoPortal(res.token);
+          authSession = { token: res.token, user: res.user, trocaSenhaObrigatoria: !!res.trocaSenhaObrigatoria };
+          definirFeedbackAuth('loginFeedback', '', false);
+
+          if (res.trocaSenhaObrigatoria) {
+            document.getElementById('loading').style.display = 'none';
+            mostrarTelaAuth('change-password');
+            return;
+          }
+
+          mostrarDashboard(res.user);
+          carregarDadosDashboard();
+        })
+        .withFailureHandler(err => {
+          definirFeedbackAuth('loginFeedback', err && err.message ? err.message : 'Erro ao autenticar.', true);
+        })
+        .loginPortal(cpf, senha);
+    }
+
+    function executarTrocaSenha(event) {
+      event.preventDefault();
+      const token = obterTokenSessaoPortal();
+      const senhaAtual = document.getElementById('currentSenha').value;
+      const novaSenha = document.getElementById('newSenha').value;
+      const confirmar = document.getElementById('confirmSenha').value;
+
+      if (novaSenha !== confirmar) {
+        definirFeedbackAuth('changePasswordFeedback', 'A confirmação da nova senha não confere.', true);
+        return;
+      }
+
+      definirFeedbackAuth('changePasswordFeedback', 'Atualizando senha...', false);
+
+      google.script.run
+        .withSuccessHandler(res => {
+          if (!res || !res.ok) {
+            definirFeedbackAuth('changePasswordFeedback', res && res.message ? res.message : 'Não foi possível atualizar a senha.', true);
+            return;
+          }
+
+          authSession = { token, user: res.user, trocaSenhaObrigatoria: false };
+          definirFeedbackAuth('changePasswordFeedback', '', false);
+          mostrarDashboard(res.user);
+          carregarDadosDashboard();
+        })
+        .withFailureHandler(err => {
+          definirFeedbackAuth('changePasswordFeedback', err && err.message ? err.message : 'Erro ao trocar a senha.', true);
+        })
+        .trocarSenhaPrimeiroAcesso(token, senhaAtual, novaSenha);
+    }
+
+    function executarLogout() {
+      const token = obterTokenSessaoPortal();
+      limparTokenSessaoPortal();
+      authSession = null;
+      dashboardCarregado = false;
+      raw = [];
+      rawMetas = [];
+      rawFeriados = [];
+      document.getElementById('loading').style.display = 'none';
+      mostrarTelaAuth('login');
+      google.script.run.logoutPortal(token);
+    }
+
+    function iniciarPortal() {
+      atualizarRelogio();
+      const loginForm = document.getElementById('loginForm');
+      const changePasswordForm = document.getElementById('changePasswordForm');
+      if (loginForm && !loginForm.dataset.bound) {
+        loginForm.addEventListener('submit', executarLogin);
+        loginForm.dataset.bound = 'true';
+      }
+      if (changePasswordForm && !changePasswordForm.dataset.bound) {
+        changePasswordForm.addEventListener('submit', executarTrocaSenha);
+        changePasswordForm.dataset.bound = 'true';
+      }
+      validarSessaoFrontend();
+    }
 
     function processarDados() {
       const fM = document.getElementById('fMes').value;
@@ -3020,11 +3754,48 @@
       return Math.abs(media) <= 1 ? media * 100 : media;
     }
 
+    function calcularAderenciaBrutaOficialIndicadores(linhas) {
+      let soma = 0;
+      let count = 0;
+
+      linhas.forEach(row => {
+        const ea = parseFloat(String(row[130] || '').replace(',', '.'));
+        if (!isNaN(ea)) {
+          soma += ea;
+          count++;
+        }
+      });
+
+      const media = count > 0 ? soma / count : 0;
+      return Math.abs(media) <= 1 ? media * 100 : media;
+    }
+
     function formatarPercentualIndicadores(valor) {
       return `${Number(valor || 0).toLocaleString('pt-BR', {
         minimumFractionDigits: 1,
         maximumFractionDigits: 1
       })}%`;
+    }
+
+    function obterClasseMetaIndicador(tipo, valor) {
+      if (valor === null || valor === undefined || valor === '') return '';
+      const n = Number(valor);
+      if (!Number.isFinite(n)) return '';
+
+      if (tipo === 'aderenciaBruta') return n >= 75 ? 'meta-ok' : 'meta-ruim';
+      if (tipo === 'aderenciaLiquida') return n >= 85 ? 'meta-ok' : 'meta-ruim';
+      if (tipo === 'tFalado') return n >= 45 ? 'meta-ok' : 'meta-ruim';
+      if (tipo === 'acw') return n <= 15 ? 'meta-ok' : 'meta-ruim';
+      if (tipo === 'pausa') return n <= 22 ? 'meta-ok' : 'meta-ruim';
+
+      return '';
+    }
+
+    function formatarPercentualMetaIndicador(tipo, valor, classesBase = '') {
+      const texto = formatarPercentualIndicadores(valor);
+      const classeMeta = obterClasseMetaIndicador(tipo, valor);
+      const classes = [classesBase, classeMeta].filter(Boolean).join(' ');
+      return classes ? `<span class="${classes}">${texto}</span>` : texto;
     }
 
     function formatarTempoIndicadores(segundos) {
@@ -3055,15 +3826,52 @@
       };
     }
 
+    function normalizarMesIndicadores(valor) {
+      const bruto = String(valor || '').trim();
+      if (!bruto || bruto === 'undefined' || bruto === '0') return '';
+
+      const meses = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+      const texto = normalizarTextoComparacao(bruto).replace(/\s+/g, '');
+
+      let match = texto.match(/^(jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez)[a-z]*[\/-](\d{2,4})$/);
+      if (match) {
+        const mes = match[1];
+        const ano = match[2].length === 4 ? match[2].slice(-2) : match[2];
+        return `${mes}/${ano}`;
+      }
+
+      match = texto.match(/^(\d{1,2})[\/-](\d{2,4})$/);
+      if (match) {
+        const indiceMes = Number(match[1]) - 1;
+        if (indiceMes >= 0 && indiceMes < 12) {
+          const ano = match[2].length === 4 ? match[2].slice(-2) : match[2];
+          return `${meses[indiceMes]}/${ano}`;
+        }
+      }
+
+      return bruto;
+    }
+
+    function obterOrdemMesIndicadores(valor) {
+      const normalizado = normalizarMesIndicadores(valor);
+      const [mes, ano] = String(normalizado).split('/');
+      const monthMap = { jan: 0, fev: 1, mar: 2, abr: 3, mai: 4, jun: 5, jul: 6, ago: 7, set: 8, out: 9, nov: 10, dez: 11 };
+      const mesIdx = monthMap[normalizarTextoComparacao(mes)] ?? -1;
+      const anoNum = Number(String(ano || '').length === 2 ? `20${ano}` : ano);
+      if (mesIdx < 0 || !Number.isFinite(anoNum)) return -1;
+      return (anoNum * 100) + mesIdx;
+    }
+
     function filtrarLinhasIndicadores(filtrosParciais) {
       return obterLinhasOperadoresIndicadores().filter(row => {
-        const data = String(row[140] || '').trim();
+        const data = normalizarMesIndicadores(row[140]);
         const unidade = String(row[81] || '').trim();
         const produto = String(row[106] || '').trim();
         const supervisor = String(row[9] || '').trim();
         const tempoCasa = String(row[120] || '').trim();
+        const dataFiltro = normalizarMesIndicadores(filtrosParciais.data);
 
-        if (filtrosParciais.data && filtrosParciais.data !== 'TODOS' && data !== filtrosParciais.data) return false;
+        if (dataFiltro && dataFiltro !== 'TODOS' && data !== dataFiltro) return false;
         if (filtrosParciais.unidade && filtrosParciais.unidade !== 'TODAS' && unidade !== filtrosParciais.unidade) return false;
         if (filtrosParciais.produto && filtrosParciais.produto !== 'TODOS' && produto !== filtrosParciais.produto) return false;
         if (filtrosParciais.supervisor && filtrosParciais.supervisor !== 'TODOS' && supervisor !== filtrosParciais.supervisor) return false;
@@ -3162,7 +3970,7 @@
           produto: filtros.produto
         });
         preencherSelect(selSupervisor, extrairOpcoesIndicadores(linhas, 9), 'Todos', 'TODOS');
-        preencherSelect(selTempoCasa, extrairOpcoesIndicadores(linhas, 143, ordenarTempoCasaIndicadores), 'Todos', 'TODOS');
+        preencherSelect(selTempoCasa, extrairOpcoesIndicadores(linhas, 120, ordenarTempoCasaIndicadores), 'Todos', 'TODOS');
         selSupervisor.value = 'TODOS';
         selTempoCasa.value = 'TODOS';
         atualizarIndicadoresOperador();
@@ -3178,7 +3986,7 @@
           produto: filtros.produto,
           supervisor: filtros.supervisor
         });
-        preencherSelect(selTempoCasa, extrairOpcoesIndicadores(linhas, 143, ordenarTempoCasaIndicadores), 'Todos', 'TODOS');
+        preencherSelect(selTempoCasa, extrairOpcoesIndicadores(linhas, 120, ordenarTempoCasaIndicadores), 'Todos', 'TODOS');
         selTempoCasa.value = 'TODOS';
         atualizarIndicadoresOperador();
         return;
@@ -3202,17 +4010,11 @@
       const linhasOperadores = obterLinhasOperadoresIndicadores();
 
       linhasOperadores.forEach(r => {
-        const dataRef = String(r[140] || '').trim();
-        if (dataRef && dataRef !== 'undefined' && dataRef !== '0') datasSet.add(dataRef);
+        const dataRef = normalizarMesIndicadores(r[140]);
+        if (dataRef) datasSet.add(dataRef);
       });
 
-      const monthMap = { 'jan':0, 'fev':1, 'mar':2, 'abr':3, 'mai':4, 'jun':5, 'jul':6, 'ago':7, 'set':8, 'out':9, 'nov':10, 'dez':11 };
-      const datasSort = [...datasSet].sort((a, b) => {
-        const [mA, yA] = String(a).split('/');
-        const [mB, yB] = String(b).split('/');
-        return new Date(2000 + parseInt(yB), monthMap[String(mB || '').toLowerCase()] || 0)
-          - new Date(2000 + parseInt(yA), monthMap[String(mA || '').toLowerCase()] || 0);
-      });
+      const datasSort = [...datasSet].sort((a, b) => obterOrdemMesIndicadores(b) - obterOrdemMesIndicadores(a));
 
       preencherSelect(selData, datasSort);
 
@@ -3470,10 +4272,10 @@
           <td class="indicadores-compare-num">${formatarTempoIndicadores(item.metricas.tempoEntreChamadas)}</td>
           <td class="indicadores-compare-num">${formatarTempoIndicadores(item.metricas.tempoLogado)}</td>
           <td class="indicadores-compare-num">${formatarTempoIndicadores(item.metricas.teo)}</td>
-          <td class="indicadores-compare-num"><span class="indicadores-compare-chip ${obterClasseAderenciaIndicadores(item.metricas.aderenciaLiquida)}">${formatarPercentualIndicadores(item.metricas.aderenciaLiquida)}</span></td>
+          <td class="indicadores-compare-num">${formatarPercentualMetaIndicador('aderenciaLiquida', item.metricas.aderenciaLiquida, `indicadores-compare-chip ${obterClasseAderenciaIndicadores(item.metricas.aderenciaLiquida)}`)}</td>
           <td class="indicadores-compare-num">${formatarTempoIndicadores(item.metricas.tempoFalado)}</td>
           <td class="indicadores-compare-num">${formatarTempoIndicadores(item.metricas.ttPausa)}</td>
-          <td class="indicadores-compare-num">${formatarPercentualIndicadores(item.metricas.percPausa)}</td>
+          <td class="indicadores-compare-num">${formatarPercentualMetaIndicador('pausa', item.metricas.percPausa)}</td>
         </tr>
       `).join('');
 
@@ -3500,10 +4302,10 @@
               <td class="indicadores-compare-num">${formatarTempoIndicadores(comparativo.totalGeral.tempoEntreChamadas)}</td>
               <td class="indicadores-compare-num">${formatarTempoIndicadores(comparativo.totalGeral.tempoLogado)}</td>
               <td class="indicadores-compare-num">${formatarTempoIndicadores(comparativo.totalGeral.teo)}</td>
-              <td class="indicadores-compare-num"><span class="indicadores-compare-chip ${obterClasseAderenciaIndicadores(comparativo.totalGeral.aderenciaLiquida)}">${formatarPercentualIndicadores(comparativo.totalGeral.aderenciaLiquida)}</span></td>
+              <td class="indicadores-compare-num">${formatarPercentualMetaIndicador('aderenciaLiquida', comparativo.totalGeral.aderenciaLiquida, `indicadores-compare-chip ${obterClasseAderenciaIndicadores(comparativo.totalGeral.aderenciaLiquida)}`)}</td>
               <td class="indicadores-compare-num">${formatarTempoIndicadores(comparativo.totalGeral.tempoFalado)}</td>
               <td class="indicadores-compare-num">${formatarTempoIndicadores(comparativo.totalGeral.ttPausa)}</td>
-              <td class="indicadores-compare-num">${formatarPercentualIndicadores(comparativo.totalGeral.percPausa)}</td>
+              <td class="indicadores-compare-num">${formatarPercentualMetaIndicador('pausa', comparativo.totalGeral.percPausa)}</td>
             </tr>
           </tbody>
         </table>
@@ -3616,7 +4418,7 @@
 
       return {
         ...base,
-        percAderencia: percentualRazaoTemposIndicadores(linhas, 107, 86),
+        percAderencia: calcularAderenciaBrutaOficialIndicadores(linhas),
         tempoImprodutivo: mediaTempoIndicadores(linhas, 109),
         idealTTF: mediaTempoIndicadores(linhas, 111),
         percTFalado: percentualRazaoTemposIndicadores(linhas, 93, 108),
@@ -3736,13 +4538,58 @@
       return linhasRender;
     }
 
+    function garantirTopScrollHierarquiaIndicadores(section, tabelaWrap, tabela) {
+      if (!section || !tabelaWrap || !tabela) return;
+
+      let topScroll = section.querySelector('#indHierarchyTopScroll');
+
+      if (!topScroll) {
+        topScroll = document.createElement('div');
+        topScroll.id = 'indHierarchyTopScroll';
+        topScroll.className = 'indicadores-top-scroll';
+        topScroll.innerHTML = '<div></div>';
+        section.insertBefore(topScroll, tabelaWrap);
+      }
+
+      const topInner = topScroll.firstElementChild;
+      if (!topInner) return;
+
+      const atualizarLargura = () => {
+        topInner.style.width = tabela.scrollWidth + 'px';
+      };
+
+      requestAnimationFrame(atualizarLargura);
+      setTimeout(atualizarLargura, 100);
+
+      if (!topScroll.dataset.bound) {
+        let sincronizando = false;
+
+        topScroll.addEventListener('scroll', () => {
+          if (sincronizando) return;
+          sincronizando = true;
+          tabelaWrap.scrollLeft = topScroll.scrollLeft;
+          requestAnimationFrame(() => sincronizando = false);
+        });
+
+        tabelaWrap.addEventListener('scroll', () => {
+          if (sincronizando) return;
+          sincronizando = true;
+          topScroll.scrollLeft = tabelaWrap.scrollLeft;
+          requestAnimationFrame(() => sincronizando = false);
+        });
+
+        topScroll.dataset.bound = 'true';
+      }
+    }
+
     function renderTabelaHierarquicaIndicadores() {
       const tbody = document.getElementById('indHierarchyBody');
       if (!tbody) return;
 
-      const tabela = tbody.closest('table');
-      const thead = tabela ? tabela.querySelector('thead') : null;
       const section = tbody.closest('.indicadores-table-shell');
+      const tabela = section ? section.querySelector('.indicadores-table') : document.querySelector('#view-indicadores-operador .indicadores-table');
+      const tabelaWrap = section ? section.querySelector('.indicadores-table-wrap') : null;
+      const thead = tabela ? tabela.querySelector('thead') : null;
       const modeBadge = section ? section.querySelector('.indicadores-table-mode') : null;
       const modo = document.getElementById('fIndModo') ? document.getElementById('fIndModo').value : 'Executivo';
       const linhas = montarLinhasHierarquiaIndicadores();
@@ -3756,50 +4603,63 @@
       }
 
       const colunasExecutivo = [
-        { key: 'label', label: 'Hierarquia', tipo: 'label' },
-        { key: 'ligacoes', label: 'Ligações', tipo: 'numero' },
-        { key: 'tempoEntreChamadas', label: 'T. Entre Chamadas', tipo: 'tempo' },
-        { key: 'tempoLogado', label: 'T. Logado', tipo: 'tempo' },
-        { key: 'teo', label: 'TEO', tipo: 'tempo' },
-        { key: 'aderenciaLiquida', label: 'Aderência Líquida', tipo: 'percentual' },
-        { key: 'tempoFalado', label: 'T. Falado', tipo: 'tempo' },
-        { key: 'ttPausa', label: 'TT Pausa', tipo: 'tempo' },
-        { key: 'percPausa', label: '% Pausa', tipo: 'percentual' }
+        { key: 'label', label: 'Hierarquia', tipo: 'label', group: 'label' },
+        { key: 'ligacoes', label: 'Ligações', tipo: 'numero', group: 'volume' },
+        { key: 'tempoEntreChamadas', label: 'Tempo entre Chamadas', tipo: 'tempo', group: 'tempos' },
+        { key: 'tempoLogado', label: 'Tempo Logado', tipo: 'tempo', group: 'tempos' },
+        { key: 'teo', label: 'TEO', tipo: 'tempo', group: 'tempos' },
+        { key: 'aderenciaLiquida', label: '% Aderência Líquida', tipo: 'percentual', group: 'aderencia' },
+        { key: 'tempoFalado', label: 'Tempo Falado', tipo: 'tempo', group: 'produtividade' },
+        { key: 'ttPausa', label: 'TT Pausa', tipo: 'tempo', group: 'pausas' },
+        { key: 'percPausa', label: '% Pausa', tipo: 'percentual', group: 'pausas' }
       ];
 
       const colunasCompleto = [
-        { key: 'label', label: 'Hierarquia', tipo: 'label' },
-        { key: 'ligacoes', label: 'Ligações', tipo: 'numero' },
-        { key: 'tempoEntreChamadas', label: 'T. Entre Chamadas', tipo: 'tempo' },
-        { key: 'tempoLogado', label: 'T. Logado', tipo: 'tempo' },
-        { key: 'teo', label: 'TEO', tipo: 'tempo' },
-        { key: 'percAderencia', label: '% Aderência', tipo: 'percentual' },
-        { key: 'aderenciaLiquida', label: 'Aderência Líquida', tipo: 'percentual' },
-        { key: 'tempoImprodutivo', label: 'T. Improdutivo', tipo: 'tempo' },
-        { key: 'tempoFalado', label: 'T. Falado', tipo: 'tempo' },
-        { key: 'idealTTF', label: 'Ideal TTF', tipo: 'tempo' },
-        { key: 'percTFalado', label: '% T Falado', tipo: 'percentual' },
-        { key: 'acw', label: 'ACW', tipo: 'tempo' },
-        { key: 'percACW', label: '% ACW', tipo: 'percentual' },
-        { key: 'tempoRingando', label: 'T Ringando', tipo: 'tempo' },
-        { key: 'agChamada', label: 'Ag. Chamada', tipo: 'tempo' },
-        { key: 'ttPausa', label: 'TT Pausa', tipo: 'tempo' },
-        { key: 'percPausa', label: '% Pausa', tipo: 'percentual' },
-        { key: 'pausaAlmoco', label: 'Pausa Almoço', tipo: 'tempo' },
-        { key: 'pausaNR17', label: 'Pausa NR17', tipo: 'tempo' }
+        { key: 'label', label: 'Hierarquia', tipo: 'label', group: 'label' },
+        { key: 'ligacoes', label: 'Ligações', tipo: 'numero', group: 'volume' },
+        { key: 'tempoEntreChamadas', label: 'Tempo entre Chamadas', tipo: 'tempo', group: 'tempos' },
+        { key: 'tempoLogado', label: 'Tempo Logado', tipo: 'tempo', group: 'tempos' },
+        { key: 'teo', label: 'TEO', tipo: 'tempo', group: 'tempos' },
+        { key: 'aderenciaLiquida', label: '% Aderência Líquida', tipo: 'percentual', group: 'aderencia' },
+        { key: 'tempoImprodutivo', label: 'Tempo Improdutivo', tipo: 'tempo', group: 'produtividade' },
+        { key: 'tempoFalado', label: 'Tempo Falado', tipo: 'tempo', group: 'produtividade' },
+        { key: 'idealTTF', label: 'Ideal Tempo Falado', tipo: 'tempo', group: 'produtividade' },
+        { key: 'percTFalado', label: '% Falado', tipo: 'percentual', group: 'produtividade' },
+        { key: 'acw', label: 'ACW', tipo: 'tempo', group: 'acw' },
+        { key: 'percACW', label: '% ACW', tipo: 'percentual', group: 'acw' },
+        { key: 'tempoRingando', label: 'T. Ringando', tipo: 'tempo', group: 'telefonia' },
+        { key: 'agChamada', label: 'Ag. Chamada', tipo: 'tempo', group: 'telefonia' },
+        { key: 'ttPausa', label: 'TT Pausa', tipo: 'tempo', group: 'pausas' },
+        { key: 'percPausa', label: '% Pausa', tipo: 'percentual', group: 'pausas' },
+        { key: 'pausaAlmoco', label: 'Pausa Almoço', tipo: 'tempo', group: 'pausas' },
+        { key: 'pausaNR17', label: 'Pausa NR17', tipo: 'tempo', group: 'pausas' }
       ];
 
       const colunas = modo === 'Completo' ? colunasCompleto : colunasExecutivo;
 
+      const classeGrupoColuna = group => {
+        if (group === 'tempos') return 'col-tempos';
+        if (group === 'aderencia') return 'col-aderencia';
+        if (group === 'produtividade') return 'col-produtividade';
+        if (group === 'acw') return 'col-acw';
+        if (group === 'telefonia') return 'col-telefonia';
+        if (group === 'pausas') return 'col-pausas';
+        return group === 'volume' ? 'col-volume' : '';
+      };
+
       if (modeBadge) {
         modeBadge.textContent = modo === 'Completo' ? 'Modo Completo' : 'Modo Executivo';
+      }
+
+      if (tabela) {
+        tabela.dataset.mode = modo === 'Completo' ? 'completo' : 'executivo';
       }
 
       if (thead) {
         thead.innerHTML = `
           <tr>
             ${colunas.map(col => `
-              <th class="${col.tipo === 'label' ? 'indicadores-name-cell' : 'indicadores-num'}">${col.label}</th>
+              <th class="${col.tipo === 'label' ? 'indicadores-name-cell' : 'indicadores-num'} ${classeGrupoColuna(col.group)}">${col.label}</th>
             `).join('')}
           </tr>
         `;
@@ -3811,6 +4671,13 @@
         if (tipo === 'tempo') return formatarTempoIndicadores(valor);
         if (tipo === 'percentual') return formatarPercentualIndicadores(valor);
         return valor;
+      };
+
+      const tipoMetaPorColuna = {
+        aderenciaLiquida: 'aderenciaLiquida',
+        percTFalado: 'tFalado',
+        percACW: 'acw',
+        percPausa: 'pausa'
       };
 
       const obterClasseNome = linha => {
@@ -3842,7 +4709,10 @@
               const toggleAttr = linha.hasChildren ? `data-toggle-key="${linha.key}"` : '';
               return `<td class="${obterClasseNome(linha)}" ${toggleAttr}>${toggle}<span class="hierarchy-label">${linha.label}</span></td>`;
             }
-            return `<td class="indicadores-num">${formatarValorHierarquia(linha.metricas[col.key], col.tipo)}</td>`;
+            if (col.tipo === 'percentual' && tipoMetaPorColuna[col.key]) {
+              return `<td class="indicadores-num ${classeGrupoColuna(col.group)}">${formatarPercentualMetaIndicador(tipoMetaPorColuna[col.key], linha.metricas[col.key])}</td>`;
+            }
+            return `<td class="indicadores-num ${classeGrupoColuna(col.group)}">${formatarValorHierarquia(linha.metricas[col.key], col.tipo)}</td>`;
           }).join('')}
         </tr>
       `).join('');
@@ -3859,6 +4729,8 @@
           toggleHierarquiaIndicadores(this.dataset.toggleKey);
         });
       });
+
+      garantirTopScrollHierarquiaIndicadores(section, tabelaWrap, tabela);
 
       console.log('DEBUG_HIERARQUIA_INDICADORES', {
         linhasRenderizadas: linhasVisiveis.length,
