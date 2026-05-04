@@ -2451,7 +2451,7 @@
       </div>
       <div class="nav-item nav-active" data-view-target="resumo-geral" onclick="trocarView('resumo-geral', this)" title="Resumo Geral"><svg viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg><span class="nav-label">Resumo Geral</span></div>
       <div class="nav-item" title="Tempos & Status"><svg viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/></svg><span class="nav-label">Tempos & Status</span></div>
-      <div class="nav-item" title="Produtividade"><svg viewBox="0 0 24 24"><path d="M16,6L18.29,8.29L13.41,13.17L9.41,9.17L2,16.59L3.41,18L9.41,12L13.41,16L19.71,9.71L22,12V6H16Z"/></svg><span class="nav-label">Produtividade</span></div>
+      <div class="nav-item" data-view-target="produtividade" onclick="trocarView('produtividade', this)" title="Produtividade"><svg viewBox="0 0 24 24"><path d="M16,6L18.29,8.29L13.41,13.17L9.41,9.17L2,16.59L3.41,18L9.41,12L13.41,16L19.71,9.71L22,12V6H16Z"/></svg><span class="nav-label">Produtividade</span></div>
       <div class="nav-item" data-view-target="indicadores-operador" onclick="trocarView('indicadores-operador', this)" title="Indicadores"><svg viewBox="0 0 24 24"><path d="M16,11V3H8V6H2V18H22V11H16M10,5H14V16H10V5M4,8H8V16H4V8M20,16H16V13H20V16Z"/></svg><span class="nav-label">Indicadores</span></div>
       <div class="nav-item" id="navAdminUsuarios" data-view-target="admin-usuarios" onclick="trocarView('admin-usuarios', this)" title="Administração de acessos" style="display:none;"><svg viewBox="0 0 24 24"><path d="M12,3L1,9L12,15L21,10.09V17H23V9L12,3M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z"/></svg><span class="nav-label">Acessos</span></div>
     </div>
@@ -2618,6 +2618,96 @@
           <div class="executive-empty">Carregando projeção executiva...</div>
         </div>
       </section>
+    </section>
+
+    <section class="app-view" id="view-produtividade">
+      <div class="indicadores-module">
+        <section class="indicadores-header">
+          <div class="indicadores-kicker">Novo Módulo</div>
+          <h1 class="indicadores-title">Produtividade</h1>
+          <p class="indicadores-subtitle">Visão hierárquica de produtividade por unidade, produto, supervisor e tempo de casa.</p>
+        </section>
+
+        <section class="indicadores-filter-bar">
+          <div class="filter-block">
+            <span class="filter-label">Data</span>
+            <div class="select-wrap">
+              <select class="select-box" id="fProdutData">
+                <option>Selecione</option>
+              </select>
+            </div>
+          </div>
+          <div class="filter-block">
+            <span class="filter-label">Unidade</span>
+            <div class="select-wrap">
+              <select class="select-box" id="fProdutUnidade">
+                <option>Todas</option>
+              </select>
+            </div>
+          </div>
+          <div class="filter-block">
+            <span class="filter-label">Produto</span>
+            <div class="select-wrap">
+              <select class="select-box" id="fProdutProduto">
+                <option>Todos</option>
+              </select>
+            </div>
+          </div>
+          <div class="filter-block">
+            <span class="filter-label">Supervisor</span>
+            <div class="select-wrap">
+              <select class="select-box" id="fProdutSupervisor">
+                <option>Todos</option>
+              </select>
+            </div>
+          </div>
+          <div class="filter-block">
+            <span class="filter-label">Tempo de Casa</span>
+            <div class="select-wrap">
+              <select class="select-box" id="fProdutTempoCasa">
+                <option>Todos</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <section class="indicadores-table-shell">
+          <div class="indicadores-table-head">
+            <div>
+              <h2 class="indicadores-table-title">Hierarquia de Produtividade</h2>
+              <p class="indicadores-table-copy">Estrutura preparada para cálculo e preenchimento dos indicadores de produtividade.</p>
+            </div>
+          </div>
+          <div class="indicadores-table-wrap">
+            <table class="indicadores-table">
+              <thead>
+                <tr>
+                  <th>Hierarquia</th>
+                  <th>% Aderência Escala</th>
+                  <th>Vendas Cadastradas</th>
+                  <th>Média Dia Vendas</th>
+                  <th>Vendas Aprovadas</th>
+                  <th>Média Dia Aprovadas</th>
+                  <th>% Aprov</th>
+                  <th>Total Logado</th>
+                  <th>Tempo Falado</th>
+                  <th>Pausas NR17</th>
+                  <th>Almoço</th>
+                  <th>Pausas Inaderentes</th>
+                  <th>Pausa Partic + Amb.</th>
+                  <th>Tempo Trabalhado</th>
+                  <th>Dif. Contratadas x Realizadas</th>
+                </tr>
+              </thead>
+              <tbody id="produtividadeHierarchyBody">
+                <tr>
+                  <td colspan="15">Tabela de produtividade aguardando processamento.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
     </section>
 
     <section class="app-view" id="view-indicadores-operador">
