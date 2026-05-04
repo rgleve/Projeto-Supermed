@@ -2245,6 +2245,154 @@
       font-size: 12px;
       font-weight: 700;
     }
+    .admin-access-shell { display: flex; flex-direction: column; gap: 16px; }
+    .admin-access-feedback { min-height: 18px; font-size: 12px; font-weight: 700; color: var(--text-muted); }
+    .admin-access-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .admin-card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .admin-access-button {
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(51,65,85,0.94), rgba(30,41,59,0.88));
+      color: #fff;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 11px 14px;
+      cursor: pointer;
+    }
+    .admin-access-button.is-light {
+      background: var(--pill-bg);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+    .admin-access-grid {
+      display: grid;
+      grid-template-columns: minmax(320px, 1.1fr) minmax(360px, 1fr);
+      gap: 16px;
+    }
+    .admin-access-search {
+      width: 100%;
+      border: 1px solid var(--border-strong);
+      border-radius: 14px;
+      background: var(--field-bg);
+      color: var(--text-main);
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 14px;
+      outline: none;
+      box-shadow: var(--field-shadow);
+    }
+    .admin-access-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+    .admin-access-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--pill-bg);
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 700;
+      border: 1px solid var(--border-color);
+    }
+    .admin-selected-user {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: var(--glass-bg);
+      border: 1px solid var(--border-strong);
+      color: var(--text-main);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .admin-editor-panel { display: none; }
+    .admin-editor-panel.is-open { display: block; }
+    .admin-form-input {
+      width: 100%;
+      border: 1px solid var(--border-strong);
+      border-radius: 14px;
+      background: var(--field-bg);
+      color: var(--text-main);
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 14px;
+      outline: none;
+      box-shadow: var(--field-shadow);
+    }
+    .admin-form-input[disabled] {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    .admin-users-table {
+      min-width: 1120px;
+      table-layout: auto;
+    }
+    .admin-users-table th,
+    .admin-users-table td {
+      white-space: nowrap;
+    }
+    .admin-users-table th:last-child,
+    .admin-users-table td:last-child {
+      position: sticky;
+      right: 0;
+      z-index: 2;
+      background: inherit;
+    }
+    .admin-col-cpf { width: 132px; }
+    .admin-col-cargo { width: 140px; }
+    .admin-col-perfil { width: 132px; }
+    .admin-col-status { width: 108px; }
+    .admin-col-login { width: 168px; }
+    .admin-col-actions { width: 320px; min-width: 320px; }
+    .admin-row-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: nowrap;
+    }
+    .admin-temp-password {
+      display: none;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(15, 118, 110, 0.24);
+      background: rgba(16, 185, 129, 0.08);
+      color: var(--text-main);
+    }
+    .admin-temp-password.is-open { display: block; }
+    .admin-temp-password-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .admin-temp-password-value {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+    }
+    .access-scope-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 14px;
+      border-radius: 16px;
+      background: var(--pill-bg);
+      border: 1px solid var(--border-strong);
+      color: var(--text-main);
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    @media (max-width: 1100px) {
+      .admin-access-grid { grid-template-columns: 1fr; }
+    }
     #portalShell {
       width: 100%;
       min-height: 100vh;
@@ -2305,6 +2453,7 @@
       <div class="nav-item" title="Tempos & Status"><svg viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/></svg><span class="nav-label">Tempos & Status</span></div>
       <div class="nav-item" title="Produtividade"><svg viewBox="0 0 24 24"><path d="M16,6L18.29,8.29L13.41,13.17L9.41,9.17L2,16.59L3.41,18L9.41,12L13.41,16L19.71,9.71L22,12V6H16Z"/></svg><span class="nav-label">Produtividade</span></div>
       <div class="nav-item" data-view-target="indicadores-operador" onclick="trocarView('indicadores-operador', this)" title="Indicadores"><svg viewBox="0 0 24 24"><path d="M16,11V3H8V6H2V18H22V11H16M10,5H14V16H10V5M4,8H8V16H4V8M20,16H16V13H20V16Z"/></svg><span class="nav-label">Indicadores</span></div>
+      <div class="nav-item" id="navAdminUsuarios" data-view-target="admin-usuarios" onclick="trocarView('admin-usuarios', this)" title="Administração de acessos" style="display:none;"><svg viewBox="0 0 24 24"><path d="M12,3L1,9L12,15L21,10.09V17H23V9L12,3M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z"/></svg><span class="nav-label">Acessos</span></div>
     </div>
     
     <div class="sidebar-footer">
@@ -2340,6 +2489,7 @@
           <span id="txtData"></span> <span id="txtHora" style="color:var(--accent-orange)"></span>
         </div>
         <div class="filter-group">
+          <div class="access-scope-chip" id="dashboardAccessLabel">Visão atual: carregando...</div>
           <div class="filter-block"><span class="filter-label">Produto</span><div class="select-wrap"><select class="select-box" id="fProd" onchange="processarDados()"></select></div></div>
           <div class="filter-block"><span class="filter-label">Site</span><div class="select-wrap"><select class="select-box" id="fSite" onchange="processarDados()"></select></div></div>
           <div class="filter-block"><span class="filter-label">Mês</span><div class="select-wrap"><select class="select-box" id="fMes" onchange="processarDados()"></select></div></div>
@@ -2625,6 +2775,207 @@
         </section>
       </div>
     </section>
+
+    <section class="app-view" id="view-admin-usuarios">
+      <div class="indicadores-module admin-access-shell">
+        <section class="indicadores-header">
+          <div class="indicadores-kicker">Autorização</div>
+          <h1 class="indicadores-title">Usuários e Acessos</h1>
+          <p class="indicadores-subtitle">Cadastre usuários do portal, atualize permissões operacionais e defina os escopos de visualização por site, produto e supervisor.</p>
+        </section>
+
+        <div class="admin-access-feedback" id="adminAccessFeedback"></div>
+        <div class="admin-access-meta" id="adminPerfisHint"></div>
+
+        <section class="indicadores-unit-compare-shell admin-editor-panel" id="adminUserEditorPanel">
+          <div class="indicadores-unit-compare-head">
+            <div>
+              <h2 class="indicadores-unit-compare-title" id="adminEditorTitle">Novo usuário</h2>
+              <p class="indicadores-unit-compare-copy" id="adminEditorSubtitle">Preencha os dados principais e, se quiser, já adicione escopos iniciais.</p>
+            </div>
+          </div>
+
+          <div class="indicadores-filter-bar">
+            <div class="filter-block">
+              <span class="filter-label">CPF</span>
+              <input class="admin-form-input" id="adminUserCpf" placeholder="00000000000" />
+            </div>
+            <div class="filter-block">
+              <span class="filter-label">Nome</span>
+              <input class="admin-form-input" id="adminUserNome" placeholder="Nome completo" />
+            </div>
+            <div class="filter-block">
+              <span class="filter-label">Email</span>
+              <input class="admin-form-input" id="adminUserEmail" placeholder="email@empresa.com" />
+            </div>
+            <div class="filter-block">
+              <span class="filter-label">Cargo</span>
+              <input class="admin-form-input" id="adminUserCargo" placeholder="Cargo" />
+            </div>
+            <div class="filter-block">
+              <span class="filter-label">Perfil</span>
+              <div class="select-wrap">
+                <select class="select-box" id="adminUserPerfil"></select>
+              </div>
+            </div>
+            <div class="filter-block">
+              <span class="filter-label">Status</span>
+              <div class="select-wrap">
+                <select class="select-box" id="adminUserStatus">
+                  <option value="ATIVO">ATIVO</option>
+                  <option value="INATIVO">INATIVO</option>
+                  <option value="BLOQUEADO">BLOQUEADO</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div id="adminInitialScopeBlock">
+            <div class="indicadores-unit-compare-head" style="margin-top:8px;">
+              <div>
+                <h3 class="indicadores-unit-compare-title" style="font-size:16px;">Escopo inicial opcional</h3>
+                <p class="indicadores-unit-compare-copy">Você pode já sair do cadastro com um ou mais escopos adicionados.</p>
+              </div>
+            </div>
+            <div class="indicadores-filter-bar">
+              <div class="filter-block">
+                <span class="filter-label">Site</span>
+                <div class="select-wrap">
+                  <select class="select-box" id="adminDraftEscopoSite" onchange="popularProdutosDraftAcessoPortal_()"></select>
+                </div>
+              </div>
+              <div class="filter-block">
+                <span class="filter-label">Produto</span>
+                <div class="select-wrap">
+                  <select class="select-box" id="adminDraftEscopoProduto" onchange="popularSupervisoresDraftAcessoPortal_()"></select>
+                </div>
+              </div>
+              <div class="filter-block">
+                <span class="filter-label">Supervisor</span>
+                <div class="select-wrap">
+                  <select class="select-box" id="adminDraftEscopoSupervisor"></select>
+                </div>
+              </div>
+              <div class="filter-block" style="align-self:flex-end;">
+                <button class="admin-access-button" type="button" onclick="adicionarEscopoDraftUsuarioPortal_()">Adicionar escopo</button>
+              </div>
+            </div>
+            <div class="indicadores-compare-table-wrap" style="margin-top:12px;">
+              <table class="indicadores-compare-table">
+                <thead>
+                  <tr>
+                    <th class="indicadores-compare-name">Site</th>
+                    <th class="indicadores-compare-num">Produto</th>
+                    <th class="indicadores-compare-num">Supervisor</th>
+                    <th class="indicadores-compare-num">Ação</th>
+                  </tr>
+                </thead>
+                <tbody id="adminDraftEscoposBody">
+                  <tr><td colspan="4" class="indicadores-compare-name">Nenhum escopo inicial adicionado.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="admin-temp-password" id="adminTempPasswordBox">
+            <div class="filter-label">Senha temporária</div>
+            <div class="admin-temp-password-row">
+              <div class="admin-temp-password-value" id="adminTempPasswordValue">-</div>
+              <button class="admin-access-button is-light" type="button" onclick="copiarSenhaTemporariaPortal_()">Copiar senha</button>
+            </div>
+          </div>
+
+          <div class="admin-access-actions" style="margin-top:12px;">
+            <button class="admin-access-button" id="adminUserSubmitButton" type="button" onclick="submeterEditorUsuarioPortal_()">Criar usuário</button>
+            <button class="admin-access-button is-light" type="button" onclick="fecharEditorUsuarioPortal_()">Cancelar</button>
+          </div>
+        </section>
+
+        <div class="admin-access-grid">
+          <section class="indicadores-unit-compare-shell">
+            <div class="admin-card-head">
+              <div>
+                <h2 class="indicadores-unit-compare-title">Usuários</h2>
+                <p class="indicadores-unit-compare-copy">Busque por nome ou CPF, edite cadastros e abra a gestão de acessos por usuário.</p>
+              </div>
+              <button class="admin-access-button" type="button" onclick="abrirNovoUsuarioPortal_()">Novo usuário</button>
+            </div>
+            <input class="admin-access-search" id="adminUserSearch" placeholder="Buscar por nome ou CPF" oninput="filtrarUsuariosAcessoPortal_()" />
+            <div class="indicadores-compare-table-wrap" style="margin-top:12px;">
+              <table class="indicadores-compare-table admin-users-table">
+                <thead>
+                  <tr>
+                    <th class="indicadores-compare-name">Nome</th>
+                    <th class="indicadores-compare-num admin-col-cpf">CPF</th>
+                    <th class="indicadores-compare-num admin-col-cargo">Cargo</th>
+                    <th class="indicadores-compare-num admin-col-perfil">Perfil</th>
+                    <th class="indicadores-compare-num admin-col-status">Status</th>
+                    <th class="indicadores-compare-num admin-col-login">Último Login</th>
+                    <th class="indicadores-compare-num admin-col-actions">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="adminUsersBody">
+                  <tr><td colspan="7" class="indicadores-compare-name">Carregando usuários...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="indicadores-unit-compare-shell">
+            <div class="indicadores-unit-compare-head">
+              <div>
+                <h2 class="indicadores-unit-compare-title">Escopo de acesso</h2>
+                <p class="indicadores-unit-compare-copy">A opção TODOS é hierárquica e respeita a combinação escolhida.</p>
+              </div>
+            </div>
+
+            <div class="admin-selected-user" id="adminSelectedUserBox">Nenhum usuário selecionado.</div>
+
+            <div class="indicadores-filter-bar" style="margin-top:12px;">
+              <div class="filter-block">
+                <span class="filter-label">Site</span>
+                <div class="select-wrap">
+                  <select class="select-box" id="adminEscopoSite" onchange="popularProdutosAcessoPortal_()"></select>
+                </div>
+              </div>
+              <div class="filter-block">
+                <span class="filter-label">Produto</span>
+                <div class="select-wrap">
+                  <select class="select-box" id="adminEscopoProduto" onchange="popularSupervisoresAcessoPortal_()"></select>
+                </div>
+              </div>
+              <div class="filter-block">
+                <span class="filter-label">Supervisor</span>
+                <div class="select-wrap">
+                  <select class="select-box" id="adminEscopoSupervisor"></select>
+                </div>
+              </div>
+            </div>
+
+            <div class="admin-access-actions">
+              <button class="admin-access-button" type="button" onclick="adicionarEscopoAcessoPortal_()">Adicionar escopo</button>
+              <button class="admin-access-button" type="button" onclick="salvarEscoposUsuarioPortalFront_()">Salvar escopos</button>
+            </div>
+
+            <div class="indicadores-compare-table-wrap" style="margin-top:12px;">
+              <table class="indicadores-compare-table">
+                <thead>
+                  <tr>
+                    <th class="indicadores-compare-name">Site</th>
+                    <th class="indicadores-compare-num">Produto</th>
+                    <th class="indicadores-compare-num">Supervisor</th>
+                    <th class="indicadores-compare-num">Ação</th>
+                  </tr>
+                </thead>
+                <tbody id="adminEscoposBody">
+                  <tr><td colspan="4" class="indicadores-compare-name">Nenhum escopo carregado.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
   </div>
   </div>
 
@@ -2690,6 +3041,10 @@
       document.querySelectorAll('.nav-item[data-view-target]').forEach(item => {
         item.classList.toggle('nav-active', item === navEl);
       });
+
+      if (nomeView === 'admin-usuarios') {
+        inicializarViewAcessoPortal_();
+      }
     }
 
     function atualizarRelogio() {
@@ -3276,6 +3631,21 @@
 
     let authSession = null;
     let dashboardCarregado = false;
+    let dashboardAccessContext = null;
+    let accessMatrixState = {
+      perfis: [],
+      dimensoes: null,
+      dimensoesCarregando: false,
+      dimensoesCallbacksPendentes: [],
+      usuarios: [],
+      usuariosFiltrados: [],
+      escopos: [],
+      usuarioSelecionado: null,
+      editorMode: null,
+      editorUserId: '',
+      editorScopesDraft: [],
+      senhaTemporariaAtual: ''
+    };
 
     function obterTokenSessaoPortal() {
       return sessionStorage.getItem('portal_supermed_token') || '';
@@ -3313,6 +3683,8 @@
         if (userRole) userRole.textContent = user.cargo || user.perfil || '';
         if (avatar) avatar.textContent = String(user.nome || 'U').trim().charAt(0).toUpperCase();
       }
+      aplicarPermissoesPortalFront_();
+      renderDashboardAccessLabel_();
     }
 
     function definirFeedbackAuth(id, mensagem, isErro) {
@@ -3322,9 +3694,697 @@
       el.style.color = isErro ? '#b9382f' : '#18794e';
     }
 
+    function renderDashboardAccessLabel_() {
+      const el = document.getElementById('dashboardAccessLabel');
+      if (!el) return;
+      el.textContent = dashboardAccessContext && dashboardAccessContext.label
+        ? dashboardAccessContext.label
+        : 'Visão atual: não identificada';
+    }
+
+    function carregarContextoAcessoDashboard_() {
+      dashboardAccessContext = null;
+      const el = document.getElementById('dashboardAccessLabel');
+      if (el) el.textContent = 'Visão atual: carregando...';
+
+      google.script.run
+        .withSuccessHandler(res => {
+          if (!res || !res.ok) {
+            dashboardAccessContext = null;
+            renderDashboardAccessLabel_();
+            return;
+          }
+          dashboardAccessContext = res;
+          renderDashboardAccessLabel_();
+        })
+        .withFailureHandler(() => {
+          dashboardAccessContext = null;
+          renderDashboardAccessLabel_();
+        })
+        .obterContextoAcessoUsuarioPortal(obterTokenSessaoPortal());
+    }
+
+    function escapeHtmlPortal_(valor) {
+      return String(valor == null ? '' : valor)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function definirFeedbackAcessoPortal_(mensagem, isErro) {
+      const el = document.getElementById('adminAccessFeedback');
+      if (!el) return;
+      el.textContent = mensagem || '';
+      el.style.color = isErro ? '#b9382f' : 'var(--text-muted)';
+    }
+
+    function resetarEstadoAcessoPortal_() {
+      accessMatrixState = {
+        perfis: [],
+        dimensoes: null,
+        dimensoesCarregando: false,
+        dimensoesCallbacksPendentes: [],
+        usuarios: [],
+        usuariosFiltrados: [],
+        escopos: [],
+        usuarioSelecionado: null,
+        editorMode: null,
+        editorUserId: '',
+        editorScopesDraft: [],
+        senhaTemporariaAtual: ''
+      };
+    }
+
+    function temPermissaoPortal_(chave) {
+      return !!(authSession && authSession.permissions && authSession.permissions[chave]);
+    }
+
+    function aplicarPermissoesPortalFront_() {
+      const navAdmin = document.getElementById('navAdminUsuarios');
+      const canViewUsers =
+        String(authSession && authSession.user && authSession.user.perfil || '').trim().toUpperCase() === 'ADMIN_MASTER' &&
+        temPermissaoPortal_('pode_ver_usuarios');
+      if (navAdmin) navAdmin.style.display = canViewUsers ? 'flex' : 'none';
+
+      const adminView = document.getElementById('view-admin-usuarios');
+      if (adminView && adminView.classList.contains('is-active') && !canViewUsers) {
+        const navResumo = document.querySelector('.nav-item[data-view-target="resumo-geral"]');
+        if (navResumo) trocarView('resumo-geral', navResumo);
+      }
+    }
+
+    function formatarCpfAcessoPortal_(cpf) {
+      const digits = String(cpf || '').replace(/\D/g, '');
+      if (!digits) return '-';
+      const padded = digits.padStart(11, '0').slice(-11);
+      return padded.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    }
+
+    function formatarUltimoLoginAcessoPortal_(valor) {
+      if (!valor) return '-';
+      const data = new Date(valor);
+      if (Number.isNaN(data.getTime())) return '-';
+      return data.toLocaleString('pt-BR');
+    }
+
+    function popularSelectAcessoPortal_(selectId, valores) {
+      const select = document.getElementById(selectId);
+      if (!select) return;
+      select.innerHTML = '';
+      (Array.isArray(valores) ? valores : ['TODOS']).forEach(valor => select.add(new Option(valor, valor)));
+    }
+
+    function popularPerfisFormularioUsuarioPortal_() {
+      const select = document.getElementById('adminUserPerfil');
+      if (!select) return;
+      select.innerHTML = '';
+      (accessMatrixState.perfis || []).forEach(perfil => {
+        select.add(new Option(perfil.perfil, perfil.perfil));
+      });
+    }
+
+    function popularProdutosAcessoPortal_() {
+      const site = document.getElementById('adminEscopoSite') ? document.getElementById('adminEscopoSite').value : 'TODOS';
+      const mapa = accessMatrixState.dimensoes ? accessMatrixState.dimensoes.produtosPorSite : null;
+      popularSelectAcessoPortal_('adminEscopoProduto', mapa && mapa[site] ? mapa[site] : ['TODOS']);
+      popularSupervisoresAcessoPortal_();
+    }
+
+    function popularSupervisoresAcessoPortal_() {
+      const site = document.getElementById('adminEscopoSite') ? document.getElementById('adminEscopoSite').value : 'TODOS';
+      const produto = document.getElementById('adminEscopoProduto') ? document.getElementById('adminEscopoProduto').value : 'TODOS';
+      const mapa = accessMatrixState.dimensoes ? accessMatrixState.dimensoes.supervisoresPorSiteProduto : null;
+      const chavePreferida = `${site}__${produto}`;
+      const chaveSite = `${site}__TODOS`;
+      const valores = mapa && (mapa[chavePreferida] || mapa[chaveSite] || mapa['TODOS__TODOS'])
+        ? (mapa[chavePreferida] || mapa[chaveSite] || mapa['TODOS__TODOS'])
+        : ['TODOS'];
+      popularSelectAcessoPortal_('adminEscopoSupervisor', valores);
+    }
+
+    function popularProdutosDraftAcessoPortal_() {
+      const site = document.getElementById('adminDraftEscopoSite') ? document.getElementById('adminDraftEscopoSite').value : 'TODOS';
+      const mapa = accessMatrixState.dimensoes ? accessMatrixState.dimensoes.produtosPorSite : null;
+      popularSelectAcessoPortal_('adminDraftEscopoProduto', mapa && mapa[site] ? mapa[site] : ['TODOS']);
+      popularSupervisoresDraftAcessoPortal_();
+    }
+
+    function popularSupervisoresDraftAcessoPortal_() {
+      const site = document.getElementById('adminDraftEscopoSite') ? document.getElementById('adminDraftEscopoSite').value : 'TODOS';
+      const produto = document.getElementById('adminDraftEscopoProduto') ? document.getElementById('adminDraftEscopoProduto').value : 'TODOS';
+      const mapa = accessMatrixState.dimensoes ? accessMatrixState.dimensoes.supervisoresPorSiteProduto : null;
+      const chavePreferida = `${site}__${produto}`;
+      const chaveSite = `${site}__TODOS`;
+      const valores = mapa && (mapa[chavePreferida] || mapa[chaveSite] || mapa['TODOS__TODOS'])
+        ? (mapa[chavePreferida] || mapa[chaveSite] || mapa['TODOS__TODOS'])
+        : ['TODOS'];
+      popularSelectAcessoPortal_('adminDraftEscopoSupervisor', valores);
+    }
+
+    function garantirDimensoesAcessoCarregadas_(callback) {
+      const done = typeof callback === 'function' ? callback : function() {};
+
+      if (accessMatrixState.dimensoes) {
+        done();
+        return;
+      }
+
+      accessMatrixState.dimensoesCallbacksPendentes.push(done);
+      if (accessMatrixState.dimensoesCarregando) return;
+
+      accessMatrixState.dimensoesCarregando = true;
+      definirFeedbackAcessoPortal_('Carregando sites, produtos e supervisores...', false);
+
+      google.script.run
+        .withSuccessHandler(dimRes => {
+          accessMatrixState.dimensoesCarregando = false;
+          if (!dimRes || !dimRes.ok) {
+            accessMatrixState.dimensoesCallbacksPendentes = [];
+            definirFeedbackAcessoPortal_(dimRes && dimRes.message ? dimRes.message : 'Não foi possível carregar as dimensões.', true);
+            return;
+          }
+
+          accessMatrixState.dimensoes = dimRes.dimensoes || null;
+          popularSelectAcessoPortal_('adminEscopoSite', accessMatrixState.dimensoes ? accessMatrixState.dimensoes.sites : ['TODOS']);
+          popularProdutosAcessoPortal_();
+          popularSelectAcessoPortal_('adminDraftEscopoSite', accessMatrixState.dimensoes ? accessMatrixState.dimensoes.sites : ['TODOS']);
+          popularProdutosDraftAcessoPortal_();
+
+          const callbacks = [...accessMatrixState.dimensoesCallbacksPendentes];
+          accessMatrixState.dimensoesCallbacksPendentes = [];
+          callbacks.forEach(fn => fn());
+          definirFeedbackAcessoPortal_('', false);
+        })
+        .withFailureHandler(err => {
+          accessMatrixState.dimensoesCarregando = false;
+          accessMatrixState.dimensoesCallbacksPendentes = [];
+          definirFeedbackAcessoPortal_(err && err.message ? err.message : 'Erro ao carregar dimensões.', true);
+        })
+        .listarDimensoesAcessoPortal(obterTokenSessaoPortal());
+    }
+
+    function limparFormularioUsuarioPortal_() {
+      document.getElementById('adminUserCpf').value = '';
+      document.getElementById('adminUserNome').value = '';
+      document.getElementById('adminUserEmail').value = '';
+      document.getElementById('adminUserCargo').value = '';
+      document.getElementById('adminUserStatus').value = 'ATIVO';
+      accessMatrixState.editorScopesDraft = [];
+      renderEscoposDraftUsuarioPortal_();
+      ocultarSenhaTemporariaPortal_();
+    }
+
+    function mostrarSenhaTemporariaPortal_(senha) {
+      accessMatrixState.senhaTemporariaAtual = senha || '';
+      const box = document.getElementById('adminTempPasswordBox');
+      const value = document.getElementById('adminTempPasswordValue');
+      if (!box || !value || !senha) return;
+      value.textContent = senha;
+      box.classList.add('is-open');
+    }
+
+    function ocultarSenhaTemporariaPortal_() {
+      accessMatrixState.senhaTemporariaAtual = '';
+      const box = document.getElementById('adminTempPasswordBox');
+      const value = document.getElementById('adminTempPasswordValue');
+      if (value) value.textContent = '-';
+      if (box) box.classList.remove('is-open');
+    }
+
+    function copiarSenhaTemporariaPortal_() {
+      if (!accessMatrixState.senhaTemporariaAtual) return;
+      navigator.clipboard.writeText(accessMatrixState.senhaTemporariaAtual)
+        .then(() => definirFeedbackAcessoPortal_('Senha temporária copiada.', false))
+        .catch(() => definirFeedbackAcessoPortal_('Não foi possível copiar a senha.', true));
+    }
+
+    function renderEditorUsuarioPortal_() {
+      const panel = document.getElementById('adminUserEditorPanel');
+      const title = document.getElementById('adminEditorTitle');
+      const subtitle = document.getElementById('adminEditorSubtitle');
+      const submit = document.getElementById('adminUserSubmitButton');
+      const cpf = document.getElementById('adminUserCpf');
+      const initialScope = document.getElementById('adminInitialScopeBlock');
+      if (!panel || !title || !subtitle || !submit || !cpf || !initialScope) return;
+
+      if (!accessMatrixState.editorMode) {
+        panel.classList.remove('is-open');
+        return;
+      }
+
+      panel.classList.add('is-open');
+      if (accessMatrixState.editorMode === 'create') {
+        title.textContent = 'Novo usuário';
+        subtitle.textContent = 'Cadastre um novo usuário do portal e, se quiser, já adicione escopos iniciais.';
+        submit.textContent = 'Criar usuário';
+        cpf.disabled = false;
+        initialScope.style.display = 'block';
+      } else {
+        title.textContent = 'Editar usuário';
+        subtitle.textContent = 'Atualize os dados cadastrais. O CPF permanece bloqueado nesta fase.';
+        submit.textContent = 'Salvar alterações';
+        cpf.disabled = true;
+        initialScope.style.display = 'none';
+      }
+    }
+
+    function abrirNovoUsuarioPortal_() {
+      accessMatrixState.editorMode = 'create';
+      accessMatrixState.editorUserId = '';
+      limparFormularioUsuarioPortal_();
+      popularPerfisFormularioUsuarioPortal_();
+      renderEditorUsuarioPortal_();
+      garantirDimensoesAcessoCarregadas_(() => {
+        popularSelectAcessoPortal_('adminDraftEscopoSite', accessMatrixState.dimensoes ? accessMatrixState.dimensoes.sites : ['TODOS']);
+        popularProdutosDraftAcessoPortal_();
+      });
+    }
+
+    function abrirEdicaoUsuarioPortal_(usuarioId) {
+      const usuario = (accessMatrixState.usuarios || []).find(item => item.usuario_id === usuarioId);
+      if (!usuario) {
+        definirFeedbackAcessoPortal_('Usuário não encontrado.', true);
+        return;
+      }
+
+      accessMatrixState.editorMode = 'edit';
+      accessMatrixState.editorUserId = usuarioId;
+      accessMatrixState.editorScopesDraft = [];
+      popularPerfisFormularioUsuarioPortal_();
+      document.getElementById('adminUserCpf').value = formatarCpfAcessoPortal_(usuario.cpf) === '-' ? '' : usuario.cpf;
+      document.getElementById('adminUserNome').value = usuario.nome || '';
+      document.getElementById('adminUserEmail').value = usuario.email || '';
+      document.getElementById('adminUserCargo').value = usuario.cargo || '';
+      document.getElementById('adminUserPerfil').value = usuario.perfil || '';
+      document.getElementById('adminUserStatus').value = usuario.status || 'ATIVO';
+      ocultarSenhaTemporariaPortal_();
+      renderEditorUsuarioPortal_();
+    }
+
+    function fecharEditorUsuarioPortal_() {
+      accessMatrixState.editorMode = null;
+      accessMatrixState.editorUserId = '';
+      accessMatrixState.editorScopesDraft = [];
+      renderEditorUsuarioPortal_();
+      ocultarSenhaTemporariaPortal_();
+    }
+
+    function coletarPayloadUsuarioPortal_() {
+      return {
+        cpf: document.getElementById('adminUserCpf').value,
+        nome: document.getElementById('adminUserNome').value,
+        email: document.getElementById('adminUserEmail').value,
+        cargo: document.getElementById('adminUserCargo').value,
+        perfil: document.getElementById('adminUserPerfil').value,
+        status: document.getElementById('adminUserStatus').value
+      };
+    }
+
+    function renderEscoposDraftUsuarioPortal_() {
+      const tbody = document.getElementById('adminDraftEscoposBody');
+      if (!tbody) return;
+      if (!accessMatrixState.editorScopesDraft.length) {
+        tbody.innerHTML = '<tr><td colspan="4" class="indicadores-compare-name">Nenhum escopo inicial adicionado.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = accessMatrixState.editorScopesDraft.map((escopo, index) => `
+        <tr>
+          <td class="indicadores-compare-name">${escapeHtmlPortal_(escopo.site)}</td>
+          <td class="indicadores-compare-num">${escapeHtmlPortal_(escopo.produto)}</td>
+          <td class="indicadores-compare-num">${escapeHtmlPortal_(escopo.supervisor)}</td>
+          <td class="indicadores-compare-num"><button class="admin-access-button is-light" type="button" onclick="removerEscopoDraftUsuarioPortal_(${index})">Remover</button></td>
+        </tr>
+      `).join('');
+    }
+
+    function adicionarEscopoDraftUsuarioPortal_() {
+      const site = document.getElementById('adminDraftEscopoSite').value;
+      const produto = document.getElementById('adminDraftEscopoProduto').value;
+      const supervisor = document.getElementById('adminDraftEscopoSupervisor').value;
+      const chave = `${site}__${produto}__${supervisor}`;
+      if (accessMatrixState.editorScopesDraft.some(item => `${item.site}__${item.produto}__${item.supervisor}` === chave)) {
+        definirFeedbackAcessoPortal_('Esse escopo inicial já foi adicionado.', true);
+        return;
+      }
+      accessMatrixState.editorScopesDraft.push({ site, produto, supervisor });
+      renderEscoposDraftUsuarioPortal_();
+      definirFeedbackAcessoPortal_('', false);
+    }
+
+    function removerEscopoDraftUsuarioPortal_(index) {
+      accessMatrixState.editorScopesDraft.splice(index, 1);
+      renderEscoposDraftUsuarioPortal_();
+    }
+
+    function carregarUsuariosPortal_(selectedUserId) {
+      google.script.run
+        .withSuccessHandler(usersRes => {
+          if (!usersRes || !usersRes.ok) {
+            definirFeedbackAcessoPortal_(usersRes && usersRes.message ? usersRes.message : 'Não foi possível carregar os usuários.', true);
+            return;
+          }
+          accessMatrixState.usuarios = usersRes.usuarios || [];
+          accessMatrixState.usuariosFiltrados = [...accessMatrixState.usuarios];
+          renderUsuariosAcessoPortal_();
+          if (selectedUserId) {
+            selecionarUsuarioAcessoPortal_(selectedUserId);
+          } else {
+            definirFeedbackAcessoPortal_('', false);
+          }
+        })
+        .withFailureHandler(err => {
+          definirFeedbackAcessoPortal_(err && err.message ? err.message : 'Erro ao carregar usuários.', true);
+        })
+        .listarUsuariosPortal(obterTokenSessaoPortal());
+    }
+
+    function renderPerfisAcessoPortal_() {
+      const wrap = document.getElementById('adminPerfisHint');
+      if (!wrap) return;
+      wrap.innerHTML = (accessMatrixState.perfis || []).map(perfil => {
+        const partes = [];
+        if (perfil.pode_ver_dashboard) partes.push('dashboard');
+        if (perfil.pode_ver_todos_os_dados) partes.push('todos os dados');
+        if (perfil.pode_ver_usuarios) partes.push('usuários');
+        return `<span class="admin-access-chip">${escapeHtmlPortal_(perfil.perfil)}: ${escapeHtmlPortal_(partes.join(', ') || 'sem acesso')}</span>`;
+      }).join('');
+    }
+
+    function renderUsuariosAcessoPortal_() {
+      const tbody = document.getElementById('adminUsersBody');
+      if (!tbody) return;
+
+      const usuarios = accessMatrixState.usuariosFiltrados || [];
+      if (!usuarios.length) {
+        tbody.innerHTML = '<tr><td colspan="7" class="indicadores-compare-name">Nenhum usuário encontrado.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = usuarios.map(usuario => {
+        const selecionado = accessMatrixState.usuarioSelecionado && accessMatrixState.usuarioSelecionado.usuario_id === usuario.usuario_id;
+        const labelStatus = String(usuario.status || '').trim().toUpperCase() === 'ATIVO' ? 'Inativar' : 'Ativar';
+        const proximoStatus = String(usuario.status || '').trim().toUpperCase() === 'ATIVO' ? 'INATIVO' : 'ATIVO';
+        return `
+          <tr class="${selecionado ? 'is-open' : ''}">
+            <td class="indicadores-compare-name">${escapeHtmlPortal_(usuario.nome || '-')}</td>
+            <td class="indicadores-compare-num">${escapeHtmlPortal_(formatarCpfAcessoPortal_(usuario.cpf))}</td>
+            <td class="indicadores-compare-num">${escapeHtmlPortal_(usuario.cargo || '-')}</td>
+            <td class="indicadores-compare-num">${escapeHtmlPortal_(usuario.perfil || '-')}</td>
+            <td class="indicadores-compare-num">${escapeHtmlPortal_(usuario.status || '-')}</td>
+            <td class="indicadores-compare-num">${escapeHtmlPortal_(formatarUltimoLoginAcessoPortal_(usuario.ultimo_login_em))}</td>
+            <td class="indicadores-compare-num">
+              <div class="admin-row-actions">
+                <button class="admin-access-button is-light" type="button" onclick="abrirEdicaoUsuarioPortal_('${escapeHtmlPortal_(usuario.usuario_id)}')">Editar</button>
+                <button class="admin-access-button is-light" type="button" onclick="selecionarUsuarioAcessoPortal_('${escapeHtmlPortal_(usuario.usuario_id)}')">Acessos</button>
+                <button class="admin-access-button is-light" type="button" onclick="resetarSenhaUsuarioPortalFront_('${escapeHtmlPortal_(usuario.usuario_id)}')">Resetar senha</button>
+                <button class="admin-access-button is-light" type="button" onclick="alterarStatusUsuarioPortalFront_('${escapeHtmlPortal_(usuario.usuario_id)}', '${proximoStatus}')">${labelStatus}</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filtrarUsuariosAcessoPortal_() {
+      const termo = String(document.getElementById('adminUserSearch') ? document.getElementById('adminUserSearch').value : '').trim().toLowerCase();
+      const base = accessMatrixState.usuarios || [];
+      if (!termo) {
+        accessMatrixState.usuariosFiltrados = [...base];
+      } else {
+        accessMatrixState.usuariosFiltrados = base.filter(usuario => {
+          const nome = String(usuario.nome || '').toLowerCase();
+          const cpf = String(usuario.cpf || '').replace(/\D/g, '');
+          return nome.includes(termo) || cpf.includes(termo.replace(/\D/g, ''));
+        });
+      }
+      renderUsuariosAcessoPortal_();
+    }
+
+    function renderUsuarioSelecionadoAcessoPortal_() {
+      const box = document.getElementById('adminSelectedUserBox');
+      if (!box) return;
+      if (!accessMatrixState.usuarioSelecionado) {
+        box.textContent = 'Nenhum usuário selecionado.';
+        return;
+      }
+      const usuario = accessMatrixState.usuarioSelecionado;
+      box.textContent = `${usuario.nome} | ${formatarCpfAcessoPortal_(usuario.cpf)} | ${usuario.cargo || '-'} | ${usuario.perfil || '-'}`;
+    }
+
+    function renderEscoposUsuarioPortal_() {
+      const tbody = document.getElementById('adminEscoposBody');
+      if (!tbody) return;
+
+      if (!accessMatrixState.escopos.length) {
+        tbody.innerHTML = '<tr><td colspan="4" class="indicadores-compare-name">Nenhum escopo carregado.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = accessMatrixState.escopos.map((escopo, index) => `
+        <tr>
+          <td class="indicadores-compare-name">${escapeHtmlPortal_(escopo.site)}</td>
+          <td class="indicadores-compare-num">${escapeHtmlPortal_(escopo.produto)}</td>
+          <td class="indicadores-compare-num">${escapeHtmlPortal_(escopo.supervisor)}</td>
+          <td class="indicadores-compare-num"><button class="admin-access-button is-light" type="button" onclick="removerEscopoAcessoPortal_(${index})">Remover</button></td>
+        </tr>
+      `).join('');
+    }
+
+    function inicializarViewAcessoPortal_() {
+      if (!temPermissaoPortal_('pode_ver_usuarios')) return;
+      if (accessMatrixState.perfis.length && accessMatrixState.usuarios.length) return;
+
+      definirFeedbackAcessoPortal_('Carregando usuários...', false);
+
+      if (!accessMatrixState.perfis.length) {
+        google.script.run
+          .withSuccessHandler(perfisRes => {
+            if (!perfisRes || !perfisRes.ok) {
+              definirFeedbackAcessoPortal_(perfisRes && perfisRes.message ? perfisRes.message : 'Não foi possível carregar os perfis.', true);
+              return;
+            }
+            accessMatrixState.perfis = perfisRes.perfis || [];
+            renderPerfisAcessoPortal_();
+            popularPerfisFormularioUsuarioPortal_();
+          })
+          .withFailureHandler(err => {
+            definirFeedbackAcessoPortal_(err && err.message ? err.message : 'Erro ao carregar perfis.', true);
+          })
+          .listarPerfisAcessoPortal(obterTokenSessaoPortal());
+      }
+
+      if (!accessMatrixState.usuarios.length) {
+        carregarUsuariosPortal_();
+      }
+
+      renderUsuarioSelecionadoAcessoPortal_();
+    }
+
+    function selecionarUsuarioAcessoPortal_(usuarioId) {
+      const usuario = (accessMatrixState.usuarios || []).find(item => item.usuario_id === usuarioId);
+      if (!usuario) {
+        definirFeedbackAcessoPortal_('Usuário não encontrado.', true);
+        return;
+      }
+
+      accessMatrixState.usuarioSelecionado = usuario;
+      renderUsuarioSelecionadoAcessoPortal_();
+      renderUsuariosAcessoPortal_();
+      garantirDimensoesAcessoCarregadas_(() => {
+        definirFeedbackAcessoPortal_('Carregando escopos do usuário...', false);
+
+        google.script.run
+          .withSuccessHandler(res => {
+            if (!res || !res.ok) {
+              definirFeedbackAcessoPortal_(res && res.message ? res.message : 'Não foi possível carregar os escopos.', true);
+              return;
+            }
+            accessMatrixState.escopos = Array.isArray(res.escopos) ? res.escopos.map(item => ({
+              site: item.site || 'TODOS',
+              produto: item.produto || 'TODOS',
+              supervisor: item.supervisor || 'TODOS'
+            })) : [];
+            renderEscoposUsuarioPortal_();
+            definirFeedbackAcessoPortal_('', false);
+          })
+          .withFailureHandler(err => {
+            definirFeedbackAcessoPortal_(err && err.message ? err.message : 'Erro ao carregar os escopos.', true);
+          })
+          .listarEscoposUsuarioPortal(obterTokenSessaoPortal(), usuarioId);
+      });
+    }
+
+    function adicionarEscopoAcessoPortal_() {
+      if (!accessMatrixState.usuarioSelecionado) {
+        definirFeedbackAcessoPortal_('Selecione um usuário antes de adicionar escopos.', true);
+        return;
+      }
+
+      const site = document.getElementById('adminEscopoSite') ? document.getElementById('adminEscopoSite').value : 'TODOS';
+      const produto = document.getElementById('adminEscopoProduto') ? document.getElementById('adminEscopoProduto').value : 'TODOS';
+      const supervisor = document.getElementById('adminEscopoSupervisor') ? document.getElementById('adminEscopoSupervisor').value : 'TODOS';
+      const chave = `${site}__${produto}__${supervisor}`;
+      const jaExiste = accessMatrixState.escopos.some(item => `${item.site}__${item.produto}__${item.supervisor}` === chave);
+      if (jaExiste) {
+        definirFeedbackAcessoPortal_('Esse escopo já foi adicionado.', true);
+        return;
+      }
+
+      accessMatrixState.escopos.push({ site, produto, supervisor });
+      renderEscoposUsuarioPortal_();
+      definirFeedbackAcessoPortal_('', false);
+    }
+
+    function removerEscopoAcessoPortal_(index) {
+      accessMatrixState.escopos.splice(index, 1);
+      renderEscoposUsuarioPortal_();
+    }
+
+    function salvarEscoposUsuarioPortalFront_() {
+      if (!accessMatrixState.usuarioSelecionado) {
+        definirFeedbackAcessoPortal_('Selecione um usuário antes de salvar.', true);
+        return;
+      }
+
+      definirFeedbackAcessoPortal_('Salvando escopos...', false);
+      google.script.run
+        .withSuccessHandler(res => {
+          if (!res || !res.ok) {
+            definirFeedbackAcessoPortal_(res && res.message ? res.message : 'Não foi possível salvar os escopos.', true);
+            return;
+          }
+          accessMatrixState.escopos = Array.isArray(res.escopos) ? res.escopos.map(item => ({
+            site: item.site || 'TODOS',
+            produto: item.produto || 'TODOS',
+            supervisor: item.supervisor || 'TODOS'
+          })) : [];
+          renderEscoposUsuarioPortal_();
+          definirFeedbackAcessoPortal_('Escopos salvos com sucesso.', false);
+        })
+        .withFailureHandler(err => {
+          definirFeedbackAcessoPortal_(err && err.message ? err.message : 'Erro ao salvar os escopos.', true);
+        })
+        .salvarEscoposUsuarioPortal(obterTokenSessaoPortal(), accessMatrixState.usuarioSelecionado.usuario_id, accessMatrixState.escopos);
+    }
+
+    function submeterEditorUsuarioPortal_() {
+      if (accessMatrixState.editorMode === 'create') {
+        criarUsuarioPortalFront_();
+        return;
+      }
+      if (accessMatrixState.editorMode === 'edit') {
+        salvarEdicaoUsuarioPortalFront_();
+      }
+    }
+
+    function criarUsuarioPortalFront_() {
+      definirFeedbackAcessoPortal_('Criando usuário...', false);
+      google.script.run
+        .withSuccessHandler(res => {
+          if (!res || !res.ok) {
+            definirFeedbackAcessoPortal_(res && res.message ? res.message : 'Não foi possível criar o usuário.', true);
+            return;
+          }
+
+          const finalizarCriacao = () => {
+            mostrarSenhaTemporariaPortal_(res.senhaTemporaria);
+            definirFeedbackAcessoPortal_('Usuário criado com sucesso.', false);
+            carregarUsuariosPortal_(res.user.usuario_id);
+            accessMatrixState.usuarioSelecionado = res.user;
+            renderUsuarioSelecionadoAcessoPortal_();
+          };
+
+          if (accessMatrixState.editorScopesDraft.length) {
+            google.script.run
+              .withSuccessHandler(scopeRes => {
+                if (!scopeRes || !scopeRes.ok) {
+                  definirFeedbackAcessoPortal_(scopeRes && scopeRes.message ? scopeRes.message : 'Usuário criado, mas os escopos iniciais falharam.', true);
+                  mostrarSenhaTemporariaPortal_(res.senhaTemporaria);
+                  carregarUsuariosPortal_(res.user.usuario_id);
+                  return;
+                }
+                finalizarCriacao();
+              })
+              .withFailureHandler(err => {
+                definirFeedbackAcessoPortal_(err && err.message ? err.message : 'Usuário criado, mas os escopos iniciais falharam.', true);
+                mostrarSenhaTemporariaPortal_(res.senhaTemporaria);
+                carregarUsuariosPortal_(res.user.usuario_id);
+              })
+              .salvarEscoposUsuarioPortal(obterTokenSessaoPortal(), res.user.usuario_id, accessMatrixState.editorScopesDraft);
+            return;
+          }
+
+          finalizarCriacao();
+        })
+        .withFailureHandler(err => {
+          definirFeedbackAcessoPortal_(err && err.message ? err.message : 'Erro ao criar usuário.', true);
+        })
+        .criarUsuarioPortal(obterTokenSessaoPortal(), coletarPayloadUsuarioPortal_());
+    }
+
+    function salvarEdicaoUsuarioPortalFront_() {
+      definirFeedbackAcessoPortal_('Salvando alterações...', false);
+      google.script.run
+        .withSuccessHandler(res => {
+          if (!res || !res.ok) {
+            definirFeedbackAcessoPortal_(res && res.message ? res.message : 'Não foi possível salvar as alterações.', true);
+            return;
+          }
+          definirFeedbackAcessoPortal_('Alterações salvas com sucesso.', false);
+          ocultarSenhaTemporariaPortal_();
+          carregarUsuariosPortal_(res.user.usuario_id);
+          fecharEditorUsuarioPortal_();
+        })
+        .withFailureHandler(err => {
+          definirFeedbackAcessoPortal_(err && err.message ? err.message : 'Erro ao salvar alterações.', true);
+        })
+        .editarUsuarioPortal(obterTokenSessaoPortal(), accessMatrixState.editorUserId, coletarPayloadUsuarioPortal_());
+    }
+
+    function resetarSenhaUsuarioPortalFront_(usuarioId) {
+      if (!window.confirm('Deseja resetar a senha deste usuário?')) return;
+      definirFeedbackAcessoPortal_('Resetando senha...', false);
+      google.script.run
+        .withSuccessHandler(res => {
+          if (!res || !res.ok) {
+            definirFeedbackAcessoPortal_(res && res.message ? res.message : 'Não foi possível resetar a senha.', true);
+            return;
+          }
+          mostrarSenhaTemporariaPortal_(res.senhaTemporaria);
+          definirFeedbackAcessoPortal_('Senha resetada com sucesso.', false);
+          carregarUsuariosPortal_(usuarioId);
+        })
+        .withFailureHandler(err => {
+          definirFeedbackAcessoPortal_(err && err.message ? err.message : 'Erro ao resetar senha.', true);
+        })
+        .resetarSenhaUsuarioPortal(obterTokenSessaoPortal(), usuarioId);
+    }
+
+    function alterarStatusUsuarioPortalFront_(usuarioId, novoStatus) {
+      const verbo = novoStatus === 'ATIVO' ? 'ativar' : 'inativar';
+      if (!window.confirm(`Deseja ${verbo} este usuário?`)) return;
+      definirFeedbackAcessoPortal_('Atualizando status...', false);
+      google.script.run
+        .withSuccessHandler(res => {
+          if (!res || !res.ok) {
+            definirFeedbackAcessoPortal_(res && res.message ? res.message : 'Não foi possível alterar o status.', true);
+            return;
+          }
+          definirFeedbackAcessoPortal_('Status atualizado com sucesso.', false);
+          carregarUsuariosPortal_(usuarioId);
+        })
+        .withFailureHandler(err => {
+          definirFeedbackAcessoPortal_(err && err.message ? err.message : 'Erro ao alterar status.', true);
+        })
+        .alterarStatusUsuarioPortal(obterTokenSessaoPortal(), usuarioId, novoStatus);
+    }
+
     function carregarDadosDashboard() {
       if (dashboardCarregado) return;
       dashboardCarregado = true;
+      carregarContextoAcessoDashboard_();
       document.getElementById('loading').style.display = 'flex';
       document.getElementById('loading').textContent = 'Sincronizando Sistema...';
       google.script.run
@@ -3451,7 +4511,7 @@
             return;
           }
 
-          authSession = { token, user: res.user, trocaSenhaObrigatoria: !!res.trocaSenhaObrigatoria };
+          authSession = { token, user: res.user, trocaSenhaObrigatoria: !!res.trocaSenhaObrigatoria, permissions: res.permissions || {} };
           if (res.trocaSenhaObrigatoria) {
             document.getElementById('loading').style.display = 'none';
             mostrarTelaAuth('change-password');
@@ -3485,7 +4545,7 @@
           }
 
           salvarTokenSessaoPortal(res.token);
-          authSession = { token: res.token, user: res.user, trocaSenhaObrigatoria: !!res.trocaSenhaObrigatoria };
+          authSession = { token: res.token, user: res.user, trocaSenhaObrigatoria: !!res.trocaSenhaObrigatoria, permissions: res.permissions || {} };
           definirFeedbackAuth('loginFeedback', '', false);
 
           if (res.trocaSenhaObrigatoria) {
@@ -3524,7 +4584,7 @@
             return;
           }
 
-          authSession = { token, user: res.user, trocaSenhaObrigatoria: false };
+          authSession = { token, user: res.user, trocaSenhaObrigatoria: false, permissions: res.permissions || {} };
           definirFeedbackAuth('changePasswordFeedback', '', false);
           mostrarDashboard(res.user);
           carregarDadosDashboard();
@@ -3540,9 +4600,12 @@
       limparTokenSessaoPortal();
       authSession = null;
       dashboardCarregado = false;
+      dashboardAccessContext = null;
+      resetarEstadoAcessoPortal_();
       raw = [];
       rawMetas = [];
       rawFeriados = [];
+      renderDashboardAccessLabel_();
       document.getElementById('loading').style.display = 'none';
       mostrarTelaAuth('login');
       google.script.run.logoutPortal(token);

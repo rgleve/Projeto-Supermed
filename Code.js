@@ -20,7 +20,42 @@ const AUTH_SHEET_HEADERS = {
   ],
   LogsAcesso: [
     'log_id', 'usuario_id', 'cpf_informado', 'evento', 'detalhe', 'sucesso', 'timestamp'
+  ],
+  PerfisAcesso: [
+    'perfil',
+    'pode_ver_dashboard',
+    'pode_ver_usuarios',
+    'pode_criar_usuario',
+    'pode_editar_usuario',
+    'pode_resetar_senha',
+    'pode_alterar_status_usuario',
+    'pode_ver_todos_os_dados',
+    'status',
+    'atualizado_em',
+    'atualizado_por'
+  ],
+  EscoposUsuario: [
+    'escopo_id',
+    'usuario_id',
+    'site',
+    'produto',
+    'supervisor',
+    'status',
+    'criado_em',
+    'criado_por',
+    'atualizado_em',
+    'atualizado_por'
   ]
+};
+const COLUNAS_AUTORIZACAO_DADOS = {
+  supervisor: 9,
+  site: 81,
+  tipo: 91,
+  produto: 106
+};
+const COLUNAS_METAS_AUTORIZACAO = {
+  site: 1,
+  produto: 2
 };
 const ADMIN_INICIAL_PORTAL = {
   cpf: '77879872000',
@@ -57,6 +92,9 @@ function garantirAbaComCabecalho_(ss, nomeAba, headers) {
 
   if (sheet.getLastRow() === 0) {
     sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    if (String(nomeAba || '').trim() === 'Usuarios') {
+      sheet.getRange('B:B').setNumberFormat('@');
+    }
     return sheet;
   }
 
@@ -64,6 +102,9 @@ function garantirAbaComCabecalho_(ss, nomeAba, headers) {
   const diferentes = headers.some((header, idx) => String(atuais[idx] || '').trim() !== header);
   if (diferentes) {
     sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+  }
+  if (String(nomeAba || '').trim() === 'Usuarios') {
+    sheet.getRange('B:B').setNumberFormat('@');
   }
   return sheet;
 }
@@ -76,6 +117,148 @@ function obterAuthSheets_() {
     sessoes: garantirAbaComCabecalho_(ss, 'Sessoes', AUTH_SHEET_HEADERS.Sessoes),
     logs: garantirAbaComCabecalho_(ss, 'LogsAcesso', AUTH_SHEET_HEADERS.LogsAcesso)
   };
+}
+
+function valorSimNaoParaBool_(valor) {
+  return String(valor || '').trim().toUpperCase() === 'SIM';
+}
+
+function normalizarValorEscopoPortal_(valor) {
+  const texto = String(valor || '').trim();
+  return texto || 'TODOS';
+}
+
+function normalizarStatusUsuarioPortal_(status, fallback) {
+  const valor = String(status || '').trim().toUpperCase();
+  const permitido = ['ATIVO', 'INATIVO', 'BLOQUEADO'];
+  if (!valor) return fallback || 'ATIVO';
+  return permitido.includes(valor) ? valor : '';
+}
+
+function gerarSenhaTemporariaPortal_() {
+  return `Tmp@${Utilities.getUuid().slice(0, 8)}`;
+}
+
+function contarAdminMastersAtivos_() {
+  const auth = garantirEstruturaAutorizacaoPortal_();
+  return sheetRowsToObjects_(auth.usuarios).filter(row =>
+    String(row.perfil || '').trim().toUpperCase() === 'ADMIN_MASTER' &&
+    String(row.status || '').trim().toUpperCase() === 'ATIVO'
+  ).length;
+}
+
+function obterPerfilAtivoPortal_(perfil) {
+  const nomePerfil = String(perfil || '').trim().toUpperCase();
+  if (!nomePerfil) return null;
+  const auth = garantirEstruturaAutorizacaoPortal_();
+  return sheetRowsToObjects_(auth.perfis).find(row =>
+    String(row.perfil || '').trim().toUpperCase() === nomePerfil &&
+    String(row.status || '').trim().toUpperCase() === 'ATIVO'
+  ) || null;
+}
+
+function montarResumoUsuarioPortal_(usuario) {
+  return {
+    usuario_id: usuario.usuario_id,
+    nome: usuario.nome || '',
+    cpf: normalizarCPF(usuario.cpf),
+    email: usuario.email || '',
+    cargo: usuario.cargo || '',
+    perfil: usuario.perfil || '',
+    status: usuario.status || '',
+    ultimo_login_em: usuario.ultimo_login_em || ''
+  };
+}
+
+function garantirEstruturaAutorizacaoPortal_() {
+  const auth = obterAuthSheets_();
+  const perfis = garantirAbaComCabecalho_(auth.ss, 'PerfisAcesso', AUTH_SHEET_HEADERS.PerfisAcesso);
+  const escopos = garantirAbaComCabecalho_(auth.ss, 'EscoposUsuario', AUTH_SHEET_HEADERS.EscoposUsuario);
+  inicializarPerfisAcessoPortal_(perfis);
+  return { ...auth, perfis, escopos };
+}
+
+function inicializarPerfisAcessoPortal_(perfisSheet) {
+  if (!perfisSheet) {
+    throw new Error('PerfisAcesso sheet é obrigatória para inicialização.');
+  }
+
+  const existentes = sheetRowsToObjects_(perfisSheet);
+  const agora = agoraIso_();
+  const defaults = [
+    {
+      perfil: 'ADMIN_MASTER',
+      pode_ver_dashboard: 'SIM',
+      pode_ver_usuarios: 'SIM',
+      pode_criar_usuario: 'SIM',
+      pode_editar_usuario: 'SIM',
+      pode_resetar_senha: 'SIM',
+      pode_alterar_status_usuario: 'SIM',
+      pode_ver_todos_os_dados: 'SIM',
+      status: 'ATIVO',
+      atualizado_em: agora,
+      atualizado_por: 'SISTEMA'
+    },
+    {
+      perfil: 'DIRETOR',
+      pode_ver_dashboard: 'SIM',
+      pode_ver_usuarios: 'NAO',
+      pode_criar_usuario: 'NAO',
+      pode_editar_usuario: 'NAO',
+      pode_resetar_senha: 'NAO',
+      pode_alterar_status_usuario: 'NAO',
+      pode_ver_todos_os_dados: 'SIM',
+      status: 'ATIVO',
+      atualizado_em: agora,
+      atualizado_por: 'SISTEMA'
+    },
+    {
+      perfil: 'GERENTE',
+      pode_ver_dashboard: 'SIM',
+      pode_ver_usuarios: 'NAO',
+      pode_criar_usuario: 'NAO',
+      pode_editar_usuario: 'NAO',
+      pode_resetar_senha: 'NAO',
+      pode_alterar_status_usuario: 'NAO',
+      pode_ver_todos_os_dados: 'NAO',
+      status: 'ATIVO',
+      atualizado_em: agora,
+      atualizado_por: 'SISTEMA'
+    },
+    {
+      perfil: 'COORDENADOR',
+      pode_ver_dashboard: 'SIM',
+      pode_ver_usuarios: 'NAO',
+      pode_criar_usuario: 'NAO',
+      pode_editar_usuario: 'NAO',
+      pode_resetar_senha: 'NAO',
+      pode_alterar_status_usuario: 'NAO',
+      pode_ver_todos_os_dados: 'NAO',
+      status: 'ATIVO',
+      atualizado_em: agora,
+      atualizado_por: 'SISTEMA'
+    },
+    {
+      perfil: 'SUPERVISOR',
+      pode_ver_dashboard: 'SIM',
+      pode_ver_usuarios: 'NAO',
+      pode_criar_usuario: 'NAO',
+      pode_editar_usuario: 'NAO',
+      pode_resetar_senha: 'NAO',
+      pode_alterar_status_usuario: 'NAO',
+      pode_ver_todos_os_dados: 'NAO',
+      status: 'ATIVO',
+      atualizado_em: agora,
+      atualizado_por: 'SISTEMA'
+    }
+  ];
+
+  defaults.forEach(defaultPerfil => {
+    const existente = existentes.find(row => String(row.perfil || '').trim().toUpperCase() === defaultPerfil.perfil);
+    if (!existente) {
+      appendLinhaPorObjeto_(perfisSheet, AUTH_SHEET_HEADERS.PerfisAcesso, defaultPerfil);
+    }
+  });
 }
 
 function sheetRowsToObjects_(sheet) {
@@ -117,7 +300,9 @@ function adicionarHoras_(date, horas) {
 }
 
 function normalizarCPF(cpf) {
-  return String(cpf || '').replace(/\D/g, '');
+  const digits = String(cpf || '').replace(/\D/g, '');
+  if (!digits) return '';
+  return digits.padStart(11, '0').slice(-11);
 }
 
 function gerarSalt() {
@@ -165,7 +350,8 @@ function registrarLogAcesso(evento, dados) {
 
 function obterUsuarioPorCPF_(cpfNormalizado) {
   const auth = obterAuthSheets_();
-  return sheetRowsToObjects_(auth.usuarios).find(row => normalizarCPF(row.cpf) === cpfNormalizado) || null;
+  const cpfBusca = normalizarCPF(cpfNormalizado);
+  return sheetRowsToObjects_(auth.usuarios).find(row => normalizarCPF(row.cpf) === cpfBusca) || null;
 }
 
 function obterUsuarioPorId_(usuarioId) {
@@ -185,7 +371,201 @@ function montarPayloadUsuarioSessao_(usuario) {
   };
 }
 
+function obterPermissoesUsuario_(usuario) {
+  const perfilUsuario = String((usuario && usuario.perfil) || '').trim().toUpperCase();
+  if (!perfilUsuario) {
+    return {
+      perfil: '',
+      pode_ver_dashboard: false,
+      pode_ver_usuarios: false,
+      pode_criar_usuario: false,
+      pode_editar_usuario: false,
+      pode_resetar_senha: false,
+      pode_alterar_status_usuario: false,
+      pode_ver_todos_os_dados: false
+    };
+  }
+
+  const auth = garantirEstruturaAutorizacaoPortal_();
+  const perfil = sheetRowsToObjects_(auth.perfis).find(row =>
+    String(row.perfil || '').trim().toUpperCase() === perfilUsuario &&
+    String(row.status || '').trim().toUpperCase() === 'ATIVO'
+  );
+
+  if (!perfil) {
+    return {
+      perfil: perfilUsuario,
+      pode_ver_dashboard: false,
+      pode_ver_usuarios: false,
+      pode_criar_usuario: false,
+      pode_editar_usuario: false,
+      pode_resetar_senha: false,
+      pode_alterar_status_usuario: false,
+      pode_ver_todos_os_dados: false
+    };
+  }
+
+  return {
+    perfil: String(perfil.perfil || '').trim(),
+    pode_ver_dashboard: valorSimNaoParaBool_(perfil.pode_ver_dashboard),
+    pode_ver_usuarios: valorSimNaoParaBool_(perfil.pode_ver_usuarios),
+    pode_criar_usuario: valorSimNaoParaBool_(perfil.pode_criar_usuario),
+    pode_editar_usuario: valorSimNaoParaBool_(perfil.pode_editar_usuario),
+    pode_resetar_senha: valorSimNaoParaBool_(perfil.pode_resetar_senha),
+    pode_alterar_status_usuario: valorSimNaoParaBool_(perfil.pode_alterar_status_usuario),
+    pode_ver_todos_os_dados: valorSimNaoParaBool_(perfil.pode_ver_todos_os_dados)
+  };
+}
+
+function obterEscoposUsuario_(usuarioId) {
+  const auth = garantirEstruturaAutorizacaoPortal_();
+  return sheetRowsToObjects_(auth.escopos)
+    .filter(row =>
+      String(row.usuario_id || '') === String(usuarioId || '') &&
+      String(row.status || '').trim().toUpperCase() === 'ATIVO'
+    )
+    .map(row => ({
+      escopo_id: row.escopo_id,
+      usuario_id: row.usuario_id,
+      site: row.site || 'TODOS',
+      produto: row.produto || 'TODOS',
+      supervisor: row.supervisor || 'TODOS',
+      status: row.status
+    }));
+}
+
+function usuarioEhAdminMaster_(usuario) {
+  return String((usuario && usuario.perfil) || '').trim().toUpperCase() === 'ADMIN_MASTER';
+}
+
+function usuarioPodeAdministrarUsuarios_(usuario) {
+  return usuarioEhAdminMaster_(usuario);
+}
+
+function normalizarComparacaoEscopo_(valor) {
+  return String(valor || '').trim().toUpperCase();
+}
+
+function valorEscopoCompativel_(valorLinha, valorEscopo) {
+  const escopo = normalizarComparacaoEscopo_(valorEscopo || 'TODOS');
+  if (escopo === 'TODOS') return true;
+  return normalizarComparacaoEscopo_(valorLinha) === escopo;
+}
+
+function montarLabelAcessoPortal_(acessoTotal, escopos) {
+  if (acessoTotal) {
+    return 'Visão atual: Geral';
+  }
+
+  if (!Array.isArray(escopos) || !escopos.length) {
+    return 'Visão atual: Sem escopo configurado';
+  }
+
+  if (escopos.length === 1) {
+    const escopo = escopos[0];
+    return `Visão atual: ${escopo.site} > ${escopo.produto} > ${escopo.supervisor}`;
+  }
+
+  return `Visão atual: ${escopos.length} escopos configurados`;
+}
+
+function validarAcessoPortal_(token, options) {
+  const opts = options || {};
+  const sessao = validarSessao(token);
+  if (!sessao || !sessao.ok) return { ok: false, message: 'Sessão inválida ou expirada.' };
+  if (sessao.trocaSenhaObrigatoria) return { ok: false, message: 'Troca de senha obrigatória.' };
+
+  garantirEstruturaAutorizacaoPortal_();
+  const usuario = obterUsuarioPorId_(sessao.user.usuario_id);
+  if (!usuario) return { ok: false, message: 'Usuário não encontrado.' };
+
+  const permissoes = obterPermissoesUsuario_(usuario);
+  if (opts.apenasAdminMaster && !usuarioPodeAdministrarUsuarios_(usuario)) {
+    return { ok: false, message: 'Acesso negado.' };
+  }
+
+  return { ok: true, sessao, usuario, permissoes };
+}
+
+function obterContextoAcessoInterno_(usuario) {
+  const permissions = obterPermissoesUsuario_(usuario);
+  const escopos = obterEscoposUsuario_(usuario.usuario_id);
+
+  let acessoTotal = false;
+  if (usuarioEhAdminMaster_(usuario)) {
+    acessoTotal = true;
+  } else if (escopos.length > 0) {
+    acessoTotal = false;
+  } else {
+    acessoTotal = !!permissions.pode_ver_todos_os_dados;
+  }
+
+  return {
+    acessoTotal,
+    perfil: String(usuario.perfil || '').trim(),
+    escopos,
+    permissions,
+    label: montarLabelAcessoPortal_(acessoTotal, escopos)
+  };
+}
+
+function linhaDentroDoEscopoPortal_(site, produto, supervisor, escopos) {
+  if (!Array.isArray(escopos) || !escopos.length) return false;
+
+  return escopos.some(escopo =>
+    valorEscopoCompativel_(site, escopo.site) &&
+    valorEscopoCompativel_(produto, escopo.produto) &&
+    valorEscopoCompativel_(supervisor, escopo.supervisor)
+  );
+}
+
+function filtrarBasePorEscopoPortal_(base, escopos) {
+  if (!Array.isArray(base) || base.length <= 1) return base;
+  const header = base[0];
+  const linhas = base.slice(1).filter(row =>
+    linhaDentroDoEscopoPortal_(
+      row[COLUNAS_AUTORIZACAO_DADOS.site],
+      row[COLUNAS_AUTORIZACAO_DADOS.produto],
+      row[COLUNAS_AUTORIZACAO_DADOS.supervisor],
+      escopos
+    )
+  );
+  return [header].concat(linhas);
+}
+
+function filtrarMetasPorEscopoPortal_(metas, escopos) {
+  if (!Array.isArray(metas) || metas.length <= 1) return metas;
+  const header = metas[0];
+
+  // A aba Metas hoje é utilizada pelo front por site/produto.
+  // Mantemos o filtro apenas nessas dimensões para preservar segurança
+  // e compatibilidade sem inferir regra de supervisor.
+  const linhas = metas.slice(1).filter(row =>
+    escopos.some(escopo =>
+      valorEscopoCompativel_(row[COLUNAS_METAS_AUTORIZACAO.site], escopo.site) &&
+      valorEscopoCompativel_(row[COLUNAS_METAS_AUTORIZACAO.produto], escopo.produto)
+    )
+  );
+
+  return [header].concat(linhas);
+}
+
+function obterContextoAcessoUsuarioPortal(token) {
+  const acesso = validarAcessoPortal_(token, {});
+  if (!acesso.ok) return acesso;
+
+  const contexto = obterContextoAcessoInterno_(acesso.usuario);
+  return {
+    ok: true,
+    acessoTotal: contexto.acessoTotal,
+    perfil: contexto.perfil,
+    escopos: contexto.escopos,
+    label: contexto.label
+  };
+}
+
 function loginPortal(cpf, senha) {
+  garantirEstruturaAutorizacaoPortal_();
   const cpfNormalizado = normalizarCPF(cpf);
   const usuario = obterUsuarioPorCPF_(cpfNormalizado);
 
@@ -247,16 +627,19 @@ function loginPortal(cpf, senha) {
     sucesso: true
   });
 
+  const permissoes = obterPermissoesUsuario_(usuario);
   return {
     ok: true,
     token: token,
     user: montarPayloadUsuarioSessao_(usuario),
-    trocaSenhaObrigatoria: String(usuario.troca_senha_obrigatoria || '').trim().toUpperCase() === 'SIM'
+    trocaSenhaObrigatoria: String(usuario.troca_senha_obrigatoria || '').trim().toUpperCase() === 'SIM',
+    permissions: permissoes
   };
 }
 
 function validarSessao(token) {
   if (!token) return { ok: false, message: 'Sessão ausente.' };
+  garantirEstruturaAutorizacaoPortal_();
 
   const auth = obterAuthSheets_();
   const tokenHash = hashTokenSessao(token);
@@ -286,10 +669,12 @@ function validarSessao(token) {
     return { ok: false, message: 'Usuário sem acesso ao portal.' };
   }
 
+  const permissoes = obterPermissoesUsuario_(usuario);
   return {
     ok: true,
     user: montarPayloadUsuarioSessao_(usuario),
-    trocaSenhaObrigatoria: String(usuario.troca_senha_obrigatoria || '').trim().toUpperCase() === 'SIM'
+    trocaSenhaObrigatoria: String(usuario.troca_senha_obrigatoria || '').trim().toUpperCase() === 'SIM',
+    permissions: permissoes
   };
 }
 
@@ -355,15 +740,17 @@ function trocarSenhaPrimeiroAcesso(token, senhaAtual, novaSenha) {
     sucesso: true
   });
 
+  const permissoes = obterPermissoesUsuario_(usuario);
   return {
     ok: true,
     user: montarPayloadUsuarioSessao_(usuario),
-    trocaSenhaObrigatoria: false
+    trocaSenhaObrigatoria: false,
+    permissions: permissoes
   };
 }
 
 function setupAdminInicialPortal() {
-  const auth = obterAuthSheets_();
+  const auth = garantirEstruturaAutorizacaoPortal_();
   const usuarios = sheetRowsToObjects_(auth.usuarios);
   if (usuarios.length > 0) {
     return {
@@ -411,6 +798,385 @@ function setupAdminInicialPortal() {
   Logger.log(JSON.stringify(retorno, null, 2));
 
   return retorno;
+}
+
+function listarPerfisAcessoPortal(token) {
+  const acesso = validarAcessoPortal_(token, { apenasAdminMaster: true });
+  if (!acesso.ok) return acesso;
+
+  const auth = garantirEstruturaAutorizacaoPortal_();
+  const perfis = sheetRowsToObjects_(auth.perfis)
+    .filter(row => String(row.status || '').trim().toUpperCase() === 'ATIVO')
+    .map(row => ({
+      perfil: row.perfil,
+      pode_ver_dashboard: valorSimNaoParaBool_(row.pode_ver_dashboard),
+      pode_ver_usuarios: valorSimNaoParaBool_(row.pode_ver_usuarios),
+      pode_criar_usuario: valorSimNaoParaBool_(row.pode_criar_usuario),
+      pode_editar_usuario: valorSimNaoParaBool_(row.pode_editar_usuario),
+      pode_resetar_senha: valorSimNaoParaBool_(row.pode_resetar_senha),
+      pode_alterar_status_usuario: valorSimNaoParaBool_(row.pode_alterar_status_usuario),
+      pode_ver_todos_os_dados: valorSimNaoParaBool_(row.pode_ver_todos_os_dados)
+    }));
+
+  return { ok: true, perfis };
+}
+
+function listarDimensoesAcessoPortal(token) {
+  const acesso = validarAcessoPortal_(token, { apenasAdminMaster: true });
+  if (!acesso.ok) return acesso;
+
+  const cache = CacheService.getScriptCache();
+  const cacheKey = 'portal_dimensoes_acesso_v1';
+  const cached = cache.get(cacheKey);
+  if (cached) {
+    try {
+      return JSON.parse(cached);
+    } catch (e) {
+      // Se o cache estiver inválido, recalcula normalmente.
+    }
+  }
+
+  const ss = obterPlanilhaDados_();
+  const baseSheet = localizarAba(ss, 'Base');
+  if (!baseSheet) return { ok: false, message: 'Aba Base não encontrada.' };
+
+  const values = baseSheet.getDataRange().getDisplayValues();
+  const sites = new Set();
+  const produtosGlobais = new Set();
+  const supervisoresGlobais = new Set();
+  const produtosPorSite = {};
+  const supervisoresPorChave = {};
+
+  values.slice(1).forEach(row => {
+    if (String(row[COLUNAS_AUTORIZACAO_DADOS.tipo] || '').trim() !== 'Operador') return;
+
+    const site = String(row[COLUNAS_AUTORIZACAO_DADOS.site] || '').trim();
+    const produto = String(row[COLUNAS_AUTORIZACAO_DADOS.produto] || '').trim();
+    const supervisor = String(row[COLUNAS_AUTORIZACAO_DADOS.supervisor] || '').trim();
+    if (!site) return;
+
+    sites.add(site);
+    if (!produtosPorSite[site]) produtosPorSite[site] = new Set();
+    if (!supervisoresPorChave[`${site}__TODOS`]) supervisoresPorChave[`${site}__TODOS`] = new Set();
+    if (!supervisoresPorChave['TODOS__TODOS']) supervisoresPorChave['TODOS__TODOS'] = new Set();
+
+    if (produto) {
+      produtosGlobais.add(produto);
+      produtosPorSite[site].add(produto);
+      if (!supervisoresPorChave[`${site}__${produto}`]) supervisoresPorChave[`${site}__${produto}`] = new Set();
+    }
+
+    if (supervisor) {
+      supervisoresGlobais.add(supervisor);
+      supervisoresPorChave[`${site}__TODOS`].add(supervisor);
+      supervisoresPorChave['TODOS__TODOS'].add(supervisor);
+      if (produto) supervisoresPorChave[`${site}__${produto}`].add(supervisor);
+    }
+  });
+
+  const ordenar = set => [...set].sort((a, b) => String(a).localeCompare(String(b), 'pt-BR'));
+  const produtosPorSiteResponse = { TODOS: ['TODOS', ...ordenar(produtosGlobais)] };
+  Object.keys(produtosPorSite).forEach(site => {
+    produtosPorSiteResponse[site] = ['TODOS', ...ordenar(produtosPorSite[site])];
+  });
+
+  const supervisoresPorSiteProdutoResponse = { TODOS__TODOS: ['TODOS', ...ordenar(supervisoresGlobais)] };
+  Object.keys(supervisoresPorChave).forEach(chave => {
+    supervisoresPorSiteProdutoResponse[chave] = ['TODOS', ...ordenar(supervisoresPorChave[chave])];
+  });
+
+  const response = {
+    ok: true,
+    dimensoes: {
+      sites: ['TODOS', ...ordenar(sites)],
+      produtosPorSite: produtosPorSiteResponse,
+      supervisoresPorSiteProduto: supervisoresPorSiteProdutoResponse
+    }
+  };
+
+  try {
+    cache.put(cacheKey, JSON.stringify(response), 600);
+  } catch (e) {
+    // Se o payload exceder o limite do cache, mantém apenas o cálculo em memória da requisição.
+  }
+
+  return response;
+}
+
+function listarUsuariosPortal(token) {
+  const acesso = validarAcessoPortal_(token, { apenasAdminMaster: true });
+  if (!acesso.ok) return acesso;
+
+  const auth = garantirEstruturaAutorizacaoPortal_();
+  const usuarios = sheetRowsToObjects_(auth.usuarios)
+    .map(row => montarResumoUsuarioPortal_(row))
+    .sort((a, b) => {
+      const nomeComp = String(a.nome || '').localeCompare(String(b.nome || ''), 'pt-BR');
+      if (nomeComp !== 0) return nomeComp;
+      return String(a.cpf || '').localeCompare(String(b.cpf || ''), 'pt-BR');
+    });
+
+  return { ok: true, usuarios };
+}
+
+function criarUsuarioPortal(token, payload) {
+  const acesso = validarAcessoPortal_(token, { apenasAdminMaster: true });
+  if (!acesso.ok) return acesso;
+
+  const data = payload || {};
+  const cpf = normalizarCPF(data.cpf);
+  const nome = String(data.nome || '').trim();
+  const email = String(data.email || '').trim();
+  const cargo = String(data.cargo || '').trim();
+  const perfil = String(data.perfil || '').trim().toUpperCase();
+  const status = normalizarStatusUsuarioPortal_(data.status, 'ATIVO');
+
+  if (!cpf) return { ok: false, message: 'CPF é obrigatório.' };
+  if (cpf.length !== 11) return { ok: false, message: 'CPF inválido.' };
+  if (!nome) return { ok: false, message: 'Nome é obrigatório.' };
+  if (!perfil) return { ok: false, message: 'Perfil é obrigatório.' };
+  if (!status) return { ok: false, message: 'Status inválido.' };
+  if (!obterPerfilAtivoPortal_(perfil)) return { ok: false, message: 'Perfil inválido ou inativo.' };
+  if (obterUsuarioPorCPF_(cpf)) return { ok: false, message: 'Já existe um usuário com este CPF.' };
+
+  const auth = garantirEstruturaAutorizacaoPortal_();
+  const agora = agoraIso_();
+  const usuarioId = Utilities.getUuid();
+  const senhaTemporaria = gerarSenhaTemporariaPortal_();
+  const senhaSalt = gerarSalt();
+  const novoUsuario = {
+    usuario_id: usuarioId,
+    cpf: cpf,
+    nome: nome,
+    email: email,
+    cargo: cargo,
+    perfil: perfil,
+    status: status,
+    senha_hash: hashSenha(senhaTemporaria, senhaSalt),
+    senha_salt: senhaSalt,
+    troca_senha_obrigatoria: 'SIM',
+    criado_em: agora,
+    criado_por: acesso.usuario.usuario_id,
+    atualizado_em: agora,
+    atualizado_por: acesso.usuario.usuario_id,
+    ultimo_login_em: ''
+  };
+
+  appendLinhaPorObjeto_(auth.usuarios, AUTH_SHEET_HEADERS.Usuarios, novoUsuario);
+
+  registrarLogAcesso('CRIAR_USUARIO_PORTAL', {
+    usuario_id: acesso.usuario.usuario_id,
+    cpf_informado: cpf,
+    detalhe: `Usuário criado: ${usuarioId}.`,
+    sucesso: true
+  });
+
+  return {
+    ok: true,
+    user: montarResumoUsuarioPortal_(novoUsuario),
+    senhaTemporaria: senhaTemporaria
+  };
+}
+
+function editarUsuarioPortal(token, usuarioId, payload) {
+  const acesso = validarAcessoPortal_(token, { apenasAdminMaster: true });
+  if (!acesso.ok) return acesso;
+
+  const data = payload || {};
+  const usuario = obterUsuarioPorId_(usuarioId);
+  if (!usuario) return { ok: false, message: 'Usuário não encontrado.' };
+
+  const nome = String(data.nome || '').trim();
+  const email = String(data.email || '').trim();
+  const cargo = String(data.cargo || '').trim();
+  const perfil = String(data.perfil || '').trim().toUpperCase();
+  const status = normalizarStatusUsuarioPortal_(data.status, String(usuario.status || '').trim().toUpperCase() || 'ATIVO');
+  const perfilAtual = String(usuario.perfil || '').trim().toUpperCase();
+  const statusAtual = String(usuario.status || '').trim().toUpperCase();
+  const adminMastersAtivos = contarAdminMastersAtivos_();
+  const ehUltimoAdminMasterAtivo = perfilAtual === 'ADMIN_MASTER' && statusAtual === 'ATIVO' && adminMastersAtivos <= 1;
+
+  if (!nome) return { ok: false, message: 'Nome é obrigatório.' };
+  if (!perfil) return { ok: false, message: 'Perfil é obrigatório.' };
+  if (!status) return { ok: false, message: 'Status inválido.' };
+  if (!obterPerfilAtivoPortal_(perfil)) return { ok: false, message: 'Perfil inválido ou inativo.' };
+  if (ehUltimoAdminMasterAtivo) {
+    if (perfil !== 'ADMIN_MASTER' || status === 'INATIVO' || status === 'BLOQUEADO') {
+      return { ok: false, message: 'Não é permitido remover ou bloquear o último ADMIN_MASTER ativo.' };
+    }
+  }
+  if (
+    String(acesso.usuario.usuario_id || '') === String(usuarioId || '') &&
+    (status === 'INATIVO' || status === 'BLOQUEADO')
+  ) {
+    return { ok: false, message: 'Você não pode inativar ou bloquear a própria conta.' };
+  }
+
+  const auth = garantirEstruturaAutorizacaoPortal_();
+  usuario.nome = nome;
+  usuario.email = email;
+  usuario.cargo = cargo;
+  usuario.perfil = perfil;
+  usuario.status = status;
+  usuario.atualizado_em = agoraIso_();
+  usuario.atualizado_por = acesso.usuario.usuario_id;
+
+  atualizarLinhaPorObjeto_(auth.usuarios, usuario._rowNumber, AUTH_SHEET_HEADERS.Usuarios, usuario);
+
+  registrarLogAcesso('EDITAR_USUARIO_PORTAL', {
+    usuario_id: acesso.usuario.usuario_id,
+    cpf_informado: normalizarCPF(usuario.cpf),
+    detalhe: `Usuário editado: ${usuarioId}.`,
+    sucesso: true
+  });
+
+  return {
+    ok: true,
+    user: montarResumoUsuarioPortal_(usuario)
+  };
+}
+
+function resetarSenhaUsuarioPortal(token, usuarioId) {
+  const acesso = validarAcessoPortal_(token, { apenasAdminMaster: true });
+  if (!acesso.ok) return acesso;
+
+  const usuario = obterUsuarioPorId_(usuarioId);
+  if (!usuario) return { ok: false, message: 'Usuário não encontrado.' };
+
+  const auth = garantirEstruturaAutorizacaoPortal_();
+  const senhaTemporaria = gerarSenhaTemporariaPortal_();
+  const senhaSalt = gerarSalt();
+
+  usuario.senha_salt = senhaSalt;
+  usuario.senha_hash = hashSenha(senhaTemporaria, senhaSalt);
+  usuario.troca_senha_obrigatoria = 'SIM';
+  usuario.atualizado_em = agoraIso_();
+  usuario.atualizado_por = acesso.usuario.usuario_id;
+
+  atualizarLinhaPorObjeto_(auth.usuarios, usuario._rowNumber, AUTH_SHEET_HEADERS.Usuarios, usuario);
+
+  registrarLogAcesso('RESETAR_SENHA_USUARIO_PORTAL', {
+    usuario_id: acesso.usuario.usuario_id,
+    cpf_informado: normalizarCPF(usuario.cpf),
+    detalhe: `Senha resetada para ${usuarioId}.`,
+    sucesso: true
+  });
+
+  return {
+    ok: true,
+    user: montarResumoUsuarioPortal_(usuario),
+    senhaTemporaria: senhaTemporaria
+  };
+}
+
+function alterarStatusUsuarioPortal(token, usuarioId, status) {
+  const acesso = validarAcessoPortal_(token, { apenasAdminMaster: true });
+  if (!acesso.ok) return acesso;
+
+  const novoStatus = normalizarStatusUsuarioPortal_(status, '');
+  if (!novoStatus) return { ok: false, message: 'Status inválido.' };
+
+  const usuario = obterUsuarioPorId_(usuarioId);
+  if (!usuario) return { ok: false, message: 'Usuário não encontrado.' };
+  const perfilAtual = String(usuario.perfil || '').trim().toUpperCase();
+  const statusAtual = String(usuario.status || '').trim().toUpperCase();
+  const adminMastersAtivos = contarAdminMastersAtivos_();
+  const ehUltimoAdminMasterAtivo = perfilAtual === 'ADMIN_MASTER' && statusAtual === 'ATIVO' && adminMastersAtivos <= 1;
+
+  if (
+    String(acesso.usuario.usuario_id || '') === String(usuarioId || '') &&
+    (novoStatus === 'INATIVO' || novoStatus === 'BLOQUEADO')
+  ) {
+    return { ok: false, message: 'Você não pode inativar ou bloquear a própria conta.' };
+  }
+  if (ehUltimoAdminMasterAtivo && (novoStatus === 'INATIVO' || novoStatus === 'BLOQUEADO')) {
+    return { ok: false, message: 'Não é permitido remover ou bloquear o último ADMIN_MASTER ativo.' };
+  }
+
+  const auth = garantirEstruturaAutorizacaoPortal_();
+  usuario.status = novoStatus;
+  usuario.atualizado_em = agoraIso_();
+  usuario.atualizado_por = acesso.usuario.usuario_id;
+
+  atualizarLinhaPorObjeto_(auth.usuarios, usuario._rowNumber, AUTH_SHEET_HEADERS.Usuarios, usuario);
+
+  registrarLogAcesso('ALTERAR_STATUS_USUARIO_PORTAL', {
+    usuario_id: acesso.usuario.usuario_id,
+    cpf_informado: normalizarCPF(usuario.cpf),
+    detalhe: `Status ${novoStatus} aplicado ao usuário ${usuarioId}.`,
+    sucesso: true
+  });
+
+  return {
+    ok: true,
+    user: montarResumoUsuarioPortal_(usuario)
+  };
+}
+
+function listarEscoposUsuarioPortal(token, usuarioId) {
+  const acesso = validarAcessoPortal_(token, { apenasAdminMaster: true });
+  if (!acesso.ok) return acesso;
+  return { ok: true, escopos: obterEscoposUsuario_(usuarioId) };
+}
+
+function salvarEscoposUsuarioPortal(token, usuarioId, escopos) {
+  const acesso = validarAcessoPortal_(token, { apenasAdminMaster: true });
+  if (!acesso.ok) return acesso;
+
+  const usuarioAlvo = obterUsuarioPorId_(usuarioId);
+  if (!usuarioAlvo) return { ok: false, message: 'Usuário alvo não encontrado.' };
+
+  const auth = garantirEstruturaAutorizacaoPortal_();
+  const agora = agoraIso_();
+  const atuais = sheetRowsToObjects_(auth.escopos).filter(row =>
+    String(row.usuario_id || '') === String(usuarioId || '') &&
+    String(row.status || '').trim().toUpperCase() === 'ATIVO'
+  );
+
+  atuais.forEach(row => {
+    const atualizado = {
+      ...row,
+      status: 'INATIVO',
+      atualizado_em: agora,
+      atualizado_por: acesso.usuario.usuario_id
+    };
+    atualizarLinhaPorObjeto_(auth.escopos, row._rowNumber, AUTH_SHEET_HEADERS.EscoposUsuario, atualizado);
+  });
+
+  const unicos = [];
+  const vistos = new Set();
+  (Array.isArray(escopos) ? escopos : []).forEach(item => {
+    const site = normalizarValorEscopoPortal_(item && item.site);
+    const produto = normalizarValorEscopoPortal_(item && item.produto);
+    const supervisor = normalizarValorEscopoPortal_(item && item.supervisor);
+    const chave = `${site}__${produto}__${supervisor}`;
+    if (vistos.has(chave)) return;
+    vistos.add(chave);
+    unicos.push({ site, produto, supervisor });
+  });
+
+  unicos.forEach(item => {
+    appendLinhaPorObjeto_(auth.escopos, AUTH_SHEET_HEADERS.EscoposUsuario, {
+      escopo_id: Utilities.getUuid(),
+      usuario_id: usuarioId,
+      site: item.site,
+      produto: item.produto,
+      supervisor: item.supervisor,
+      status: 'ATIVO',
+      criado_em: agora,
+      criado_por: acesso.usuario.usuario_id,
+      atualizado_em: agora,
+      atualizado_por: acesso.usuario.usuario_id
+    });
+  });
+
+  registrarLogAcesso('SALVAR_ESCOPOS_USUARIO', {
+    usuario_id: acesso.usuario.usuario_id,
+    detalhe: `Escopos atualizados para ${usuarioId} (${unicos.length} registro(s)).`,
+    sucesso: true
+  });
+
+  return { ok: true, escopos: obterEscoposUsuario_(usuarioId) };
 }
 
 function obterDadosExcelInterno_() {
@@ -462,7 +1228,71 @@ function obterDadosExcelAutenticado(token) {
     return JSON.stringify([['Erro', 'Troca de senha obrigatória.']]);
   }
 
-  return obterDadosExcelInterno_();
+  const usuario = obterUsuarioPorId_(sessao.user.usuario_id);
+  if (!usuario) {
+    return JSON.stringify([['Erro', 'Usuário não encontrado.']]);
+  }
+
+  const contexto = obterContextoAcessoInterno_(usuario);
+  if (contexto.acessoTotal) {
+    return obterDadosExcelInterno_();
+  }
+
+  try {
+    const ss = obterPlanilhaDados_();
+    const baseSheet = localizarAba(ss, 'Base');
+    const metasSheet = localizarAba(ss, 'Metas');
+    const feriadosSheet = localizarAba(ss, 'Feriados');
+
+    if (!baseSheet) {
+      return JSON.stringify([['Erro', 'Aba Base nao encontrada.']]);
+    }
+
+    const base = baseSheet.getDataRange().getDisplayValues();
+    const metas = metasSheet ? metasSheet.getDataRange().getDisplayValues() : [];
+    const feriados = feriadosSheet ? feriadosSheet.getDataRange().getDisplayValues() : [];
+
+    if (!contexto.escopos.length) {
+      return JSON.stringify({
+        base: base.length ? [base[0]] : [],
+        metas: metas.length ? [metas[0]] : [],
+        feriados,
+        debugAbas: {
+          abas: ss.getSheets().map(s => s.getName()),
+          encontrouBase: !!baseSheet,
+          encontrouMetas: !!metasSheet,
+          encontrouFeriados: !!feriadosSheet,
+          baseRows: base.length ? 1 : 0,
+          metasRows: metas.length ? 1 : 0,
+          feriadosRows: feriados.length,
+          escopoFiltrado: true,
+          escopos: 0
+        }
+      });
+    }
+
+    const baseFiltrada = filtrarBasePorEscopoPortal_(base, contexto.escopos);
+    const metasFiltradas = filtrarMetasPorEscopoPortal_(metas, contexto.escopos);
+
+    return JSON.stringify({
+      base: baseFiltrada,
+      metas: metasFiltradas,
+      feriados,
+      debugAbas: {
+        abas: ss.getSheets().map(s => s.getName()),
+        encontrouBase: !!baseSheet,
+        encontrouMetas: !!metasSheet,
+        encontrouFeriados: !!feriadosSheet,
+        baseRows: baseFiltrada.length,
+        metasRows: metasFiltradas.length,
+        feriadosRows: feriados.length,
+        escopoFiltrado: true,
+        escopos: contexto.escopos.length
+      }
+    });
+  } catch (e) {
+    return JSON.stringify([['Erro', e.message]]);
+  }
 }
 
 function obterDadosExcel() {
