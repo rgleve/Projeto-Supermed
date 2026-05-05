@@ -2632,7 +2632,7 @@
           <div class="filter-block">
             <span class="filter-label">Data</span>
             <div class="select-wrap">
-              <select class="select-box" id="fProdutData">
+              <select class="select-box" id="fProdutData" onchange="atualizarFiltrosProdutividade('data')">
                 <option>Selecione</option>
               </select>
             </div>
@@ -2640,7 +2640,7 @@
           <div class="filter-block">
             <span class="filter-label">Unidade</span>
             <div class="select-wrap">
-              <select class="select-box" id="fProdutUnidade">
+              <select class="select-box" id="fProdutUnidade" onchange="atualizarFiltrosProdutividade('unidade')">
                 <option>Todas</option>
               </select>
             </div>
@@ -2648,7 +2648,7 @@
           <div class="filter-block">
             <span class="filter-label">Produto</span>
             <div class="select-wrap">
-              <select class="select-box" id="fProdutProduto">
+              <select class="select-box" id="fProdutProduto" onchange="atualizarFiltrosProdutividade('produto')">
                 <option>Todos</option>
               </select>
             </div>
@@ -2656,7 +2656,7 @@
           <div class="filter-block">
             <span class="filter-label">Supervisor</span>
             <div class="select-wrap">
-              <select class="select-box" id="fProdutSupervisor">
+              <select class="select-box" id="fProdutSupervisor" onchange="atualizarFiltrosProdutividade('supervisor')">
                 <option>Todos</option>
               </select>
             </div>
@@ -2664,7 +2664,7 @@
           <div class="filter-block">
             <span class="filter-label">Tempo de Casa</span>
             <div class="select-wrap">
-              <select class="select-box" id="fProdutTempoCasa">
+              <select class="select-box" id="fProdutTempoCasa" onchange="atualizarFiltrosProdutividade('tempoCasa')">
                 <option>Todos</option>
               </select>
             </div>
@@ -2694,14 +2694,13 @@
                   <th>Pausas NR17</th>
                   <th>Almoço</th>
                   <th>Pausas Inaderentes</th>
-                  <th>Pausa Partic + Amb.</th>
                   <th>Tempo Trabalhado</th>
                   <th>Dif. Contratadas x Realizadas</th>
                 </tr>
               </thead>
               <tbody id="produtividadeHierarchyBody">
                 <tr>
-                  <td colspan="15">Tabela de produtividade aguardando processamento.</td>
+                  <td colspan="14">Tabela de produtividade aguardando processamento.</td>
                 </tr>
               </tbody>
             </table>
@@ -3076,6 +3075,9 @@
     let rawFeriados = [];
     let gVolumes, gPercentuais, gProducao;
     window.indHierarchyExpanded = window.indHierarchyExpanded || new Set();
+    window.produtividadeExpandedKeys = window.produtividadeExpandedKeys || new Set();
+    window.produtividadeCollapsedKeys = window.produtividadeCollapsedKeys || new Set();
+    window.produtividadeUltimaHierarquia = window.produtividadeUltimaHierarquia || [];
     const COLUNAS_BASE_TABELA = {
       site: 81,
       perfil: 91,
@@ -3083,6 +3085,18 @@
       brutas: 121,
       liquidas: 103,
       produto: 106
+    };
+    const COLUNAS_PRODUTIVIDADE = {
+      aderenciaEscala: 131,
+      vendasCadastradas: 121,
+      vendasAprovadas: 103,
+      totalLogado: 108, // DE, mesmo T. Logado usado na aba Indicadores
+      tempoFalado: 93,
+      pausaNR17: 87,
+      almoco: 115,
+      pausasInaderentes: 88,
+      tempoTrabalhado: 122,
+      diferencaHoras: 124
     };
     const SITES_EXECUTIVOS = ['Barreiros', 'Porto Alegre', 'Praça XV', 'São Paulo'];
     const PRODUTOS_EXECUTIVOS = ['CPFL', 'ENEL', 'STA ENEL', 'NEO', 'STA CPFL'];
@@ -4529,6 +4543,7 @@
       };
 
       popularFiltrosIndicadores();
+      popularFiltrosProdutividade();
 
       document.getElementById('loading').style.display='none';
       
@@ -5901,6 +5916,720 @@
       } catch (e) {
         console.error('ERRO_HIERARQUIA_INDICADORES', e);
       }
+    }
+
+    function obterFiltrosProdutividadeSelecionados() {
+      return {
+        data: document.getElementById('fProdutData') ? document.getElementById('fProdutData').value : '',
+        unidade: document.getElementById('fProdutUnidade') ? document.getElementById('fProdutUnidade').value : 'TODAS',
+        produto: document.getElementById('fProdutProduto') ? document.getElementById('fProdutProduto').value : 'TODOS',
+        supervisor: document.getElementById('fProdutSupervisor') ? document.getElementById('fProdutSupervisor').value : 'TODOS',
+        tempoCasa: document.getElementById('fProdutTempoCasa') ? document.getElementById('fProdutTempoCasa').value : 'TODOS'
+      };
+    }
+
+    function linhaEhOperadorProdutividade(row) {
+      return normalizarTextoComparacao(row && row[91]) === 'operador';
+    }
+
+    function obterLinhasOperadoresProdutividade() {
+      return (raw || []).slice(1).filter(linhaEhOperadorProdutividade);
+    }
+
+    function filtrarSomenteOperadoresProdutividade(linhas) {
+      return (linhas || []).filter(linhaEhOperadorProdutividade);
+    }
+
+    function diagnosticarFiltroOperadorProdutividade() {
+      const totalSemCabecalho = (raw || []).slice(1).length;
+      const operadores = obterLinhasOperadoresProdutividade();
+      const naoOperadores = (raw || []).slice(1).filter(row => !linhaEhOperadorProdutividade(row));
+      const resumoPerfis = {};
+
+      (raw || []).slice(1).forEach(row => {
+        const perfil = String(row[91] || '').trim() || '(vazio)';
+        resumoPerfis[perfil] = (resumoPerfis[perfil] || 0) + 1;
+      });
+
+      console.log('DEBUG FILTRO OPERADOR PRODUTIVIDADE', {
+        totalSemCabecalho,
+        totalOperadores: operadores.length,
+        totalNaoOperadores: naoOperadores.length,
+        resumoPerfis,
+        primeirasLinhasOperador: operadores.slice(0, 5).map(row => ({
+          operador: row[7],
+          perfilCN91: row[91],
+          site: row[81],
+          produto: row[106],
+          supervisor: row[9]
+        })),
+        primeirasLinhasNaoOperador: naoOperadores.slice(0, 10).map(row => ({
+          nome: row[7],
+          perfilCN91: row[91],
+          site: row[81],
+          produto: row[106],
+          supervisor: row[9]
+        }))
+      });
+    }
+
+    function filtrarLinhasProdutividade(filtrosParciais) {
+      const filtros = filtrosParciais || {};
+      const baseOperadores = obterLinhasOperadoresProdutividade();
+      return baseOperadores.filter(row => {
+        const data = normalizarMesIndicadores(row[140]);
+        const unidade = String(row[81] || '').trim();
+        const produto = String(row[106] || '').trim();
+        const supervisor = String(row[9] || '').trim();
+        const tempoCasa = String(row[120] || '').trim();
+        const dataFiltro = normalizarMesIndicadores(filtros.data);
+
+        if (dataFiltro && dataFiltro !== 'TODOS' && data !== dataFiltro) return false;
+        if (filtros.unidade && filtros.unidade !== 'TODAS' && unidade !== filtros.unidade) return false;
+        if (filtros.produto && filtros.produto !== 'TODOS' && produto !== filtros.produto) return false;
+        if (filtros.supervisor && filtros.supervisor !== 'TODOS' && supervisor !== filtros.supervisor) return false;
+        if (filtros.tempoCasa && filtros.tempoCasa !== 'TODOS' && tempoCasa !== filtros.tempoCasa) return false;
+        return true;
+      });
+    }
+
+    function popularFiltrosProdutividade() {
+      const selData = document.getElementById('fProdutData');
+      const selUnidade = document.getElementById('fProdutUnidade');
+      const selProduto = document.getElementById('fProdutProduto');
+      const selSupervisor = document.getElementById('fProdutSupervisor');
+      const selTempoCasa = document.getElementById('fProdutTempoCasa');
+      if (!selData || !selUnidade || !selProduto || !selSupervisor || !selTempoCasa) return;
+
+      inicializarEventosProdutividade();
+
+      const datasSet = new Set();
+      obterLinhasOperadoresProdutividade().forEach(row => {
+        const dataRef = normalizarMesIndicadores(row[140]);
+        if (dataRef) datasSet.add(dataRef);
+      });
+
+      const datasSort = [...datasSet].sort((a, b) => obterOrdemMesIndicadores(b) - obterOrdemMesIndicadores(a));
+      preencherSelect(selData, datasSort);
+      if (datasSort.length > 0) selData.value = datasSort[0];
+
+      atualizarFiltrosProdutividade('data');
+      atualizarProdutividade();
+
+      if (!window.__debugFiltroOperadorProdutividadeExecutado) {
+        window.__debugFiltroOperadorProdutividadeExecutado = true;
+        diagnosticarFiltroOperadorProdutividade();
+      }
+    }
+
+    function atualizarFiltrosProdutividade(campoAlterado) {
+      const selUnidade = document.getElementById('fProdutUnidade');
+      const selProduto = document.getElementById('fProdutProduto');
+      const selSupervisor = document.getElementById('fProdutSupervisor');
+      const selTempoCasa = document.getElementById('fProdutTempoCasa');
+      if (!selUnidade || !selProduto || !selSupervisor || !selTempoCasa) return;
+
+      const filtros = obterFiltrosProdutividadeSelecionados();
+
+      if (campoAlterado === 'data') {
+        filtros.unidade = 'TODAS';
+        filtros.produto = 'TODOS';
+        filtros.supervisor = 'TODOS';
+        filtros.tempoCasa = 'TODOS';
+
+        const linhas = filtrarLinhasProdutividade({ data: filtros.data });
+        preencherSelect(selUnidade, extrairOpcoesIndicadores(linhas, 81), 'Todas', 'TODAS');
+        preencherSelect(selProduto, extrairOpcoesIndicadores(linhas, 106), 'Todos', 'TODOS');
+        preencherSelect(selSupervisor, extrairOpcoesIndicadores(linhas, 9), 'Todos', 'TODOS');
+        preencherSelect(selTempoCasa, extrairOpcoesIndicadores(linhas, 120, ordenarTempoCasaIndicadores), 'Todos', 'TODOS');
+        selUnidade.value = 'TODAS';
+        selProduto.value = 'TODOS';
+        selSupervisor.value = 'TODOS';
+        selTempoCasa.value = 'TODOS';
+        atualizarProdutividade();
+        return;
+      }
+
+      if (campoAlterado === 'unidade') {
+        filtros.produto = 'TODOS';
+        filtros.supervisor = 'TODOS';
+        filtros.tempoCasa = 'TODOS';
+
+        const linhas = filtrarLinhasProdutividade({
+          data: filtros.data,
+          unidade: filtros.unidade
+        });
+        preencherSelect(selProduto, extrairOpcoesIndicadores(linhas, 106), 'Todos', 'TODOS');
+        preencherSelect(selSupervisor, extrairOpcoesIndicadores(linhas, 9), 'Todos', 'TODOS');
+        preencherSelect(selTempoCasa, extrairOpcoesIndicadores(linhas, 120, ordenarTempoCasaIndicadores), 'Todos', 'TODOS');
+        selProduto.value = 'TODOS';
+        selSupervisor.value = 'TODOS';
+        selTempoCasa.value = 'TODOS';
+        atualizarProdutividade();
+        return;
+      }
+
+      if (campoAlterado === 'produto') {
+        filtros.supervisor = 'TODOS';
+        filtros.tempoCasa = 'TODOS';
+
+        const linhas = filtrarLinhasProdutividade({
+          data: filtros.data,
+          unidade: filtros.unidade,
+          produto: filtros.produto
+        });
+        preencherSelect(selSupervisor, extrairOpcoesIndicadores(linhas, 9), 'Todos', 'TODOS');
+        preencherSelect(selTempoCasa, extrairOpcoesIndicadores(linhas, 120, ordenarTempoCasaIndicadores), 'Todos', 'TODOS');
+        selSupervisor.value = 'TODOS';
+        selTempoCasa.value = 'TODOS';
+        atualizarProdutividade();
+        return;
+      }
+
+      if (campoAlterado === 'supervisor') {
+        filtros.tempoCasa = 'TODOS';
+
+        const linhas = filtrarLinhasProdutividade({
+          data: filtros.data,
+          unidade: filtros.unidade,
+          produto: filtros.produto,
+          supervisor: filtros.supervisor
+        });
+        preencherSelect(selTempoCasa, extrairOpcoesIndicadores(linhas, 120, ordenarTempoCasaIndicadores), 'Todos', 'TODOS');
+        selTempoCasa.value = 'TODOS';
+        atualizarProdutividade();
+        return;
+      }
+
+      if (campoAlterado === 'tempoCasa') {
+        atualizarProdutividade();
+      }
+    }
+
+    function atualizarProdutividade() {
+      const filtros = obterFiltrosProdutividadeSelecionados();
+      const linhas = filtrarLinhasProdutividade(filtros);
+      const linhasHierarquia = montarHierarquiaProdutividade(linhas);
+      window.produtividadeUltimaHierarquia = linhasHierarquia;
+      inicializarExpansaoProdutividade(linhasHierarquia);
+      renderizarTabelaProdutividade(linhasHierarquia);
+
+      if (!window.__debugConciliacaoProdutividadeExecutado) {
+        window.__debugConciliacaoProdutividadeExecutado = true;
+        diagnosticarProdutividadeContraExcel();
+      }
+    }
+
+    function parseTempoProdutividade(valor) {
+      if (valor === null || valor === undefined || valor === '') return null;
+
+      if (valor instanceof Date && !isNaN(valor.getTime())) {
+        return valor.getHours() * 3600 + valor.getMinutes() * 60 + valor.getSeconds();
+      }
+
+      if (typeof valor === 'number') {
+        const abs = Math.abs(valor);
+        if (abs <= 1) return valor * 86400;
+        if (abs <= 86400) return valor;
+        return null;
+      }
+
+      let texto = String(valor).trim();
+      if (!texto || texto === 'undefined' || texto === 'null') return null;
+
+      let sinal = 1;
+      if (texto.charAt(0) === '-') {
+        sinal = -1;
+        texto = texto.slice(1).trim();
+      } else if (texto.charAt(0) === '+') {
+        texto = texto.slice(1).trim();
+      }
+
+      const matchHora = texto.match(/(\d{1,3}):(\d{2})(?::(\d{2}(?:[.,]\d+)?))?/);
+      if (matchHora) {
+        const horas = Number(matchHora[1] || 0);
+        const minutos = Number(matchHora[2] || 0);
+        const segundos = Number(String(matchHora[3] || 0).replace(',', '.'));
+        return sinal * (horas * 3600 + minutos * 60 + segundos);
+      }
+
+      let numeroTexto = texto
+        .replace(/\s/g, '')
+        .replace(/h$/i, '');
+
+      const temVirgula = numeroTexto.includes(',');
+      const temPonto = numeroTexto.includes('.');
+
+      if (temVirgula && temPonto) {
+        const ultimaVirgula = numeroTexto.lastIndexOf(',');
+        const ultimoPonto = numeroTexto.lastIndexOf('.');
+        if (ultimaVirgula > ultimoPonto) {
+          numeroTexto = numeroTexto.replace(/\./g, '').replace(',', '.');
+        } else {
+          numeroTexto = numeroTexto.replace(/,/g, '');
+        }
+      } else if (temVirgula) {
+        numeroTexto = numeroTexto.replace(',', '.');
+      }
+
+      const n = Number(numeroTexto);
+      if (!Number.isFinite(n)) return null;
+
+      const abs = Math.abs(n);
+      if (abs <= 1) return sinal * n * 86400;
+      if (abs <= 86400) return sinal * n;
+
+      return null;
+    }
+
+    function parseHorasDecimaisProdutividade(valor) {
+      if (valor === null || valor === undefined) return null;
+
+      if (typeof valor === 'number') {
+        return valor * 3600;
+      }
+
+      let texto = String(valor).trim();
+      if (!texto || texto === 'undefined') return null;
+
+      let sinal = 1;
+      if (texto.charAt(0) === '-') {
+        sinal = -1;
+        texto = texto.slice(1).trim();
+      } else if (texto.charAt(0) === '+') {
+        texto = texto.slice(1).trim();
+      }
+
+      if (texto.includes(':')) {
+        return sinal * tToS(texto);
+      }
+
+      texto = texto
+        .toLowerCase()
+        .replace('h', '')
+        .replace(/\s/g, '');
+
+      const temVirgula = texto.includes(',');
+      const temPonto = texto.includes('.');
+
+      if (temVirgula && temPonto) {
+        const ultimaVirgula = texto.lastIndexOf(',');
+        const ultimoPonto = texto.lastIndexOf('.');
+
+        if (ultimaVirgula > ultimoPonto) {
+          texto = texto.replace(/\./g, '').replace(',', '.');
+        } else {
+          texto = texto.replace(/,/g, '');
+        }
+      } else if (temVirgula) {
+        texto = texto.replace(',', '.');
+      }
+
+      const horas = Number(texto);
+      return Number.isFinite(horas) ? sinal * horas * 3600 : null;
+    }
+
+    function valorPreenchidoProdutividade(valor) {
+      return !(valor === null || valor === undefined || valor === '');
+    }
+
+    function mediaPercentualProdutividade(linhas, idx) {
+      let soma = 0;
+      let count = 0;
+
+      filtrarSomenteOperadoresProdutividade(linhas).forEach(row => {
+        const bruto = row[idx];
+        if (!valorPreenchidoProdutividade(bruto)) return;
+
+        let valor = parseNumeroIndicadores(bruto);
+        if (!Number.isFinite(valor)) return;
+        if (Math.abs(valor) <= 1) valor = valor * 100;
+
+        soma += valor;
+        count++;
+      });
+
+      return count > 0 ? soma / count : null;
+    }
+
+    function mediaTempoProdutividade(linhas, idx) {
+      let soma = 0;
+      let count = 0;
+      const linhasOperadores = filtrarSomenteOperadoresProdutividade(linhas);
+
+      if (idx === COLUNAS_PRODUTIVIDADE.totalLogado && !window.__debugMediaTempoCIExecutado) {
+        window.__debugMediaTempoCIExecutado = true;
+        const amostras = linhasOperadores.slice(0, 10).map(row => ({
+          bruto: row ? row[idx] : null,
+          tipo: row ? typeof row[idx] : null,
+          parseado: row ? parseTempoProdutividade(row[idx]) : null
+        }));
+        console.log('DEBUG MEDIA TEMPO CI', amostras);
+      }
+
+      linhasOperadores.forEach(row => {
+        const bruto = row[idx];
+        if (!valorPreenchidoProdutividade(bruto)) return;
+
+        const segundos = parseTempoProdutividade(bruto);
+        if (segundos === null) return;
+        soma += segundos;
+        count++;
+      });
+
+      return count > 0 ? soma / count : null;
+    }
+
+    function mediaHorasDecimaisProdutividade(linhas, idx) {
+      let soma = 0;
+      let count = 0;
+
+      filtrarSomenteOperadoresProdutividade(linhas).forEach(row => {
+        const bruto = row[idx];
+        if (!valorPreenchidoProdutividade(bruto)) return;
+
+        const segundos = parseHorasDecimaisProdutividade(bruto);
+        if (segundos === null) return;
+        soma += segundos;
+        count++;
+      });
+
+      return count > 0 ? soma / count : null;
+    }
+
+    function mediaNumeroProdutividade(linhas, idx) {
+      let soma = 0;
+      let count = 0;
+
+      filtrarSomenteOperadoresProdutividade(linhas).forEach(row => {
+        const bruto = row[idx];
+        if (!valorPreenchidoProdutividade(bruto)) return;
+
+        const valor = parseNumeroIndicadores(bruto);
+        if (!Number.isFinite(valor)) return;
+        soma += valor;
+        count++;
+      });
+
+      return count > 0 ? soma / count : null;
+    }
+
+    function somaNumeroProdutividade(linhas, idx) {
+      return filtrarSomenteOperadoresProdutividade(linhas).reduce((soma, row) => {
+        const bruto = row[idx];
+        if (!valorPreenchidoProdutividade(bruto)) return soma;
+
+        const valor = parseNumeroIndicadores(bruto);
+        return Number.isFinite(valor) ? soma + valor : soma;
+      }, 0);
+    }
+
+    function calcularMetricasProdutividade(linhas) {
+      linhas = filtrarSomenteOperadoresProdutividade(linhas);
+      const vendasCadastradas = somaNumeroProdutividade(linhas, COLUNAS_PRODUTIVIDADE.vendasCadastradas);
+      const vendasAprovadas = somaNumeroProdutividade(linhas, COLUNAS_PRODUTIVIDADE.vendasAprovadas);
+
+      if (!window.__debugProdutividadeCIExecutado) {
+        window.__debugProdutividadeCIExecutado = true;
+        const primeiraLinha = (linhas || []).find(row => row && row[COLUNAS_PRODUTIVIDADE.totalLogado] !== undefined && row[COLUNAS_PRODUTIVIDADE.totalLogado] !== null && row[COLUNAS_PRODUTIVIDADE.totalLogado] !== '');
+        console.log('DEBUG PRODUTIVIDADE CI totalLogado', {
+          indice: COLUNAS_PRODUTIVIDADE.totalLogado,
+          valorBruto: primeiraLinha ? primeiraLinha[COLUNAS_PRODUTIVIDADE.totalLogado] : null,
+          tipo: primeiraLinha ? typeof primeiraLinha[COLUNAS_PRODUTIVIDADE.totalLogado] : null,
+          linhaExemplo: primeiraLinha || null
+        });
+      }
+
+      return {
+        aderenciaEscala: calcularAderenciaLiquidaOficialIndicadores(linhas),
+        vendasCadastradas,
+        mediaDiaVendas: mediaNumeroProdutividade(linhas, COLUNAS_PRODUTIVIDADE.vendasCadastradas),
+        vendasAprovadas,
+        mediaDiaAprovadas: mediaNumeroProdutividade(linhas, COLUNAS_PRODUTIVIDADE.vendasAprovadas),
+        percentualAprovacao: vendasCadastradas > 0 ? (vendasAprovadas / vendasCadastradas) * 100 : null,
+        totalLogado: mediaTempoProdutividade(linhas, COLUNAS_PRODUTIVIDADE.totalLogado),
+        tempoFalado: mediaTempoProdutividade(linhas, COLUNAS_PRODUTIVIDADE.tempoFalado),
+        pausaNR17: mediaTempoProdutividade(linhas, COLUNAS_PRODUTIVIDADE.pausaNR17),
+        almoco: mediaTempoProdutividade(linhas, COLUNAS_PRODUTIVIDADE.almoco),
+        pausasInaderentes: mediaTempoProdutividade(linhas, COLUNAS_PRODUTIVIDADE.pausasInaderentes),
+        tempoTrabalhado: mediaTempoProdutividade(linhas, COLUNAS_PRODUTIVIDADE.tempoTrabalhado),
+        diferencaHoras: mediaHorasDecimaisProdutividade(linhas, COLUNAS_PRODUTIVIDADE.diferencaHoras)
+      };
+    }
+
+    function diagnosticarProdutividadeContraExcel() {
+      const filtros = obterFiltrosProdutividadeSelecionados();
+      const dataFiltro = normalizarMesIndicadores(filtros.data);
+      const indicesAderencia = [125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136];
+      const indicesTempo = [86, 87, 88, 107, 108, 109, 114, 115, 116, 122];
+      const indicesExemplo = [81, 91, 106, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 86, 87, 88, 107, 108, 109, 114, 115, 116, 122, 124];
+      const grupos = new Map();
+
+      obterLinhasOperadoresProdutividade().forEach(row => {
+        const data = normalizarMesIndicadores(row[140]);
+        if (dataFiltro && dataFiltro !== 'TODOS' && data !== dataFiltro) return;
+
+        const unidade = String(row[81] || '').trim();
+        if (!unidade) return;
+        if (!grupos.has(unidade)) grupos.set(unidade, []);
+        grupos.get(unidade).push(row);
+      });
+
+      const resultado = {};
+
+      [...grupos.keys()].sort((a, b) => a.localeCompare(b, 'pt-BR')).forEach(unidade => {
+        const linhasUnidade = grupos.get(unidade) || [];
+        const metricasAtuais = calcularMetricasProdutividade(linhasUnidade);
+        const aderenciasCandidatas = {};
+        const temposCandidatos = {};
+
+        indicesAderencia.forEach(idx => {
+          aderenciasCandidatas[idx] = formatarPercentualIndicadores(mediaPercentualIndicadores(linhasUnidade, idx));
+        });
+
+        indicesTempo.forEach(idx => {
+          temposCandidatos[idx] = formatarTempoHHMMSSProdutividade(mediaTempoProdutividade(linhasUnidade, idx));
+        });
+
+        const linhaPortoAlegre = unidade === 'Porto Alegre' ? linhasUnidade[0] : null;
+        const exemploPortoAlegre = linhaPortoAlegre
+          ? indicesExemplo.reduce((acc, idx) => {
+              acc[idx] = linhaPortoAlegre[idx];
+              return acc;
+            }, {})
+          : null;
+
+        resultado[unidade] = {
+          linhas: linhasUnidade.length,
+          atuais: {
+            aderenciaAtual: formatarPercentualIndicadores(metricasAtuais.aderenciaEscala),
+            totalLogadoAtual: formatarTempoHHMMSSProdutividade(metricasAtuais.totalLogado),
+            tempoTrabalhadoAtual: formatarTempoHHMMSSProdutividade(metricasAtuais.tempoTrabalhado),
+            diferencaHorasAtual: formatarTempoHHMMSSProdutividade(metricasAtuais.diferencaHoras, true)
+          },
+          aderenciasCandidatas,
+          temposCandidatos,
+          exemploPortoAlegre
+        };
+      });
+
+      console.log('DEBUG CONCILIACAO PRODUTIVIDADE', resultado);
+    }
+
+    function montarHierarquiaProdutividade(linhas) {
+      linhas = filtrarSomenteOperadoresProdutividade(linhas);
+      const linhasRender = [];
+      const ordemUnidades = ['Porto Alegre', 'Barreiros', 'Praça XV', 'São Paulo'];
+      const ordenarUnidades = (a, b) => {
+        const idxA = ordemUnidades.indexOf(a);
+        const idxB = ordemUnidades.indexOf(b);
+        if (idxA !== -1 || idxB !== -1) {
+          return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
+        }
+        return a.localeCompare(b, 'pt-BR');
+      };
+      const ordenarAlfabetico = (a, b) => a.localeCompare(b, 'pt-BR');
+
+      const gruposUnidade = agruparLinhasIndicadores(linhas, 81);
+      [...gruposUnidade.keys()].sort(ordenarUnidades).forEach(unidade => {
+        const linhasUnidade = gruposUnidade.get(unidade) || [];
+        const gruposProduto = agruparLinhasIndicadores(linhasUnidade, 106);
+        const keyUnidade = unidade;
+        linhasRender.push({
+          key: keyUnidade,
+          parentKey: null,
+          level: 0,
+          label: unidade,
+          metricas: calcularMetricasProdutividade(linhasUnidade),
+          hasChildren: gruposProduto.size > 0
+        });
+
+        [...gruposProduto.keys()].sort(ordenarAlfabetico).forEach(produto => {
+          const linhasProduto = gruposProduto.get(produto) || [];
+          const gruposSupervisor = agruparLinhasIndicadores(linhasProduto, 9);
+          const keyProduto = `${keyUnidade} > ${produto}`;
+          linhasRender.push({
+            key: keyProduto,
+            parentKey: keyUnidade,
+            level: 1,
+            label: produto,
+            metricas: calcularMetricasProdutividade(linhasProduto),
+            hasChildren: gruposSupervisor.size > 0
+          });
+
+          [...gruposSupervisor.keys()].sort(ordenarAlfabetico).forEach(supervisor => {
+            const linhasSupervisor = gruposSupervisor.get(supervisor) || [];
+            const gruposTempoCasa = agruparLinhasIndicadores(linhasSupervisor, 120);
+            const keySupervisor = `${keyProduto} > ${supervisor}`;
+            linhasRender.push({
+              key: keySupervisor,
+              parentKey: keyProduto,
+              level: 2,
+              label: supervisor,
+              metricas: calcularMetricasProdutividade(linhasSupervisor),
+              hasChildren: gruposTempoCasa.size > 0
+            });
+
+            [...gruposTempoCasa.keys()].sort(ordenarTempoCasaIndicadores).forEach(tempoCasa => {
+              const linhasTempoCasa = gruposTempoCasa.get(tempoCasa) || [];
+              const gruposOperador = agruparLinhasIndicadores(linhasTempoCasa, 7);
+              const keyTempoCasa = `${keySupervisor} > ${tempoCasa}`;
+              linhasRender.push({
+                key: keyTempoCasa,
+                parentKey: keySupervisor,
+                level: 3,
+                label: tempoCasa,
+                metricas: calcularMetricasProdutividade(linhasTempoCasa),
+                hasChildren: gruposOperador.size > 0
+              });
+
+              [...gruposOperador.keys()].sort(ordenarAlfabetico).forEach(operador => {
+                const linhasOperador = gruposOperador.get(operador) || [];
+                linhasRender.push({
+                  key: `${keyTempoCasa} > ${operador}`,
+                  parentKey: keyTempoCasa,
+                  level: 4,
+                  label: operador,
+                  metricas: calcularMetricasProdutividade(linhasOperador),
+                  hasChildren: false
+                });
+              });
+            });
+          });
+        });
+      });
+
+      return linhasRender;
+    }
+
+    function inicializarExpansaoProdutividade(linhasHierarquia) {
+      if (!window.produtividadeExpandedKeys) window.produtividadeExpandedKeys = new Set();
+      if (!window.produtividadeCollapsedKeys) window.produtividadeCollapsedKeys = new Set();
+
+      const keysAtuais = new Set((linhasHierarquia || []).map(linha => linha.key));
+      [...window.produtividadeExpandedKeys].forEach(key => {
+        if (!keysAtuais.has(key)) window.produtividadeExpandedKeys.delete(key);
+      });
+      [...window.produtividadeCollapsedKeys].forEach(key => {
+        if (!keysAtuais.has(key)) window.produtividadeCollapsedKeys.delete(key);
+      });
+
+      (linhasHierarquia || []).forEach(linha => {
+        if (linha.hasChildren && !window.produtividadeCollapsedKeys.has(linha.key)) {
+          window.produtividadeExpandedKeys.add(linha.key);
+        }
+      });
+    }
+
+    function linhaProdutividadeVisivel(linha, mapaLinhas) {
+      if (!linha) return false;
+      if (linha.level === 0) return true;
+
+      let parentKey = linha.parentKey;
+      while (parentKey) {
+        const parent = mapaLinhas.get(parentKey);
+        if (!parent) return false;
+        if (!window.produtividadeExpandedKeys || !window.produtividadeExpandedKeys.has(parentKey)) return false;
+        parentKey = parent.parentKey;
+      }
+
+      return true;
+    }
+
+    function toggleProdutividadeNode(key) {
+      if (!window.produtividadeExpandedKeys) window.produtividadeExpandedKeys = new Set();
+      if (!window.produtividadeCollapsedKeys) window.produtividadeCollapsedKeys = new Set();
+
+      if (window.produtividadeExpandedKeys.has(key)) {
+        window.produtividadeExpandedKeys.delete(key);
+        window.produtividadeCollapsedKeys.add(key);
+      } else {
+        window.produtividadeExpandedKeys.add(key);
+        window.produtividadeCollapsedKeys.delete(key);
+      }
+
+      renderizarTabelaProdutividade(window.produtividadeUltimaHierarquia || []);
+    }
+
+    function inicializarEventosProdutividade() {
+      const tbody = document.getElementById('produtividadeHierarchyBody');
+      if (!tbody || tbody.dataset.produtividadeToggleBound === 'true') return;
+
+      tbody.addEventListener('click', function(e) {
+        const btn = e.target.closest('.hierarchy-toggle');
+        if (!btn || !tbody.contains(btn)) return;
+
+        e.stopPropagation();
+        toggleProdutividadeNode(btn.dataset.key);
+      });
+
+      tbody.dataset.produtividadeToggleBound = 'true';
+    }
+
+    function renderizarControleExpansaoProdutividade(linha) {
+      if (!linha.hasChildren) return '<span class="hierarchy-toggle-placeholder"></span>';
+
+      const expanded = window.produtividadeExpandedKeys && window.produtividadeExpandedKeys.has(linha.key);
+      const key = escapeHtmlPortal_(linha.key);
+      return `<button class="hierarchy-toggle" type="button" data-key="${key}" aria-expanded="${expanded ? 'true' : 'false'}">${expanded ? '▾' : '▸'}</button>`;
+    }
+
+    function formatarNumeroProdutividade(valor, casas = 0) {
+      if (valor === null || valor === undefined || !Number.isFinite(Number(valor))) return '-';
+      return Number(valor).toLocaleString('pt-BR', {
+        minimumFractionDigits: casas,
+        maximumFractionDigits: casas
+      });
+    }
+
+    function formatarTempoHHMMSSProdutividade(segundos, comSinal = false) {
+      if (segundos === null || segundos === undefined || !Number.isFinite(Number(segundos))) return '-';
+      const totalAbs = Math.abs(Math.round(segundos));
+      const horas = Math.floor(totalAbs / 3600);
+      const minutos = Math.floor((totalAbs % 3600) / 60);
+      const segs = totalAbs % 60;
+      const sinal = comSinal && segundos < 0 ? '-' : '';
+      return `${sinal}${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segs).padStart(2, '0')}`;
+    }
+
+    function renderizarTabelaProdutividade(linhasHierarquia) {
+      const tbody = document.getElementById('produtividadeHierarchyBody');
+      if (!tbody) return;
+
+      if (!linhasHierarquia || linhasHierarquia.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="14" class="indicadores-name-cell">Não há dados para os filtros selecionados.</td></tr>';
+        return;
+      }
+
+      const mapaLinhas = new Map(linhasHierarquia.map(linha => [linha.key, linha]));
+      const linhasVisiveis = linhasHierarquia.filter(linha => linhaProdutividadeVisivel(linha, mapaLinhas));
+
+      tbody.innerHTML = linhasVisiveis.map(linha => {
+        const metricas = linha.metricas || {};
+        const label = escapeHtmlPortal_(linha.label);
+        const classeLinha = [`lvl-${linha.level}`];
+        if (linha.hasChildren) classeLinha.push('is-expandable');
+        return `
+          <tr class="${classeLinha.join(' ')}">
+            <td class="indicadores-name-cell indicadores-indent-${linha.level}">${renderizarControleExpansaoProdutividade(linha)}<span class="hierarchy-label">${label}</span></td>
+            <td class="indicadores-num">${formatarPercentualIndicadores(metricas.aderenciaEscala)}</td>
+            <td class="indicadores-num">${formatarNumeroProdutividade(metricas.vendasCadastradas, 0)}</td>
+            <td class="indicadores-num">${formatarNumeroProdutividade(metricas.mediaDiaVendas, 1)}</td>
+            <td class="indicadores-num">${formatarNumeroProdutividade(metricas.vendasAprovadas, 0)}</td>
+            <td class="indicadores-num">${formatarNumeroProdutividade(metricas.mediaDiaAprovadas, 1)}</td>
+            <td class="indicadores-num">${formatarPercentualIndicadores(metricas.percentualAprovacao)}</td>
+            <td class="indicadores-num">${formatarTempoHHMMSSProdutividade(metricas.totalLogado)}</td>
+            <td class="indicadores-num">${formatarTempoHHMMSSProdutividade(metricas.tempoFalado)}</td>
+            <td class="indicadores-num">${formatarTempoHHMMSSProdutividade(metricas.pausaNR17)}</td>
+            <td class="indicadores-num">${formatarTempoHHMMSSProdutividade(metricas.almoco)}</td>
+            <td class="indicadores-num">${formatarTempoHHMMSSProdutividade(metricas.pausasInaderentes)}</td>
+            <td class="indicadores-num">${formatarTempoHHMMSSProdutividade(metricas.tempoTrabalhado)}</td>
+            <td class="indicadores-num">${formatarTempoHHMMSSProdutividade(metricas.diferencaHoras, true)}</td>
+          </tr>
+        `;
+      }).join('');
+
+      inicializarEventosProdutividade();
     }
 
     function renderCharts(res) {

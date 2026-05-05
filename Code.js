@@ -1299,12 +1299,63 @@ function obterDadosExcel() {
   return JSON.stringify([['Erro', 'Use obterDadosExcelAutenticado(token).']]);
 }
 
+function logSyncExcelToBridge_(mensagem, detalhe) {
+  const texto = detalhe === undefined ? mensagem : `${mensagem}: ${JSON.stringify(detalhe)}`;
+  console.log(texto);
+  Logger.log(texto);
+}
+
+function garantirDimensoesAbaSync_(sheet, numRows, numCols) {
+  if (sheet.getMaxRows() < numRows) {
+    sheet.insertRowsAfter(sheet.getMaxRows(), numRows - sheet.getMaxRows());
+  }
+
+  if (sheet.getMaxColumns() < numCols) {
+    sheet.insertColumnsAfter(sheet.getMaxColumns(), numCols - sheet.getMaxColumns());
+  }
+}
+
+function obterOuCriarAbaSync_(ss, nomeAba) {
+  return localizarAba(ss, nomeAba) || ss.insertSheet(nomeAba);
+}
+
+function validarDadosBaseSync_(data) {
+  if (!Array.isArray(data)) throw new Error('Dados da BASE ESPELHO invalidos: retorno nao e array.');
+  if (data.length <= 1) throw new Error('Dados da BASE ESPELHO invalidos: sem linhas de dados.');
+  if (!data[0] || data[0].length < 100) throw new Error('Dados da BASE ESPELHO invalidos: cabecalho com menos de 100 colunas.');
+
+  const possuiOperador = data.slice(1).some(row => String(row && row[91] || '').trim().toUpperCase() === 'OPERADOR');
+  if (!possuiOperador) throw new Error('Dados da BASE ESPELHO invalidos: nenhuma linha Operador encontrada na coluna CN.');
+}
+
+function gravarDadosEmAbaSync_(sheet, data) {
+  const numRows = data.length;
+  const numCols = data[0].length;
+
+  garantirDimensoesAbaSync_(sheet, numRows, numCols);
+  sheet.clearContents();
+  sheet.getRange(1, 1, numRows, numCols).setValues(data);
+}
+
+function validarAbaRecebeuDadosSync_(sheet, data) {
+  if (sheet.getLastRow() < data.length) throw new Error(`Aba ${sheet.getName()} recebeu menos linhas que o esperado.`);
+  if (sheet.getLastColumn() < data[0].length) throw new Error(`Aba ${sheet.getName()} recebeu menos colunas que o esperado.`);
+}
+
 function syncExcelToBridge() {
   const excelId = '1HOWv62ayFFoIsWOdjKmO5MzsKqd6H-BH';
   const bridgeId = '1sTeO8derRRrW5eB9FglZmee_ya_2v0szvck8F900FJg';
+  let tempFileId = null;
   
   try {
+    logSyncExcelToBridge_('Inicio da sincronizacao Excel -> Bridge');
+
     const excelFile = DriveApp.getFileById(excelId);
+    logSyncExcelToBridge_('Arquivo Excel encontrado', {
+      id: excelId,
+      nome: excelFile.getName()
+    });
+
     const blob = excelFile.getBlob();
     
     const resource = {
@@ -1313,23 +1364,235 @@ function syncExcelToBridge() {
     };
     
     const tempFile = Drive.Files.create(resource, blob);
+    tempFileId = tempFile.id;
+    logSyncExcelToBridge_('Conversao temporaria criada', { id: tempFileId });
+
     const tempSs = SpreadsheetApp.openById(tempFile.id);
     
     const sourceSheet = tempSs.getSheetByName("BASE ESPELHO");
     
     if (!sourceSheet) throw new Error("Aba BASE ESPELHO nao encontrada no Excel.");
+    logSyncExcelToBridge_('Aba BASE ESPELHO encontrada');
     
     const data = sourceSheet.getDataRange().getValues();
+    logSyncExcelToBridge_('Linhas e colunas carregadas', {
+      linhas: data.length,
+      colunas: data[0] ? data[0].length : 0
+    });
+
+    validarDadosBaseSync_(data);
+    logSyncExcelToBridge_('Validacao aprovada');
     
     const bridgeSs = SpreadsheetApp.openById(bridgeId);
-    const bridgeSheet = bridgeSs.getSheets()[0];
-    bridgeSheet.clear();
-    bridgeSheet.getRange(1, 1, data.length, data[0].length).setValues(data);
-    
-    Drive.Files.remove(tempFile.id);
-    console.log("Sincronizacao realizada com sucesso!");
+    const bridgeSheet = localizarAba(bridgeSs, 'Base');
+    if (!bridgeSheet) throw new Error('Aba destino Base nao encontrada na planilha bridge.');
+
+    const tempBridgeSheet = obterOuCriarAbaSync_(bridgeSs, '_TEMP_BASE_SYNC');
+    gravarDadosEmAbaSync_(tempBridgeSheet, data);
+    validarAbaRecebeuDadosSync_(tempBridgeSheet, data);
+    logSyncExcelToBridge_('Gravacao em aba temporaria concluida', {
+      aba: tempBridgeSheet.getName(),
+      linhas: tempBridgeSheet.getLastRow(),
+      colunas: tempBridgeSheet.getLastColumn()
+    });
+
+    const backupSheet = obterOuCriarAbaSync_(bridgeSs, '_BACKUP_BASE_SYNC');
+    const dadosBackup = bridgeSheet.getDataRange().getValues();
+    gravarDadosEmAbaSync_(backupSheet, dadosBackup);
+
+    try {
+      gravarDadosEmAbaSync_(bridgeSheet, data);
+    } catch (erroSetValuesBase) {
+      logSyncExcelToBridge_('Falha ao substituir Base; tentando restaurar backup', {
+        erro: erroSetValuesBase.message
+      });
+      gravarDadosEmAbaSync_(bridgeSheet, dadosBackup);
+      throw erroSetValuesBase;
+    }
+
+    validarAbaRecebeuDadosSync_(bridgeSheet, data);
+    logSyncExcelToBridge_('Substituicao da Base concluida', {
+      linhas: bridgeSheet.getLastRow(),
+      colunas: bridgeSheet.getLastColumn()
+    });
     
   } catch (e) {
     console.error("Erro na sincronizacao: " + e.message);
+    Logger.log("Erro na sincronizacao: " + e.message);
+    throw e;
+  } finally {
+    if (tempFileId) {
+      try {
+        Drive.Files.remove(tempFileId);
+        logSyncExcelToBridge_('Arquivo temporario removido', { id: tempFileId });
+      } catch (removeError) {
+        console.error("Erro ao remover arquivo temporario: " + removeError.message);
+        Logger.log("Erro ao remover arquivo temporario: " + removeError.message);
+      }
+    }
   }
+}
+
+function diagnosticarBaseEspelhoExcelSemGravar() {
+  const excelId = '1HOWv62ayFFoIsWOdjKmO5MzsKqd6H-BH';
+  let tempFileId = null;
+
+  try {
+    Logger.log('DIAG: inicio leitura BASE ESPELHO do Excel sem gravar.');
+
+    const excelFile = DriveApp.getFileById(excelId);
+    Logger.log('DIAG: arquivo encontrado: ' + excelFile.getName());
+    Logger.log('DIAG: ultima atualizacao Drive: ' + excelFile.getLastUpdated());
+
+    const blob = excelFile.getBlob();
+    const resource = {
+      name: 'TempDiagBaseEspelho',
+      mimeType: MimeType.GOOGLE_SHEETS
+    };
+
+    const tempFile = Drive.Files.create(resource, blob);
+    tempFileId = tempFile.id;
+    Logger.log('DIAG: arquivo temporario criado: ' + tempFileId);
+
+    const tempSs = SpreadsheetApp.openById(tempFileId);
+    const sourceSheet = tempSs.getSheetByName('BASE ESPELHO');
+
+    if (!sourceSheet) {
+      throw new Error('DIAG: aba BASE ESPELHO nao encontrada no arquivo convertido.');
+    }
+
+    const data = sourceSheet.getDataRange().getDisplayValues();
+
+    Logger.log('DIAG: linhas carregadas: ' + data.length);
+    Logger.log('DIAG: colunas carregadas: ' + (data[0] ? data[0].length : 0));
+
+    const resumo = diagnosticarMetricaBaseArray_(data, 'mai/26');
+
+    Logger.log('DIAG RESULTADO BASE ESPELHO CONVERTIDA: ' + JSON.stringify(resumo, null, 2));
+
+    return resumo;
+
+  } catch (e) {
+    Logger.log('DIAG ERRO: ' + e.message);
+    throw e;
+  } finally {
+    if (tempFileId) {
+      try {
+        Drive.Files.remove(tempFileId);
+        Logger.log('DIAG: arquivo temporario removido: ' + tempFileId);
+      } catch (removeError) {
+        Logger.log('DIAG: erro ao remover temporario: ' + removeError.message);
+      }
+    }
+  }
+}
+
+function diagnosticarMetricaBaseArray_(data, mesRef) {
+  const resultado = {
+    mes: mesRef,
+    totalLinhas: data.length,
+    totalOperadorMes: 0,
+    totalCadastradasDR121: 0,
+    totalAprovadasCZ103: 0,
+    linhasSemSiteOuProduto: 0,
+    porSiteProduto: {},
+    exemplosAprovadas: [],
+    exemplosSemSiteOuProduto: []
+  };
+
+  data.slice(1).forEach(row => {
+    const perfil = String(row[91] || '').trim().toUpperCase();
+    const mes = String(row[140] || '').trim().toLowerCase();
+
+    if (perfil !== 'OPERADOR') return;
+    if (mes !== String(mesRef || '').toLowerCase()) return;
+
+    resultado.totalOperadorMes++;
+
+    const site = String(row[81] || '').trim();
+    const produto = String(row[106] || '').trim();
+    const chave = `${site || '(sem site)'} | ${produto || '(sem produto)'}`;
+
+    const cadastradas = parseNumeroDiagnosticoSync_(row[121]);
+    const aprovadas = parseNumeroDiagnosticoSync_(row[103]);
+
+    resultado.totalCadastradasDR121 += cadastradas;
+    resultado.totalAprovadasCZ103 += aprovadas;
+
+    if (!resultado.porSiteProduto[chave]) {
+      resultado.porSiteProduto[chave] = {
+        site,
+        produto,
+        linhas: 0,
+        cadastradas: 0,
+        aprovadas: 0
+      };
+    }
+
+    resultado.porSiteProduto[chave].linhas++;
+    resultado.porSiteProduto[chave].cadastradas += cadastradas;
+    resultado.porSiteProduto[chave].aprovadas += aprovadas;
+
+    if (resultado.exemplosAprovadas.length < 20) {
+      resultado.exemplosAprovadas.push({
+        site,
+        produto,
+        operador: row[7],
+        perfil: row[91],
+        mes: row[140],
+        brutasDR121: row[121],
+        aprovadasCZ103: row[103]
+      });
+    }
+
+    if (!site || !produto) {
+      resultado.linhasSemSiteOuProduto++;
+      if (resultado.exemplosSemSiteOuProduto.length < 20) {
+        resultado.exemplosSemSiteOuProduto.push({
+          site,
+          produto,
+          operador: row[7],
+          perfil: row[91],
+          mes: row[140],
+          brutasDR121: row[121],
+          aprovadasCZ103: row[103],
+          supervisor: row[9]
+        });
+      }
+    }
+  });
+
+  return resultado;
+}
+
+function parseNumeroDiagnosticoSync_(valor) {
+  if (valor === null || valor === undefined || valor === '') return 0;
+  if (typeof valor === 'number') return valor;
+
+  let texto = String(valor).trim();
+  if (!texto) return 0;
+
+  texto = texto
+    .replace(/\s/g, '')
+    .replace(/R\$/g, '')
+    .replace(/%/g, '');
+
+  const temVirgula = texto.includes(',');
+  const temPonto = texto.includes('.');
+
+  if (temVirgula && temPonto) {
+    const ultimaVirgula = texto.lastIndexOf(',');
+    const ultimoPonto = texto.lastIndexOf('.');
+
+    if (ultimaVirgula > ultimoPonto) {
+      texto = texto.replace(/\./g, '').replace(',', '.');
+    } else {
+      texto = texto.replace(/,/g, '');
+    }
+  } else if (temVirgula) {
+    texto = texto.replace(',', '.');
+  }
+
+  const numero = Number(texto);
+  return Number.isFinite(numero) ? numero : 0;
 }
