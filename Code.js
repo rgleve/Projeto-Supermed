@@ -1986,11 +1986,21 @@ function normalizarTempoBridge_(valor) {
   if (valor === null || valor === undefined || valor === '') return valor;
 
   if (valor instanceof Date && !isNaN(valor.getTime())) {
-    const segundos =
+    let segundos =
       valor.getUTCHours() * 3600 +
       valor.getUTCMinutes() * 60 +
       valor.getUTCSeconds() +
       valor.getUTCMilliseconds() / 1000;
+
+    const ano = valor.getUTCFullYear();
+    const mes = valor.getUTCMonth();
+    const dia = valor.getUTCDate();
+
+    // Duracoes importadas do Excel/Google chegam como Date em 1899-12-30
+    // com uma base artificial de 8 horas. Precisamos descontar essa base.
+    if (ano === 1899 && mes === 11 && dia === 30 && segundos >= 8 * 3600) {
+      segundos -= 8 * 3600;
+    }
 
     return segundos / 86400;
   }
