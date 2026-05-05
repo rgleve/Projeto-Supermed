@@ -1722,6 +1722,125 @@ function diagnosticarBaseBridgeGoogleSheets() {
   return resultado;
 }
 
+function corrigirTemposBaseBridgeAtual() {
+  const bridgeId = '1sTeO8derRRrW5eB9FglZmee_ya_2v0szvck8F900FJg';
+  const nomeBackup = '_BACKUP_ANTES_CORRECAO_TEMPOS';
+  const indicesTempos = [86, 87, 88, 93, 108, 115, 122];
+
+  const ss = SpreadsheetApp.openById(bridgeId);
+  const baseSheet = localizarAba(ss, 'Base');
+  if (!baseSheet) throw new Error('CORRECAO TEMPOS: aba Base nao encontrada.');
+
+  const rangeBase = baseSheet.getDataRange();
+  const dadosBase = rangeBase.getValues();
+  const totalLinhas = dadosBase.length;
+  const totalColunas = dadosBase[0] ? dadosBase[0].length : 0;
+
+  try {
+    const backupSheet = obterOuCriarAbaSync_(ss, nomeBackup);
+    gravarDadosEmAbaSync_(backupSheet, dadosBase);
+  } catch (erroBackup) {
+    Logger.log('CORRECAO TEMPOS: backup falhou; Base nao foi alterada. ' + erroBackup.message);
+    throw new Error('CORRECAO TEMPOS: backup falhou; Base nao foi alterada. ' + erroBackup.message);
+  }
+
+  const resumo = {
+    planilhaId: bridgeId,
+    aba: baseSheet.getName(),
+    backup: nomeBackup,
+    totalLinhas,
+    totalColunas,
+    celulasAvaliadas: 0,
+    colunas: {}
+  };
+
+  indicesTempos.forEach(indiceJs => {
+    const colunaPlanilha = indiceJs + 1;
+    const quantidadeLinhasDados = Math.max(totalLinhas - 1, 0);
+    const infoColuna = {
+      indiceJS: indiceJs,
+      colunaPlanilha,
+      avaliadas: quantidadeLinhasDados,
+      corrigidas: 0,
+      exemplos: []
+    };
+
+    resumo.celulasAvaliadas += quantidadeLinhasDados;
+
+    if (quantidadeLinhasDados === 0) {
+      resumo.colunas[indiceJs] = infoColuna;
+      return;
+    }
+
+    const valoresColuna = baseSheet.getRange(2, colunaPlanilha, quantidadeLinhasDados, 1).getValues();
+    const corrigidos = valoresColuna.map((linha, idx) => {
+      const antes = linha[0];
+      const depois = normalizarTempoBridge_(antes);
+
+      if (depois !== antes) {
+        infoColuna.corrigidas++;
+        if (infoColuna.exemplos.length < 10) {
+          infoColuna.exemplos.push({
+            linha: idx + 2,
+            antes,
+            depois
+          });
+        }
+      }
+
+      return [depois];
+    });
+
+    baseSheet.getRange(2, colunaPlanilha, quantidadeLinhasDados, 1)
+      .setValues(corrigidos)
+      .setNumberFormat('[h]:mm:ss');
+
+    resumo.colunas[indiceJs] = infoColuna;
+  });
+
+  Logger.log('CORRECAO TEMPOS BASE BRIDGE: ' + JSON.stringify(resumo, null, 2));
+  console.log('CORRECAO TEMPOS BASE BRIDGE: ' + JSON.stringify(resumo));
+  return resumo;
+}
+
+function normalizarTempoBridge_(valor) {
+  if (valor === null || valor === undefined || valor === '') return valor;
+
+  if (typeof valor === 'number') {
+    if (valor === 0) return 0;
+    if (Math.abs(valor) > 1) return valor / 1000000000;
+    return valor;
+  }
+
+  let texto = String(valor).trim();
+  if (!texto) return valor;
+
+  texto = texto.replace(/\s/g, '');
+
+  const temVirgula = texto.includes(',');
+  const temPonto = texto.includes('.');
+
+  if (temVirgula && temPonto) {
+    const ultimaVirgula = texto.lastIndexOf(',');
+    const ultimoPonto = texto.lastIndexOf('.');
+
+    if (ultimaVirgula > ultimoPonto) {
+      texto = texto.replace(/\./g, '').replace(',', '.');
+    } else {
+      texto = texto.replace(/,/g, '');
+    }
+  } else if (temVirgula) {
+    texto = texto.replace(',', '.');
+  }
+
+  const n = Number(texto);
+  if (!Number.isFinite(n)) return valor;
+
+  if (n === 0) return 0;
+  if (Math.abs(n) > 1) return n / 1000000000;
+  return n;
+}
+
 function parseNumeroDiagnosticoSync_(valor) {
   if (valor === null || valor === undefined || valor === '') return 0;
   if (typeof valor === 'number') return valor;
