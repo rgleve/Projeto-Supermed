@@ -1439,9 +1439,11 @@ function normalizarPercentualBridge_(valor) {
 }
 
 function aplicarFormatosCriticosBaseBridge_(sheet) {
-  const maxRows = sheet.getMaxRows();
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 1) return;
+
   const aplicarFormato = (coluna, formato) => {
-    sheet.getRange(1, coluna, maxRows, 1).setNumberFormat(formato);
+    sheet.getRange(1, coluna, lastRow, 1).setNumberFormat(formato);
   };
 
   [82, 92, 107, 141].forEach(coluna => aplicarFormato(coluna, '@'));
@@ -1450,6 +1452,69 @@ function aplicarFormatosCriticosBaseBridge_(sheet) {
   [87, 88, 89, 94, 109, 116, 123, 127, 128, 129, 130, 131].forEach(coluna => aplicarFormato(coluna, '[h]:mm:ss'));
   aplicarFormato(132, '0.0%');
   aplicarFormato(125, '0.00');
+}
+
+function substituirBasePorAbaTemporariaSync_(ss, tempSheetName, baseSheetName, backupSheetName) {
+  const tempSheet = localizarAba(ss, tempSheetName);
+  if (!tempSheet) throw new Error(`Aba temporaria ${tempSheetName} nao encontrada para troca.`);
+
+  const baseSheet = localizarAba(ss, baseSheetName);
+  if (!baseSheet) throw new Error(`Aba ${baseSheetName} nao encontrada para troca.`);
+
+  const backupAntigo = localizarAba(ss, backupSheetName);
+  if (backupAntigo) {
+    logSyncExcelToBridge_('Excluindo backup antigo antes da troca de abas', {
+      aba: backupAntigo.getName()
+    });
+    ss.deleteSheet(backupAntigo);
+  }
+
+  let baseRenomeadaParaBackup = false;
+
+  try {
+    logSyncExcelToBridge_('Renomeando Base atual para backup', {
+      origem: baseSheet.getName(),
+      destino: backupSheetName
+    });
+    baseSheet.setName(backupSheetName);
+    baseRenomeadaParaBackup = true;
+
+    logSyncExcelToBridge_('Renomeando aba temporaria para Base', {
+      origem: tempSheet.getName(),
+      destino: baseSheetName
+    });
+    tempSheet.setName(baseSheetName);
+
+    const novaBase = localizarAba(ss, baseSheetName);
+    if (!novaBase) throw new Error(`Aba ${baseSheetName} nao encontrada apos troca.`);
+
+    logSyncExcelToBridge_('Troca de abas concluida por rename', {
+      base: novaBase.getName(),
+      backup: backupSheetName
+    });
+
+    return novaBase;
+  } catch (erroTroca) {
+    logSyncExcelToBridge_('Falha na troca de abas por rename', {
+      erro: erroTroca.message
+    });
+
+    if (baseRenomeadaParaBackup && !localizarAba(ss, baseSheetName)) {
+      try {
+        const backupAtual = localizarAba(ss, backupSheetName);
+        if (backupAtual) {
+          backupAtual.setName(baseSheetName);
+          logSyncExcelToBridge_('Backup restaurado como Base apos falha na troca');
+        }
+      } catch (erroRestore) {
+        logSyncExcelToBridge_('Falha ao restaurar backup como Base', {
+          erro: erroRestore.message
+        });
+      }
+    }
+
+    throw erroTroca;
+  }
 }
 
 function syncExcelToBridge() {
@@ -1508,6 +1573,7 @@ function syncExcelToBridge() {
 
     const tempBridgeSheet = obterOuCriarAbaSync_(bridgeSs, '_TEMP_BASE_SYNC');
     gravarDadosEmAbaSync_(tempBridgeSheet, data);
+    aplicarFormatosCriticosBaseBridge_(tempBridgeSheet);
     validarAbaRecebeuDadosSync_(tempBridgeSheet, data);
     logSyncExcelToBridge_('Gravacao em aba temporaria concluida', {
       aba: tempBridgeSheet.getName(),
@@ -1515,27 +1581,18 @@ function syncExcelToBridge() {
       colunas: tempBridgeSheet.getLastColumn()
     });
 
-    const backupSheet = obterOuCriarAbaSync_(bridgeSs, '_BACKUP_BASE_SYNC');
-    const dadosBackup = bridgeSheet.getDataRange().getValues();
-    gravarDadosEmAbaSync_(backupSheet, dadosBackup);
-
-    try {
-      gravarDadosEmAbaSync_(bridgeSheet, data);
-      aplicarFormatosCriticosBaseBridge_(bridgeSheet);
-      validarAbaRecebeuDadosSync_(bridgeSheet, data);
-    } catch (erroSetValuesBase) {
-      logSyncExcelToBridge_('Falha ao substituir Base; tentando restaurar backup', {
-        erro: erroSetValuesBase.message
-      });
-      gravarDadosEmAbaSync_(bridgeSheet, dadosBackup);
-      aplicarFormatosCriticosBaseBridge_(bridgeSheet);
-      throw erroSetValuesBase;
-    }
+    const novaBaseSheet = substituirBasePorAbaTemporariaSync_(
+      bridgeSs,
+      '_TEMP_BASE_SYNC',
+      'Base',
+      '_BACKUP_BASE_SYNC'
+    );
+    validarAbaRecebeuDadosSync_(novaBaseSheet, data);
 
     logSyncExcelToBridge_('Substituicao da Base concluida', {
       origem: nomeArquivoOrigem,
-      linhas: bridgeSheet.getLastRow(),
-      colunas: bridgeSheet.getLastColumn()
+      linhas: novaBaseSheet.getLastRow(),
+      colunas: novaBaseSheet.getLastColumn()
     });
     
   } catch (e) {
