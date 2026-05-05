@@ -4559,8 +4559,8 @@
           const prodName = String(r[106]).trim(); 
           if (prodName && prodName !== "undefined" && prodName !== "0" && prodName !== "0,00") prodsSet.add(prodName);
           
-          const mesName = String(r[140]).trim();
-          if(mesName && mesName !== "undefined") mesesSet.add(mesName);
+          const mesName = normalizarMesFiltroCapa(r[140], r[92]);
+          if (mesName && /^[a-zç]{3}\/\d{2}$/.test(mesName) && !/^\d+(\.\d+)?$/.test(mesName)) mesesSet.add(mesName);
         }
       });
       
@@ -4716,6 +4716,97 @@
       google.script.run.logoutPortal(token);
     }
 
+    function normalizarPercentualCapa(valor) {
+      if (valor === null || valor === undefined || valor === '') return null;
+
+      let n;
+
+      if (typeof valor === 'number') {
+        n = valor;
+      } else {
+        let texto = String(valor).trim();
+        if (!texto) return null;
+
+        texto = texto
+          .replace(/\s/g, '')
+          .replace('%', '');
+
+        const temVirgula = texto.includes(',');
+        const temPonto = texto.includes('.');
+
+        if (temVirgula && temPonto) {
+          const ultimaVirgula = texto.lastIndexOf(',');
+          const ultimoPonto = texto.lastIndexOf('.');
+
+          if (ultimaVirgula > ultimoPonto) {
+            texto = texto.replace(/\./g, '').replace(',', '.');
+          } else {
+            texto = texto.replace(/,/g, '');
+          }
+        } else if (temVirgula) {
+          texto = texto.replace(',', '.');
+        }
+
+        n = Number(texto);
+      }
+
+      if (!Number.isFinite(n)) return null;
+
+      // Se vier como 87.75, transformar para 0.8775.
+      if (Math.abs(n) > 1 && Math.abs(n) <= 100) return n / 100;
+
+      // Se vier como 8775.66, transformar para 0.877566.
+      if (Math.abs(n) > 100 && Math.abs(n) <= 10000) return n / 10000;
+
+      // Se vier como 0.8775, manter.
+      return n;
+    }
+
+    function normalizarMesFiltroCapa(valorMes, valorDataFallback) {
+      const meses = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+
+      function formatarDataComoMesAno(data) {
+        if (!(data instanceof Date) || isNaN(data.getTime())) return '';
+        return `${meses[data.getMonth()]}/${String(data.getFullYear()).slice(-2)}`;
+      }
+
+      function serialExcelParaData(serial) {
+        const n = Number(serial);
+        if (!Number.isFinite(n)) return null;
+        return new Date(Math.round((n - 25569) * 86400 * 1000));
+      }
+
+      function tentarNormalizar(valor) {
+        if (valor === null || valor === undefined || valor === '') return '';
+
+        if (valor instanceof Date && !isNaN(valor.getTime())) {
+          return formatarDataComoMesAno(valor);
+        }
+
+        let texto = String(valor).trim().toLowerCase();
+        if (!texto) return '';
+
+        if (/^[a-zç]{3}\/\d{2}$/.test(texto)) return texto;
+
+        if (/^\d+(\.\d+)?$/.test(texto)) {
+          const data = serialExcelParaData(texto);
+          return formatarDataComoMesAno(data);
+        }
+
+        const matchBr = texto.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+        if (matchBr) {
+          const dia = Number(matchBr[1]);
+          const mes = Number(matchBr[2]) - 1;
+          const ano = Number(matchBr[3]);
+          return formatarDataComoMesAno(new Date(ano, mes, dia));
+        }
+
+        return '';
+      }
+
+      return tentarNormalizar(valorMes) || tentarNormalizar(valorDataFallback);
+    }
+
     function iniciarPortal() {
       atualizarRelogio();
       const loginForm = document.getElementById('loginForm');
@@ -4778,7 +4869,7 @@
       let uniqueDays = new Set();
 
       raw.slice(1).forEach(r => {
-        const matchMes = String(r[col.dt]).trim() === fM;
+        const matchMes = normalizarMesFiltroCapa(r[col.dt], r[col.dDia]) === fM;
         const matchOperacao = (fS === "TODAS" || String(r[col.op]).trim() === fS);
         const matchProduto = (fP === "TODOS" || String(r[col.prod]).trim() === fP);
 
@@ -4787,7 +4878,7 @@
           d.can += Number(String(r[col.can]).replace(',','.'))||0; d.pen += Number(String(r[col.pen]).replace(',','.'))||0;
           d.sCW += Number(String(r[col.cw]).replace(',','.'))||0; d.sDR += Number(String(r[col.dr]).replace(',','.'))||0;
           
-          let eb=parseFloat(String(r[col.eb]).replace(',','.')); if(!isNaN(eb)){d.sEB+=eb;d.cEB++;}
+          const eb = normalizarPercentualCapa(r[col.eb]); if(eb !== null){d.sEB+=eb;d.cEB++;}
           let ei=parseFloat(String(r[col.ei]).replace(',','.')); if(!isNaN(ei)){d.sEI+=ei;d.cEI++;}
           let ej=parseFloat(String(r[col.ej]).replace(',','.')); if(!isNaN(ej)){d.sEJ+=ej;d.cEJ++;}
           
@@ -4805,7 +4896,7 @@
       
       const res = {
         vLog: Math.round(d.log/divDays),
-        vAder: d.cEB ? (d.sEB/d.cEB)*100 : 0,
+        vAder: d.cEB ? d.sEB/d.cEB : 0,
         vVol: [d.cad, d.apr, d.can, d.pen],
         vConv: [d.cad ? Math.round((d.apr/d.cad)*100) : 0, d.cad ? Math.round((d.can/d.cad)*100) : 0, d.cad ? Math.round((d.pen/d.cad)*100) : 0],
         vProd: [d.count ? d.sCW/d.count : 0, d.count ? d.sDR/d.count : 0], // Matemática da versão 1 restaurada
@@ -4828,8 +4919,9 @@
     function renderUI(res) {
       document.getElementById('vLog').innerText = res.vLog > 0 ? res.vLog : 0;
       
-      document.getElementById('vAder').innerText = res.vAder > 0 ? res.vAder.toFixed(2)+'%' : '0%';
-      document.getElementById('pathAder').style.strokeDasharray = `${res.vAder}, 100`;
+      const aderenciaPercentual = res.vAder * 100;
+      document.getElementById('vAder').innerText = aderenciaPercentual > 0 ? aderenciaPercentual.toFixed(2)+'%' : '0%';
+      document.getElementById('pathAder').style.strokeDasharray = `${aderenciaPercentual}, 100`;
 
       document.getElementById('vTelOut').innerText = res.vTel[0] > 0 ? res.vTel[0].toFixed(2)+'%' : '';
       document.getElementById('vTelIn').innerText = res.vTel[1] > 0 ? res.vTel[1].toFixed(2)+'%' : '';
