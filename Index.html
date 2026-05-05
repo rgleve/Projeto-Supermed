@@ -2133,6 +2133,361 @@
       background: linear-gradient(180deg, rgba(86, 108, 133, 0.90), rgba(63, 80, 101, 0.82)) !important;
     }
 
+    /* POLIMENTO OPERACIONAL - LIQUID GLASS + LEITURA EXCEL */
+    .card {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.90), rgba(255,255,255,0.68)),
+        var(--card-bg);
+      border-color: rgba(255,255,255,0.76);
+      box-shadow:
+        0 22px 48px rgba(15, 23, 42, 0.13),
+        0 8px 18px rgba(15, 23, 42, 0.06),
+        inset 0 1px 0 rgba(255,255,255,0.82);
+    }
+    .card-title {
+      font-size: 9.5px;
+      letter-spacing: 1.25px;
+      color: #526173;
+    }
+    .icon-container {
+      opacity: 0.82;
+      color: #7890a6;
+    }
+    .ring-val,
+    .logados-val,
+    .val-out,
+    .val-in,
+    .pause-total-value,
+    .pause-value {
+      font-weight: 850;
+    }
+    .ring-val,
+    .val-out,
+    .val-in {
+      color: #172433;
+    }
+
+    .metric-good,
+    #view-indicadores-operador .indicadores-compare-chip.good,
+    #view-indicadores-operador .meta-ok {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 54px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #dff7ea, #c9efd9);
+      border: 1px solid rgba(22, 163, 74, 0.26);
+      color: #166534;
+      font-weight: 850;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.62);
+    }
+    .metric-warn,
+    #view-indicadores-operador .indicadores-compare-chip.warn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 54px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #fff1c7, #f7dda0);
+      border: 1px solid rgba(217, 119, 6, 0.26);
+      color: #8a4b0f;
+      font-weight: 850;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.58);
+    }
+    .metric-bad,
+    #view-indicadores-operador .indicadores-compare-chip.risk,
+    #view-indicadores-operador .meta-ruim {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 54px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ffe1df, #f7c7c2);
+      border: 1px solid rgba(220, 38, 38, 0.26);
+      color: #991b1b;
+      font-weight: 850;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.58);
+    }
+    .metric-neutral {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 54px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #e9f2f8, #d7e5ef);
+      border: 1px solid rgba(100, 116, 139, 0.22);
+      color: #284961;
+      font-weight: 800;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.58);
+    }
+
+    #view-indicadores-operador .indicadores-header,
+    #view-indicadores-operador .indicadores-filter-bar,
+    #view-indicadores-operador .indicadores-summary-card,
+    #view-indicadores-operador .indicadores-unit-compare-shell,
+    #view-indicadores-operador .indicadores-table-shell {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.46), rgba(255,255,255,0.20)),
+        linear-gradient(135deg, rgba(255,255,255,0.58), rgba(232,241,248,0.18));
+      border-color: rgba(255,255,255,0.70);
+      box-shadow:
+        0 30px 76px rgba(15, 23, 42, 0.18),
+        0 10px 28px rgba(15, 23, 42, 0.09),
+        inset 0 1px 0 rgba(255,255,255,0.86),
+        inset 0 -1px 0 rgba(255,255,255,0.16);
+    }
+    #view-indicadores-operador .indicadores-summary-card {
+      min-height: 108px;
+      padding: 14px 15px 15px;
+    }
+    #view-indicadores-operador .indicadores-summary-label {
+      font-size: 9px;
+      letter-spacing: 1.1px;
+      color: #4b5f72;
+    }
+    #view-indicadores-operador .indicadores-summary-value {
+      font-size: 30px;
+      font-weight: 900;
+      color: #122130;
+    }
+    #view-indicadores-operador .indicadores-summary-foot {
+      font-size: 11px;
+      font-weight: 750;
+      color: #627486;
+    }
+
+    #view-indicadores-operador .indicadores-compare-table-wrap,
+    #view-indicadores-operador .indicadores-table-wrap {
+      border-color: rgba(160, 177, 193, 0.42);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.74), rgba(247,250,252,0.52));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.82),
+        0 16px 36px rgba(15, 23, 42, 0.08);
+    }
+    #view-indicadores-operador .indicadores-compare-table {
+      border-spacing: 0 2px;
+    }
+    #view-indicadores-operador .indicadores-compare-table th,
+    #view-indicadores-operador .indicadores-compare-table td {
+      padding: 6px 10px;
+      font-size: 11.5px;
+    }
+    #view-indicadores-operador .indicadores-compare-table thead th,
+    #view-indicadores-operador .indicadores-table thead th {
+      background: linear-gradient(180deg, #244f6d, #17384f) !important;
+      color: #f8fbfd !important;
+      font-weight: 850;
+      letter-spacing: 0.65px;
+      text-transform: uppercase;
+      border-right: 1px solid rgba(255,255,255,0.10);
+      border-bottom: 1px solid rgba(9, 30, 45, 0.44);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.14),
+        inset 0 -1px 0 rgba(0,0,0,0.16);
+    }
+    #view-indicadores-operador .indicadores-compare-table thead th {
+      padding-top: 9px;
+      padding-bottom: 9px;
+    }
+    #view-indicadores-operador .indicadores-table thead th {
+      font-size: 8.8px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      min-height: 32px;
+    }
+    #view-indicadores-operador .indicadores-compare-table tbody tr:nth-child(odd) td {
+      background: rgba(255,255,255,0.88);
+    }
+    #view-indicadores-operador .indicadores-compare-table tbody tr:nth-child(even) td {
+      background: rgba(238,245,250,0.86);
+    }
+    #view-indicadores-operador .indicadores-compare-table tbody td,
+    #view-indicadores-operador .indicadores-table tbody td {
+      border-right: 1px solid rgba(132, 151, 168, 0.15);
+      border-bottom: 1px solid rgba(132, 151, 168, 0.24);
+    }
+    #view-indicadores-operador .indicadores-compare-name,
+    #view-indicadores-operador .indicadores-name-cell {
+      color: #183247;
+      font-weight: 800;
+    }
+    #view-indicadores-operador .indicadores-compare-num,
+    #view-indicadores-operador .indicadores-num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      color: #223548;
+    }
+    #view-indicadores-operador .indicadores-compare-table tbody tr.total-row td,
+    #view-indicadores-operador .indicadores-table tbody tr.total-row td,
+    #view-indicadores-operador .indicadores-table tbody tr.total-row > td {
+      background: linear-gradient(180deg, #bdd4e5, #9fbdd3) !important;
+      color: #102235;
+      font-weight: 900;
+      border-top: 2px solid #406d8b;
+      border-bottom: 1px solid rgba(45, 82, 108, 0.38);
+      height: 30px;
+    }
+
+    #view-indicadores-operador .indicadores-table tbody tr td {
+      font-size: 10px;
+      padding-top: 3px;
+      padding-bottom: 3px;
+      height: 24px;
+    }
+    #view-indicadores-operador .indicadores-table tbody tr.lvl-0 > td {
+      background: linear-gradient(180deg, #b9d5eb, #9fc4de) !important;
+      color: #102c43;
+      font-weight: 900;
+      border-top: 1px solid rgba(49, 94, 126, 0.42);
+      border-bottom: 1px solid rgba(49, 94, 126, 0.34);
+    }
+    #view-indicadores-operador .indicadores-table tbody tr.lvl-1 > td {
+      background: linear-gradient(180deg, #fff1d4, #efd59f) !important;
+      color: #4b3517;
+      font-weight: 850;
+      border-top: 1px solid rgba(184, 129, 38, 0.30);
+      border-bottom: 1px solid rgba(184, 129, 38, 0.24);
+    }
+    #view-indicadores-operador .indicadores-table tbody tr.lvl-2 > td {
+      background: linear-gradient(180deg, #d9f3e4, #bfe7d0) !important;
+      color: #183f30;
+      font-weight: 800;
+      border-top: 1px solid rgba(37, 133, 91, 0.25);
+      border-bottom: 1px solid rgba(37, 133, 91, 0.20);
+    }
+    #view-indicadores-operador .indicadores-table tbody tr.lvl-3 > td {
+      background: linear-gradient(180deg, #e4eef7, #ccddea) !important;
+      color: #33485c;
+      font-weight: 700;
+      border-top: 1px solid rgba(92, 120, 145, 0.22);
+      border-bottom: 1px solid rgba(92, 120, 145, 0.18);
+    }
+    #view-indicadores-operador .indicadores-table tbody tr.lvl-4 > td {
+      background: linear-gradient(180deg, #ffffff, #f2f5f8) !important;
+      color: #465869;
+      font-weight: 550;
+    }
+    #view-indicadores-operador .indicadores-table tbody tr.lvl-4:hover > td {
+      background: linear-gradient(180deg, #f8fbfd, #eaf2f7) !important;
+    }
+    #view-indicadores-operador .indicadores-table tbody tr.lvl-0 td:first-child::before {
+      background: linear-gradient(180deg, #1d5f8c, #134765);
+      width: 7px;
+    }
+    #view-indicadores-operador .indicadores-table tbody tr.lvl-1 td:first-child::before {
+      background: linear-gradient(180deg, #d99520, #b77412);
+      width: 6px;
+    }
+    #view-indicadores-operador .indicadores-table tbody tr.lvl-2 td:first-child::before {
+      background: linear-gradient(180deg, #168356, #0f6542);
+      width: 5px;
+    }
+    #view-indicadores-operador .indicadores-table tbody tr.lvl-3 td:first-child::before {
+      background: linear-gradient(180deg, #6f91ad, #557792);
+      width: 5px;
+    }
+    #view-indicadores-operador .indicadores-table tbody tr.lvl-4 td:first-child::before {
+      background: linear-gradient(180deg, #bdc8d2, #9facb8);
+      width: 4px;
+    }
+    #view-indicadores-operador .indicadores-indent-1 { padding-left: 22px !important; }
+    #view-indicadores-operador .indicadores-indent-2 { padding-left: 42px !important; }
+    #view-indicadores-operador .indicadores-indent-3 { padding-left: 62px !important; }
+    #view-indicadores-operador .indicadores-indent-4 { padding-left: 82px !important; }
+    #view-indicadores-operador .hierarchy-toggle {
+      width: 20px;
+      height: 20px;
+      border-color: rgba(36, 79, 109, 0.30);
+      background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(224,236,245,0.78));
+      color: #1a4868;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.80),
+        0 3px 8px rgba(15, 23, 42, 0.12);
+    }
+    #view-indicadores-operador .hierarchy-toggle:hover {
+      background: linear-gradient(180deg, #ffffff, #d7e9f6);
+      border-color: rgba(29, 95, 140, 0.48);
+      transform: translateY(-1px) scale(1.04);
+    }
+
+    .dark-theme .card,
+    [data-theme="dark"] .card {
+      background:
+        linear-gradient(180deg, rgba(30,41,59,0.84), rgba(15,23,42,0.70)),
+        var(--card-bg);
+      border-color: rgba(148,163,184,0.18);
+    }
+    .dark-theme .card-title,
+    [data-theme="dark"] .card-title {
+      color: #b5c1ce;
+    }
+    .dark-theme .ring-val,
+    .dark-theme .val-out,
+    .dark-theme .val-in,
+    [data-theme="dark"] .ring-val,
+    [data-theme="dark"] .val-out,
+    [data-theme="dark"] .val-in {
+      color: #f8fafc;
+    }
+    .dark-theme #view-indicadores-operador .indicadores-compare-table thead th,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-compare-table thead th,
+    .dark-theme #view-indicadores-operador .indicadores-table thead th,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-table thead th {
+      background: linear-gradient(180deg, #1f4b67, #132f43) !important;
+      color: #f8fafc !important;
+      border-right-color: rgba(255,255,255,0.08);
+    }
+    .dark-theme #view-indicadores-operador .indicadores-compare-table tbody tr:nth-child(odd) td,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-compare-table tbody tr:nth-child(odd) td {
+      background: rgba(24, 34, 49, 0.76);
+    }
+    .dark-theme #view-indicadores-operador .indicadores-compare-table tbody tr:nth-child(even) td,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-compare-table tbody tr:nth-child(even) td {
+      background: rgba(31, 44, 62, 0.72);
+    }
+    .dark-theme #view-indicadores-operador .indicadores-compare-name,
+    .dark-theme #view-indicadores-operador .indicadores-name-cell,
+    .dark-theme #view-indicadores-operador .indicadores-compare-num,
+    .dark-theme #view-indicadores-operador .indicadores-num,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-compare-name,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-name-cell,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-compare-num,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-num {
+      color: #e5edf6;
+    }
+    .dark-theme #view-indicadores-operador .indicadores-table tbody tr.lvl-0 > td,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-table tbody tr.lvl-0 > td {
+      background: linear-gradient(180deg, rgba(61, 102, 135, 0.94), rgba(38, 74, 104, 0.88)) !important;
+    }
+    .dark-theme #view-indicadores-operador .indicadores-table tbody tr.lvl-1 > td,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-table tbody tr.lvl-1 > td {
+      background: linear-gradient(180deg, rgba(128, 95, 43, 0.88), rgba(92, 67, 33, 0.82)) !important;
+    }
+    .dark-theme #view-indicadores-operador .indicadores-table tbody tr.lvl-2 > td,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-table tbody tr.lvl-2 > td {
+      background: linear-gradient(180deg, rgba(44, 119, 82, 0.86), rgba(29, 82, 58, 0.78)) !important;
+    }
+    .dark-theme #view-indicadores-operador .indicadores-table tbody tr.lvl-3 > td,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-table tbody tr.lvl-3 > td {
+      background: linear-gradient(180deg, rgba(61, 83, 106, 0.84), rgba(42, 61, 82, 0.76)) !important;
+    }
+    .dark-theme #view-indicadores-operador .indicadores-table tbody tr.lvl-4 > td,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-table tbody tr.lvl-4 > td {
+      background: linear-gradient(180deg, rgba(25, 34, 48, 0.78), rgba(18, 27, 40, 0.68)) !important;
+    }
+    .dark-theme #view-indicadores-operador .indicadores-table tbody tr.total-row > td,
+    .dark-theme #view-indicadores-operador .indicadores-compare-table tbody tr.total-row td,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-table tbody tr.total-row > td,
+    [data-theme="dark"] #view-indicadores-operador .indicadores-compare-table tbody tr.total-row td {
+      background: linear-gradient(180deg, rgba(78, 109, 137, 0.96), rgba(54, 82, 108, 0.88)) !important;
+      border-top-color: rgba(147, 197, 253, 0.38);
+    }
+
     /* SCROLL FIX - INDICADORES */
     html, body {
       height: auto !important;
