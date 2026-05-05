@@ -1565,6 +1565,163 @@ function diagnosticarMetricaBaseArray_(data, mesRef) {
   return resultado;
 }
 
+function diagnosticarBaseBridgeGoogleSheets() {
+  const bridgeId = '1sTeO8derRRrW5eB9FglZmee_ya_2v0szvck8F900FJg';
+  const mesRef = 'mai/26';
+  const colunasCriticas = {
+    site: 81,
+    perfil: 91,
+    data: 92,
+    tempoFalado: 93,
+    vendasAprovadas: 103,
+    produto: 106,
+    totalLogadoIndicadores: 108,
+    almoco: 115,
+    vendasCadastradas: 121,
+    tempoTrabalhado: 122,
+    diferencaHoras: 124,
+    mes: 140
+  };
+  const indicesPercentuais = [125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136];
+  const indicesTempos = [87, 88, 93, 108, 115, 122, 124];
+  const todosIndices = [...new Set([
+    ...Object.values(colunasCriticas),
+    ...indicesPercentuais,
+    ...indicesTempos
+  ])].sort((a, b) => a - b);
+
+  const ss = SpreadsheetApp.openById(bridgeId);
+  const baseSheet = localizarAba(ss, 'Base');
+  if (!baseSheet) throw new Error('DIAG BRIDGE: aba Base nao encontrada.');
+
+  const range = baseSheet.getDataRange();
+  const valores = range.getValues();
+  const exibidos = range.getDisplayValues();
+
+  const linhasFiltradas = [];
+  exibidos.slice(1).forEach((rowDisplay, idx) => {
+    const rowValores = valores[idx + 1] || [];
+    const perfil = String(rowDisplay[91] || '').trim().toUpperCase();
+    const mes = String(rowDisplay[140] || '').trim().toLowerCase();
+
+    if (perfil !== 'OPERADOR') return;
+    if (mes !== mesRef) return;
+
+    linhasFiltradas.push({
+      linhaPlanilha: idx + 2,
+      valores: rowValores,
+      exibidos: rowDisplay
+    });
+  });
+
+  const diagnosticoColunas = {};
+  todosIndices.forEach(idx => {
+    const exemplos = linhasFiltradas.slice(0, 10).map(item => ({
+      linha: item.linhaPlanilha,
+      valor: item.valores[idx],
+      display: item.exibidos[idx],
+      tipoValor: typeof item.valores[idx]
+    }));
+
+    diagnosticoColunas[idx] = {
+      indiceJS: idx,
+      colunaPlanilha: idx + 1,
+      exemplos,
+      somaDisplay: linhasFiltradas.reduce((soma, item) => soma + parseNumeroDiagnosticoSync_(item.exibidos[idx]), 0),
+      somaValues: linhasFiltradas.reduce((soma, item) => soma + parseNumeroDiagnosticoSync_(item.valores[idx]), 0)
+    };
+  });
+
+  const exemplosPercentuais = linhasFiltradas.slice(0, 10).map(item => {
+    const exemplo = { linha: item.linhaPlanilha };
+    indicesPercentuais.forEach(idx => {
+      exemplo[idx] = {
+        valor: item.valores[idx],
+        display: item.exibidos[idx],
+        tipoValor: typeof item.valores[idx]
+      };
+    });
+    return exemplo;
+  });
+
+  const exemplosTempos = linhasFiltradas.slice(0, 10).map(item => {
+    const exemplo = { linha: item.linhaPlanilha };
+    indicesTempos.forEach(idx => {
+      exemplo[idx] = {
+        valor: item.valores[idx],
+        display: item.exibidos[idx],
+        tipoValor: typeof item.valores[idx]
+      };
+    });
+    return exemplo;
+  });
+
+  const linhasComTempoExibidoZero = linhasFiltradas
+    .filter(item => indicesTempos.some(idx => {
+      const display = String(item.exibidos[idx] || '').trim().toLowerCase();
+      return display === '0' || display === '0s' || display === '00:00:00';
+    }))
+    .slice(0, 20)
+    .map(item => ({
+      linha: item.linhaPlanilha,
+      operador: item.exibidos[7],
+      site: item.exibidos[81],
+      produto: item.exibidos[106],
+      tempos: indicesTempos.reduce((acc, idx) => {
+        acc[idx] = {
+          valor: item.valores[idx],
+          display: item.exibidos[idx],
+          tipoValor: typeof item.valores[idx]
+        };
+        return acc;
+      }, {})
+    }));
+
+  const linhasValorNumeroDisplayEstranho = linhasFiltradas
+    .filter(item => todosIndices.some(idx => typeof item.valores[idx] === 'number' && String(item.exibidos[idx] || '').trim() && parseNumeroDiagnosticoSync_(item.exibidos[idx]) !== item.valores[idx]))
+    .slice(0, 20)
+    .map(item => ({
+      linha: item.linhaPlanilha,
+      operador: item.exibidos[7],
+      site: item.exibidos[81],
+      produto: item.exibidos[106],
+      diferencas: todosIndices.reduce((acc, idx) => {
+        if (typeof item.valores[idx] === 'number' && String(item.exibidos[idx] || '').trim() && parseNumeroDiagnosticoSync_(item.exibidos[idx]) !== item.valores[idx]) {
+          acc[idx] = {
+            valor: item.valores[idx],
+            display: item.exibidos[idx],
+            tipoValor: typeof item.valores[idx]
+          };
+        }
+        return acc;
+      }, {})
+    }));
+
+  const resultado = {
+    planilhaId: bridgeId,
+    aba: baseSheet.getName(),
+    totalLinhas: valores.length,
+    totalColunas: valores[0] ? valores[0].length : 0,
+    mes: mesRef,
+    totalOperadorMai26: linhasFiltradas.length,
+    totais: {
+      cadastradasDisplay121: linhasFiltradas.reduce((soma, item) => soma + parseNumeroDiagnosticoSync_(item.exibidos[121]), 0),
+      aprovadasDisplay103: linhasFiltradas.reduce((soma, item) => soma + parseNumeroDiagnosticoSync_(item.exibidos[103]), 0),
+      cadastradasValues121: linhasFiltradas.reduce((soma, item) => soma + parseNumeroDiagnosticoSync_(item.valores[121]), 0),
+      aprovadasValues103: linhasFiltradas.reduce((soma, item) => soma + parseNumeroDiagnosticoSync_(item.valores[103]), 0)
+    },
+    colunasCriticas,
+    diagnosticoColunas,
+    exemplosPercentuais,
+    exemplosTempos,
+    linhasComTempoExibidoZero,
+    linhasValorNumeroDisplayEstranho
+  };
+
+  Logger.log(JSON.stringify(resultado, null, 2));
+  return resultado;
+}
+
 function parseNumeroDiagnosticoSync_(valor) {
   if (valor === null || valor === undefined || valor === '') return 0;
   if (typeof valor === 'number') return valor;
