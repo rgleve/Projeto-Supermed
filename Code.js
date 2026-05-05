@@ -1320,12 +1320,45 @@ function obterOuCriarAbaSync_(ss, nomeAba) {
 }
 
 function validarDadosBaseSync_(data) {
-  if (!Array.isArray(data)) throw new Error('Dados da BASE ESPELHO invalidos: retorno nao e array.');
-  if (data.length <= 1) throw new Error('Dados da BASE ESPELHO invalidos: sem linhas de dados.');
-  if (!data[0] || data[0].length < 100) throw new Error('Dados da BASE ESPELHO invalidos: cabecalho com menos de 100 colunas.');
+  if (!Array.isArray(data)) throw new Error('Dados da BASE_DASH_EXPORT.xlsx invalidos: retorno nao e array.');
+  if (data.length <= 1) throw new Error('Dados da BASE_DASH_EXPORT.xlsx invalidos: sem linhas de dados.');
+  if (!data[0] || data[0].length < 141) throw new Error('Dados da BASE_DASH_EXPORT.xlsx invalidos: cabecalho sem colunas criticas ate EK.');
 
   const possuiOperador = data.slice(1).some(row => String(row && row[91] || '').trim().toUpperCase() === 'OPERADOR');
-  if (!possuiOperador) throw new Error('Dados da BASE ESPELHO invalidos: nenhuma linha Operador encontrada na coluna CN.');
+  if (!possuiOperador) throw new Error('Dados da BASE_DASH_EXPORT.xlsx invalidos: nenhuma linha Operador encontrada na coluna CN.');
+
+  const possuiMes = data.slice(1).some(row => String(row && row[140] || '').trim());
+  if (!possuiMes) throw new Error('Dados da BASE_DASH_EXPORT.xlsx invalidos: nenhuma linha com mes preenchido na coluna EK.');
+
+  const linhasOperadorMai26 = data.slice(1).filter(row =>
+    String(row && row[91] || '').trim().toUpperCase() === 'OPERADOR' &&
+    String(row && row[140] || '').trim().toLowerCase() === 'mai/26'
+  );
+
+  if (!linhasOperadorMai26.length) {
+    throw new Error('Dados da BASE_DASH_EXPORT.xlsx invalidos: nenhuma linha Operador em mai/26 encontrada.');
+  }
+
+  const somaCadastradas = linhasOperadorMai26.reduce((soma, row) => soma + parseNumeroDiagnosticoSync_(row[121]), 0);
+  const somaAprovadas = linhasOperadorMai26.reduce((soma, row) => soma + parseNumeroDiagnosticoSync_(row[103]), 0);
+
+  if (somaCadastradas <= 0) {
+    throw new Error('Dados da BASE_DASH_EXPORT.xlsx invalidos: soma DR para Operador em mai/26 nao e maior que zero.');
+  }
+
+  if (somaAprovadas < 0) {
+    throw new Error('Dados da BASE_DASH_EXPORT.xlsx invalidos: soma CZ para Operador em mai/26 e negativa.');
+  }
+
+  const linhaSemSite = linhasOperadorMai26.find(row => !String(row && row[81] || '').trim());
+  if (linhaSemSite) {
+    throw new Error('Dados da BASE_DASH_EXPORT.xlsx invalidos: existe Operador em mai/26 com Site vazio.');
+  }
+
+  const linhaSemProduto = linhasOperadorMai26.find(row => !String(row && row[106] || '').trim());
+  if (linhaSemProduto) {
+    throw new Error('Dados da BASE_DASH_EXPORT.xlsx invalidos: existe Operador em mai/26 com Produto vazio.');
+  }
 }
 
 function gravarDadosEmAbaSync_(sheet, data) {
@@ -1342,16 +1375,94 @@ function validarAbaRecebeuDadosSync_(sheet, data) {
   if (sheet.getLastColumn() < data[0].length) throw new Error(`Aba ${sheet.getName()} recebeu menos colunas que o esperado.`);
 }
 
+function normalizarCamposCriticosBaseBridge_(data) {
+  const indicesTempo = [86, 87, 88, 93, 108, 115, 122, 126, 127, 128, 129, 130];
+  const indicesPercentual = [131];
+
+  data.slice(1).forEach(row => {
+    indicesTempo.forEach(indiceJs => {
+      if (indiceJs < row.length) {
+        row[indiceJs] = normalizarTempoBridge_(row[indiceJs]);
+      }
+    });
+
+    indicesPercentual.forEach(indiceJs => {
+      if (indiceJs < row.length) {
+        row[indiceJs] = normalizarPercentualBridge_(row[indiceJs]);
+      }
+    });
+  });
+
+  return data;
+}
+
+function normalizarPercentualBridge_(valor) {
+  if (valor === null || valor === undefined || valor === '') return valor;
+
+  if (typeof valor === 'number') {
+    if (valor === 0) return 0;
+    if (Math.abs(valor) > 1000) return valor / 1000000000;
+    if (Math.abs(valor) > 1 && Math.abs(valor) <= 100) return valor / 100;
+    return valor;
+  }
+
+  let texto = String(valor).trim();
+  if (!texto) return valor;
+
+  texto = texto
+    .replace(/\s/g, '')
+    .replace('%', '');
+
+  const temVirgula = texto.includes(',');
+  const temPonto = texto.includes('.');
+
+  if (temVirgula && temPonto) {
+    const ultimaVirgula = texto.lastIndexOf(',');
+    const ultimoPonto = texto.lastIndexOf('.');
+
+    if (ultimaVirgula > ultimoPonto) {
+      texto = texto.replace(/\./g, '').replace(',', '.');
+    } else {
+      texto = texto.replace(/,/g, '');
+    }
+  } else if (temVirgula) {
+    texto = texto.replace(',', '.');
+  }
+
+  const n = Number(texto);
+  if (!Number.isFinite(n)) return valor;
+
+  if (n === 0) return 0;
+  if (Math.abs(n) > 1000) return n / 1000000000;
+  if (Math.abs(n) > 1 && Math.abs(n) <= 100) return n / 100;
+  return n;
+}
+
+function aplicarFormatosCriticosBaseBridge_(sheet) {
+  const maxRows = sheet.getMaxRows();
+  const aplicarFormato = (coluna, formato) => {
+    sheet.getRange(1, coluna, maxRows, 1).setNumberFormat(formato);
+  };
+
+  [82, 92, 107, 141].forEach(coluna => aplicarFormato(coluna, '@'));
+  aplicarFormato(93, 'dd/mm/yyyy');
+  [104, 122].forEach(coluna => aplicarFormato(coluna, '0'));
+  [87, 88, 89, 94, 109, 116, 123, 127, 128, 129, 130, 131].forEach(coluna => aplicarFormato(coluna, '[h]:mm:ss'));
+  aplicarFormato(132, '0.0%');
+  aplicarFormato(125, '0.00');
+}
+
 function syncExcelToBridge() {
-  const excelId = '1HOWv62ayFFoIsWOdjKmO5MzsKqd6H-BH';
+  const excelId = '14PkWwjkXD6jeKgGtajg9n1Y1QbaXfBlF';
   const bridgeId = '1sTeO8derRRrW5eB9FglZmee_ya_2v0szvck8F900FJg';
+  const nomeArquivoOrigem = 'BASE_DASH_EXPORT.xlsx';
   let tempFileId = null;
   
   try {
-    logSyncExcelToBridge_('Inicio da sincronizacao Excel -> Bridge');
+    logSyncExcelToBridge_('Inicio da sincronizacao BASE_DASH_EXPORT.xlsx -> Bridge');
 
     const excelFile = DriveApp.getFileById(excelId);
-    logSyncExcelToBridge_('Arquivo Excel encontrado', {
+    logSyncExcelToBridge_('Arquivo BASE_DASH_EXPORT.xlsx encontrado', {
       id: excelId,
       nome: excelFile.getName()
     });
@@ -1369,17 +1480,25 @@ function syncExcelToBridge() {
 
     const tempSs = SpreadsheetApp.openById(tempFile.id);
     
-    const sourceSheet = tempSs.getSheetByName("BASE ESPELHO");
+    const sourceSheet =
+      tempSs.getSheetByName('Base') ||
+      tempSs.getSheetByName('BASE ESPELHO');
     
-    if (!sourceSheet) throw new Error("Aba BASE ESPELHO nao encontrada no Excel.");
-    logSyncExcelToBridge_('Aba BASE ESPELHO encontrada');
+    if (!sourceSheet) {
+      throw new Error('Aba Base nao encontrada no arquivo BASE_DASH_EXPORT.xlsx convertido.');
+    }
+    logSyncExcelToBridge_('Aba de origem encontrada em BASE_DASH_EXPORT.xlsx', {
+      aba: sourceSheet.getName()
+    });
     
     const data = sourceSheet.getDataRange().getValues();
     logSyncExcelToBridge_('Linhas e colunas carregadas', {
+      origem: nomeArquivoOrigem,
       linhas: data.length,
       colunas: data[0] ? data[0].length : 0
     });
 
+    normalizarCamposCriticosBaseBridge_(data);
     validarDadosBaseSync_(data);
     logSyncExcelToBridge_('Validacao aprovada');
     
@@ -1402,16 +1521,19 @@ function syncExcelToBridge() {
 
     try {
       gravarDadosEmAbaSync_(bridgeSheet, data);
+      aplicarFormatosCriticosBaseBridge_(bridgeSheet);
+      validarAbaRecebeuDadosSync_(bridgeSheet, data);
     } catch (erroSetValuesBase) {
       logSyncExcelToBridge_('Falha ao substituir Base; tentando restaurar backup', {
         erro: erroSetValuesBase.message
       });
       gravarDadosEmAbaSync_(bridgeSheet, dadosBackup);
+      aplicarFormatosCriticosBaseBridge_(bridgeSheet);
       throw erroSetValuesBase;
     }
 
-    validarAbaRecebeuDadosSync_(bridgeSheet, data);
     logSyncExcelToBridge_('Substituicao da Base concluida', {
+      origem: nomeArquivoOrigem,
       linhas: bridgeSheet.getLastRow(),
       colunas: bridgeSheet.getLastColumn()
     });
