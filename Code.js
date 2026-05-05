@@ -1985,6 +1985,16 @@ function corrigirTemposBaseBridgeAtual() {
 function normalizarTempoBridge_(valor) {
   if (valor === null || valor === undefined || valor === '') return valor;
 
+  if (valor instanceof Date && !isNaN(valor.getTime())) {
+    const segundos =
+      valor.getUTCHours() * 3600 +
+      valor.getUTCMinutes() * 60 +
+      valor.getUTCSeconds() +
+      valor.getUTCMilliseconds() / 1000;
+
+    return segundos / 86400;
+  }
+
   if (typeof valor === 'number') {
     if (valor === 0) return 0;
     if (Math.abs(valor) > 1) return valor / 1000000000;
