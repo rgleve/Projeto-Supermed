@@ -5291,7 +5291,8 @@
     function calcularMetricasIndicadoresPorLinhas(linhas) {
       let somaLigacoes = 0;
       let countLigacoes = 0;
-      let somaCT = 0;
+      let somaTempoAguardandoChamada = 0;
+      let countTempoAguardandoChamada = 0;
       let somaDK = 0;
       let somaDE = 0;
 
@@ -5305,20 +5306,21 @@
       let countTTPausa = 0;
 
       linhas.forEach(row => {
-        const ee = parseNumeroIndicadores(row[134]);
-        const ct = tToS(row[97]);
+        const ligacoes = parseNumeroIndicadores(row[11]);
+        const tempoAguardandoChamada = tToS(row[24]);
         const de = tToS(row[108]);
         const dd = tToS(row[107]);
         const cp = tToS(row[93]);
         const dk = tToS(row[114]);
 
-        if (ee !== null) {
-          somaLigacoes += ee;
+        if (ligacoes !== null) {
+          somaLigacoes += ligacoes;
           countLigacoes++;
         }
 
-        if (String(row[97] || '').trim() && String(row[97] || '').trim() !== 'undefined') {
-          somaCT += ct || 0;
+        if (String(row[24] || '').trim() && String(row[24] || '').trim() !== 'undefined') {
+          somaTempoAguardandoChamada += tempoAguardandoChamada || 0;
+          countTempoAguardandoChamada++;
         }
 
         somaDK += dk || 0;
@@ -5346,6 +5348,8 @@
       });
 
       const aderenciaLiquida = calcularAderenciaLiquidaOficialIndicadores(linhas);
+      const mediaLigacoes = countLigacoes > 0 ? somaLigacoes / countLigacoes : 0;
+      const mediaTempoAguardandoChamada = countTempoAguardandoChamada > 0 ? somaTempoAguardandoChamada / countTempoAguardandoChamada : 0;
 
       console.log('DEBUG_ADERENCIA_LIQUIDA_OFICIAL', {
         linhas: linhas.length,
@@ -5353,8 +5357,8 @@
       });
 
       return {
-        ligacoes: countLigacoes > 0 ? somaLigacoes / countLigacoes : 0,
-        tempoEntreChamadas: somaLigacoes > 0 ? somaCT / somaLigacoes : 0,
+        ligacoes: mediaLigacoes,
+        tempoEntreChamadas: mediaLigacoes > 0 ? mediaTempoAguardandoChamada / mediaLigacoes : 0,
         tempoLogado: countTempoLogado > 0 ? somaTempoLogado / countTempoLogado : 0,
         teo: countTEO > 0 ? somaTEO / countTEO : 0,
         aderenciaLiquida,
@@ -5364,7 +5368,8 @@
         debug: {
           somaLigacoes,
           countLigacoes,
-          somaCT,
+          somaTempoAguardandoChamada,
+          countTempoAguardandoChamada,
           somaDE,
           somaDK
         }
@@ -5380,7 +5385,7 @@
         filtros,
         linhas: linhas.length,
         somaLigacoes: resumo.debug.somaLigacoes,
-        somaCT: resumo.debug.somaCT,
+        somaTempoAguardandoChamada: resumo.debug.somaTempoAguardandoChamada,
         somaDE: resumo.debug.somaDE,
         somaDK: resumo.debug.somaDK,
         tempoEntreChamadas: resumo.tempoEntreChamadas,
@@ -5684,8 +5689,8 @@
         percTFalado: percentualRazaoTemposIndicadores(linhas, 93, 108),
         acw: mediaTempoIndicadores(linhas, 94),
         percACW: mediaPercentualIndicadores(linhas, 112),
-        tempoRingando: mediaTempoIndicadores(linhas, 96),
-        agChamada: mediaTempoIndicadores(linhas, 97),
+        tempoRingando: mediaTempoIndicadores(linhas, 22),
+        agChamada: mediaTempoIndicadores(linhas, 24),
         pausaAlmoco: mediaTempoIndicadores(linhas, 115),
         pausaNR17: mediaTempoIndicadores(linhas, 116)
       };
