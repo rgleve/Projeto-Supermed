@@ -1,0 +1,5 @@
+backups_locais/**
+*_backup*.js
+Code_backup*.js
+*_backup*.txt
+Code_backup*.txt

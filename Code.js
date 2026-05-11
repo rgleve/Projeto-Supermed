@@ -1,7 +1,7 @@
 // Teste de sincronização via VS Code e clasp
 function doGet() {
   return HtmlService.createHtmlOutputFromFile('Index')
-      .setTitle('Portal Supermed')
+      .setTitle('Portal Rede Assist 24H')
       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
@@ -1518,7 +1518,7 @@ function substituirBasePorAbaTemporariaSync_(ss, tempSheetName, baseSheetName, b
 }
 
 function syncExcelToBridge() {
-  const excelId = '14PkWwjkXD6jeKgGtajg9n1Y1QbaXfBlF';
+  const excelId = '1msUVJs2VNOgJv0jJp7dqk7Vv62W5qE_y';
   const bridgeId = '1sTeO8derRRrW5eB9FglZmee_ya_2v0szvck8F900FJg';
   const nomeArquivoOrigem = 'BASE_DASH_EXPORT.xlsx';
   let tempFileId = null;
