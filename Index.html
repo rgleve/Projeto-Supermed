@@ -5422,6 +5422,219 @@
         inset 0 1px 0 rgba(214,236,255,0.10) !important;
     }
 
+    #view-ytd-executivo .ytd-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    #view-ytd-executivo .ytd-filter-bar {
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
+    #view-ytd-executivo .ytd-filter-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #view-ytd-executivo .ytd-clear-button {
+      min-height: 42px;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      background: var(--color-bg-card);
+      color: var(--text-main);
+      font-weight: 800;
+      padding: 0 14px;
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+    }
+
+    #view-ytd-executivo .ytd-card-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    #view-ytd-executivo .ytd-kpi-card {
+      min-height: 116px;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px;
+      background: var(--color-bg-card);
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    #view-ytd-executivo .ytd-kpi-label {
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    #view-ytd-executivo .ytd-kpi-value {
+      color: var(--text-main);
+      font-size: 25px;
+      line-height: 1.1;
+      font-weight: 950;
+      font-variant-numeric: tabular-nums;
+    }
+
+    #view-ytd-executivo .ytd-kpi-foot {
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    #view-ytd-executivo .ytd-kpi-card.is-good .ytd-kpi-value,
+    #view-ytd-executivo .ytd-positive {
+      color: #22c55e;
+    }
+
+    #view-ytd-executivo .ytd-kpi-card.is-risk .ytd-kpi-value,
+    #view-ytd-executivo .ytd-negative {
+      color: #ef4444;
+    }
+
+    #view-ytd-executivo .ytd-kpi-card.is-warn .ytd-kpi-value {
+      color: #f59e0b;
+    }
+
+    #view-ytd-executivo .ytd-chart-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    #view-ytd-executivo .ytd-chart-shell,
+    #view-ytd-executivo .ytd-table-shell,
+    #view-ytd-executivo .ytd-alert-shell {
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      background: var(--color-bg-card);
+      box-shadow: var(--shadow-card);
+      padding: 14px;
+      overflow: hidden;
+    }
+
+    #view-ytd-executivo .ytd-chart-title,
+    #view-ytd-executivo .ytd-table-title,
+    #view-ytd-executivo .ytd-alert-title {
+      color: var(--text-main);
+      font-size: 14px;
+      font-weight: 950;
+      margin: 0 0 12px;
+    }
+
+    #view-ytd-executivo .ytd-chart-box {
+      position: relative;
+      height: 260px;
+    }
+
+    #view-ytd-executivo .ytd-two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    #view-ytd-executivo .ytd-table-wrap {
+      overflow: auto;
+      max-width: 100%;
+    }
+
+    #view-ytd-executivo .ytd-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+      font-size: 12px;
+      color: var(--text-main);
+    }
+
+    #view-ytd-executivo .ytd-table th,
+    #view-ytd-executivo .ytd-table td {
+      border-bottom: 1px solid var(--border-color);
+      padding: 9px 10px;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    #view-ytd-executivo .ytd-table th {
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    #view-ytd-executivo .ytd-table .num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    #view-ytd-executivo .ytd-matrix-cell {
+      color: #0f172a;
+      font-weight: 950;
+      text-align: center !important;
+    }
+
+    #view-ytd-executivo .ytd-matrix-good { background: rgba(34, 197, 94, 0.78); }
+    #view-ytd-executivo .ytd-matrix-warn { background: rgba(245, 158, 11, 0.82); }
+    #view-ytd-executivo .ytd-matrix-risk { background: rgba(239, 68, 68, 0.80); color: #fff; }
+    #view-ytd-executivo .ytd-matrix-empty { background: rgba(148, 163, 184, 0.18); color: var(--text-muted); }
+
+    #view-ytd-executivo .ytd-alert-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    #view-ytd-executivo .ytd-alert-item {
+      display: grid;
+      grid-template-columns: 10px 1fr;
+      gap: 10px;
+      align-items: start;
+      color: var(--text-main);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 9px 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+    }
+
+    #view-ytd-executivo .ytd-alert-dot {
+      width: 9px;
+      height: 9px;
+      margin-top: 4px;
+      border-radius: 50%;
+      background: #f59e0b;
+    }
+
+    #view-ytd-executivo .ytd-alert-item.is-risk .ytd-alert-dot {
+      background: #ef4444;
+    }
+
+    #view-ytd-executivo .ytd-empty {
+      color: var(--text-muted);
+      font-weight: 800;
+      padding: 18px;
+    }
+
+    @media (max-width: 1300px) {
+      #view-ytd-executivo .ytd-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      #view-ytd-executivo .ytd-chart-grid,
+      #view-ytd-executivo .ytd-two-col { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      #view-ytd-executivo .ytd-card-grid { grid-template-columns: 1fr; }
+      #view-ytd-executivo .ytd-filter-bar { align-items: stretch; }
+    }
+
     .indicadores-table-shell::before,
     .indicadores-unit-compare-shell::before {
       will-change: auto;
@@ -7434,6 +7647,7 @@
       <div class="nav-item" data-view-target="indicadores-operador" onclick="trocarView('indicadores-operador', this)" title="Indicadores"><svg viewBox="0 0 24 24"><path d="M16,11V3H8V6H2V18H22V11H16M10,5H14V16H10V5M4,8H8V16H4V8M20,16H16V13H20V16Z"/></svg><span class="nav-label">Indicadores</span></div>
       <div class="nav-item" data-view-target="raio-x-operador" onclick="trocarView('raio-x-operador', this)" title="RAIO X do Operador"><svg viewBox="0 0 24 24"><path d="M12,2A7,7 0 0,1 19,9C19,10.57 18.49,12.01 17.63,13.19L22.71,18.27L21.29,19.69L16.21,14.61C15.01,15.48 13.57,16 12,16A7,7 0 0,1 5,9A7,7 0 0,1 12,2M12,4A5,5 0 0,0 7,9A5,5 0 0,0 12,14A5,5 0 0,0 17,9A5,5 0 0,0 12,4M11,6H13V10H11V6M11,11H13V13H11V11M4,19H14V21H4V19Z"/></svg><span class="nav-label">RAIO X do Operador</span></div>
       <div class="nav-item" data-view-target="simulador" onclick="trocarView('simulador', this)" title="Simulador"><svg viewBox="0 0 24 24"><path d="M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M7,7H17V9H7V7M7,11H10V14H7V11M12,11H15V14H12V11M17,11H19V14H17V11M7,16H10V18H7V16M12,16H15V18H12V16M17,16H19V18H17V16Z"/></svg><span class="nav-label">Simulador</span></div>
+      <div class="nav-item" id="navYtdExecutivo" data-view-target="ytd-executivo" onclick="trocarView('ytd-executivo', this)" title="YTD Executivo" style="display:none;"><svg viewBox="0 0 24 24"><path d="M3,3H21V5H3V3M5,7H19V21H5V7M7,9V19H9V9H7M11,13V19H13V13H11M15,11V19H17V11H15Z"/></svg><span class="nav-label">YTD Executivo</span></div>
       <div class="nav-item" id="navAdminUsuarios" data-view-target="admin-usuarios" onclick="trocarView('admin-usuarios', this)" title="Administração de acessos" style="display:none;"><svg viewBox="0 0 24 24"><path d="M12,3L1,9L12,15L21,10.09V17H23V9L12,3M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z"/></svg><span class="nav-label">Acessos</span></div>
     </div>
     
@@ -8638,6 +8852,95 @@
       </div>
     </section>
 
+    <section class="app-view" id="view-ytd-executivo">
+      <div class="indicadores-module ytd-layout">
+        <section class="indicadores-header">
+          <div class="indicadores-kicker">Diretoria</div>
+          <h1 class="indicadores-title">YTD Executivo</h1>
+          <p class="indicadores-subtitle">Visão Year to Date - Rede Assist 24H</p>
+        </section>
+
+        <section class="indicadores-filter-bar ytd-filter-bar">
+          <div class="filter-block">
+            <span class="filter-label">Ano</span>
+            <div class="select-wrap">
+              <select class="select-box" id="fYtdAno" onchange="atualizarFiltrosYtdExecutivoPortal('ano')"></select>
+            </div>
+          </div>
+          <div class="filter-block">
+            <span class="filter-label">Unidade</span>
+            <div class="select-wrap">
+              <select class="select-box" id="fYtdUnidade" onchange="atualizarFiltrosYtdExecutivoPortal('unidade')"></select>
+            </div>
+          </div>
+          <div class="filter-block">
+            <span class="filter-label">Produto</span>
+            <div class="select-wrap">
+              <select class="select-box" id="fYtdProduto" onchange="atualizarFiltrosYtdExecutivoPortal('produto')"></select>
+            </div>
+          </div>
+          <div class="filter-block">
+            <span class="filter-label">Visão</span>
+            <div class="select-wrap">
+              <select class="select-box" id="fYtdVisao" onchange="solicitarRenderYtdExecutivoPortal()">
+                <option value="CONSOLIDADO">Consolidado</option>
+                <option value="UNIDADE">Unidade</option>
+                <option value="PRODUTO">Produto</option>
+              </select>
+            </div>
+          </div>
+          <div class="ytd-filter-actions">
+            <button type="button" class="ytd-clear-button" onclick="limparFiltrosYtdExecutivoPortal()">Limpar filtros</button>
+          </div>
+        </section>
+
+        <section class="ytd-card-grid" id="ytdExecutiveCards"></section>
+
+        <section class="ytd-chart-grid">
+          <article class="ytd-chart-shell">
+            <h2 class="ytd-chart-title">Evolução Mensal - Líquidas vs Meta</h2>
+            <div class="ytd-chart-box"><canvas id="ytdChartEvolucao"></canvas></div>
+          </article>
+          <article class="ytd-chart-shell">
+            <h2 class="ytd-chart-title">Acumulado YTD - Realizado vs Meta</h2>
+            <div class="ytd-chart-box"><canvas id="ytdChartAcumulado"></canvas></div>
+          </article>
+          <article class="ytd-chart-shell">
+            <h2 class="ytd-chart-title">Logados x Produtividade</h2>
+            <div class="ytd-chart-box"><canvas id="ytdChartProdutividade"></canvas></div>
+          </article>
+        </section>
+
+        <section class="ytd-two-col">
+          <article class="ytd-table-shell">
+            <h2 class="ytd-table-title">Desempenho por Unidade (YTD)</h2>
+            <div class="ytd-table-wrap" id="ytdTabelaUnidades"></div>
+          </article>
+          <article class="ytd-table-shell">
+            <h2 class="ytd-table-title">Desempenho por Produto (YTD)</h2>
+            <div class="ytd-table-wrap" id="ytdTabelaProdutos"></div>
+          </article>
+        </section>
+
+        <section class="ytd-two-col">
+          <article class="ytd-table-shell">
+            <h2 class="ytd-table-title">Evolução Mensal Detalhada</h2>
+            <div class="ytd-table-wrap" id="ytdTabelaMensal"></div>
+          </article>
+          <div class="ytd-layout">
+            <article class="ytd-table-shell">
+              <h2 class="ytd-table-title">Matriz Unidade x Produto - % da Meta YTD</h2>
+              <div class="ytd-table-wrap" id="ytdMatrizUnidadeProduto"></div>
+            </article>
+            <article class="ytd-alert-shell">
+              <h2 class="ytd-alert-title">Alertas Executivos</h2>
+              <div id="ytdAlertasExecutivos"></div>
+            </article>
+          </div>
+        </section>
+      </div>
+    </section>
+
     <section class="app-view" id="view-admin-usuarios">
       <div class="indicadores-module admin-access-shell">
         <section class="indicadores-header">
@@ -8880,6 +9183,7 @@
     let rawOperadoresIndicadoresPortal = [];
     let rawOperadoresNormalizadosPortal = [];
     let gVolumes, gPercentuais, gProducao, gCurvaABC;
+    let gYtdEvolucao, gYtdAcumulado, gYtdProdutividade;
     window.indHierarchyExpanded = window.indHierarchyExpanded || new Set();
     window.produtividadeExpandedKeys = window.produtividadeExpandedKeys || new Set();
     window.produtividadeCollapsedKeys = window.produtividadeCollapsedKeys || new Set();
@@ -8917,6 +9221,7 @@
       'zerados-logados': true,
       'raio-x-operador': true,
       simulador: true,
+      'ytd-executivo': true,
       'admin-usuarios': true
     };
     const portalFrontCache = {
@@ -8927,7 +9232,8 @@
       curvaABC: new Map(),
       zeradosLogados: new Map(),
       raioXOperador: new Map(),
-      simulador: new Map()
+      simulador: new Map(),
+      ytdExecutivo: new Map()
     };
     const portalLastHtml = new WeakMap();
     const COLUNAS_BASE_TABELA = {
@@ -9011,6 +9317,9 @@
     };
     const MONTH_MAP = { jan: 0, fev: 1, mar: 2, abr: 3, mai: 4, jun: 5, jul: 6, ago: 7, set: 8, out: 9, nov: 10, dez: 11 };
     const SHORT_MONTHS = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+    const YTD_EXECUTIVO_ANO_MINIMO = 2025;
+    const YTD_EXECUTIVO_CHAVE_MINIMA = 202501;
+    const YTD_EXECUTIVO_PERFIS_AUTORIZADOS = ['ADMIN_MASTER', 'DIRETOR'];
 
     function limparCachesFrontPortal() {
       Object.values(portalFrontCache).forEach(cache => cache.clear());
@@ -9168,6 +9477,19 @@
       else executarRenderDebouncedPortal('simulador', render);
     }
 
+    function solicitarRenderYtdExecutivoPortal(imediato = false) {
+      if (!viewAtivaPortal('ytd-executivo') && !imediato) {
+        marcarViewPendentePortal('ytd-executivo');
+        return;
+      }
+      const render = () => {
+        renderizarYtdExecutivoPortal();
+        portalViewDirty['ytd-executivo'] = false;
+      };
+      if (imediato) render();
+      else executarRenderDebouncedPortal('ytd-executivo', render);
+    }
+
     function renderizarViewAtivaPortal(nomeView) {
       if (nomeView === 'resumo-geral' && portalViewDirty['resumo-geral']) solicitarRenderResumoGeral(true);
       if (nomeView === 'indicadores-operador' && portalViewDirty['indicadores-operador']) solicitarRenderIndicadoresOperador(true);
@@ -9177,6 +9499,7 @@
       if (nomeView === 'zerados-logados' && portalViewDirty['zerados-logados']) solicitarRenderZeradosLogados(true);
       if (nomeView === 'raio-x-operador' && portalViewDirty['raio-x-operador']) solicitarRenderRaioXOperador(true);
       if (nomeView === 'simulador' && portalViewDirty.simulador) solicitarRenderSimulador(true);
+      if (nomeView === 'ytd-executivo' && portalViewDirty['ytd-executivo']) solicitarRenderYtdExecutivoPortal(true);
     }
 
     function exibirErroCarregamento(msg) {
@@ -9197,6 +9520,7 @@
       
       if(window.curData && viewAtivaPortal('resumo-geral')) renderCharts(window.curData);
       if(viewAtivaPortal('curva-abc')) solicitarRenderCurvaABC(true);
+      if(viewAtivaPortal('ytd-executivo')) solicitarRenderYtdExecutivoPortal(true);
     }
 
     function preencherSelect(selectEl, options, firstOptionLabel, firstOptionValue) {
@@ -10157,6 +10481,783 @@
       });
     }
 
+    function perfilPodeVerYtdExecutivoPortal_() {
+      const perfilAtual = String(authSession && authSession.user && authSession.user.perfil || '').trim().toUpperCase();
+      return YTD_EXECUTIVO_PERFIS_AUTORIZADOS.includes(perfilAtual);
+    }
+
+    function obterChaveMesYtdExecutivoPortal(mesRef) {
+      const chave = obterChaveMesPeriodoPortal(mesRef);
+      return chave ? Math.floor(chave / 100) * 100 + (chave % 100) : null;
+    }
+
+    function obterAnoMesDeDataYtdExecutivoPortal(data) {
+      if (!data) return null;
+      return data.getFullYear() * 100 + data.getMonth() + 1;
+    }
+
+    function formatarMesYtdExecutivoPortal(ano, mesIndex) {
+      return `${SHORT_MONTHS[mesIndex]}/${String(ano).slice(-2)}`;
+    }
+
+    function obterMesesAnoYtdExecutivoPortal(ano, chaveMesCorte) {
+      const anoNum = Number(ano || 0);
+      const corte = Number(chaveMesCorte || 0);
+      if (!corte) return [];
+      const chaveInicial = Math.max((anoNum * 100) + 1, YTD_EXECUTIVO_CHAVE_MINIMA);
+      const chaveFinal = Math.min(corte, (anoNum * 100) + 12);
+      if (chaveFinal < chaveInicial) return [];
+      return Array.from({ length: 12 }, (_, mesIndex) => {
+        const chave = anoNum * 100 + mesIndex + 1;
+        return {
+          ano: anoNum,
+          mesIndex,
+          chave,
+          label: formatarMesYtdExecutivoPortal(anoNum, mesIndex)
+        };
+      }).filter(item => item.chave >= chaveInicial && item.chave <= chaveFinal);
+    }
+
+    function obterFeriadosYtdExecutivoPortal() {
+      return rawFeriados.slice(1).map(row => ({
+        data: parseDataBase(row[0]),
+        nome: row[1],
+        ano: row[2],
+        tipo: row[3],
+        uf: row[4],
+        municipio: row[5]
+      })).filter(item => item.data);
+    }
+
+    function obterDataInicioOperacionalYtdExecutivoPortal(ano, mesIndex) {
+      if (Number(ano) === 2026 && Number(mesIndex) === 0) return criarDataSegura(2026, 0, 12);
+      return criarDataSegura(ano, mesIndex, 1);
+    }
+
+    function listarDiasUteisYtdExecutivoPortal(ano, mesIndex, unidade, feriados, dataCorte) {
+      const primeiroDia = obterDataInicioOperacionalYtdExecutivoPortal(ano, mesIndex);
+      if (!primeiroDia) return [];
+      const ultimoDiaMes = criarDataSegura(ano, mesIndex + 1, 0) || new Date(ano, mesIndex + 1, 0);
+      const mesEhCorte = dataCorte && dataCorte.getFullYear() === Number(ano) && dataCorte.getMonth() === Number(mesIndex);
+      const ultimoDia = mesEhCorte && dataCorte < ultimoDiaMes ? dataCorte : ultimoDiaMes;
+      if (ultimoDia < primeiroDia) return [];
+      const mesRef = formatarMesYtdExecutivoPortal(ano, mesIndex);
+      const diasPorSite = calcularDiasUteisPorSite(mesRef, new Date(9999, 11, 31), feriados || []);
+      const unidadeConhecida = diasPorSite && diasPorSite[unidade];
+
+      if (unidadeConhecida && SITE_MAP[unidade]) {
+        const feriadosSite = new Set((feriados || [])
+          .filter(feriado =>
+            feriado.data &&
+            feriado.data.getFullYear() === ano &&
+            feriado.data.getMonth() === mesIndex &&
+            feriadoAplicaAoSite(feriado, unidade)
+          )
+          .map(feriado => criarChaveData(feriado.data)));
+        const dias = [];
+        for (let dia = new Date(primeiroDia); dia <= ultimoDia; dia.setDate(dia.getDate() + 1)) {
+          const diaSemana = dia.getDay();
+          if (diaSemana === 0 || diaSemana === 6 || feriadosSite.has(criarChaveData(dia))) continue;
+          dias.push(criarDataSegura(dia.getFullYear(), dia.getMonth(), dia.getDate()));
+        }
+        return dias;
+      }
+
+      const dias = [];
+      for (let dia = new Date(primeiroDia); dia <= ultimoDia; dia.setDate(dia.getDate() + 1)) {
+        const diaSemana = dia.getDay();
+        if (diaSemana === 0 || diaSemana === 6) continue;
+        dias.push(criarDataSegura(dia.getFullYear(), dia.getMonth(), dia.getDate()));
+      }
+      return dias;
+    }
+
+    function criarMetricasYtdExecutivoPortal(label) {
+      return {
+        label,
+        brutas: 0,
+        liquidas: 0,
+        meta: 0,
+        metaMeses: new Set(),
+        diasUteis: new Set(),
+        operadoresLogados: new Set(),
+        logadosPorDia: new Map()
+      };
+    }
+
+    function adicionarDiaUtilYtdExecutivoPortal(metricas, chaveDia) {
+      if (metricas && chaveDia) metricas.diasUteis.add(chaveDia);
+    }
+
+    function adicionarVendaYtdExecutivoPortal(metricas, brutas, liquidas) {
+      if (!metricas) return;
+      metricas.brutas += Number(brutas || 0);
+      metricas.liquidas += Number(liquidas || 0);
+    }
+
+    function adicionarMetaYtdExecutivoPortal(metricas, meta, chaveMes) {
+      const valorMeta = Number(meta || 0);
+      if (!metricas || valorMeta <= 0 || !chaveMes) return;
+      metricas.meta += valorMeta;
+      metricas.metaMeses.add(chaveMes);
+    }
+
+    function adicionarLogadoYtdExecutivoPortal(metricas, chaveDia, operador) {
+      if (!metricas || !chaveDia || !operador) return;
+      metricas.operadoresLogados.add(operador);
+      if (!metricas.logadosPorDia.has(chaveDia)) metricas.logadosPorDia.set(chaveDia, new Set());
+      metricas.logadosPorDia.get(chaveDia).add(operador);
+    }
+
+    function finalizarMetricasYtdExecutivoPortal(metricas, mesesEsperados) {
+      const totalLogadosDia = [...metricas.logadosPorDia.values()].reduce((soma, operadores) => soma + operadores.size, 0);
+      const diasUteis = metricas.diasUteis.size;
+      const aprovacao = metricas.brutas > 0 ? (metricas.liquidas / metricas.brutas) * 100 : 0;
+      const mesesMetaObrigatorios = Array.isArray(mesesEsperados) ? mesesEsperados.map(mes => mes.chave) : null;
+      const metaValida = mesesMetaObrigatorios
+        ? mesesMetaObrigatorios.length > 0 && mesesMetaObrigatorios.every(chave => metricas.metaMeses.has(chave))
+        : metricas.metaMeses.size > 0;
+      const meta = metaValida ? metricas.meta : null;
+      const percentualMeta = metaValida && meta > 0 ? (metricas.liquidas / meta) * 100 : null;
+      const gap = metaValida ? metricas.liquidas - meta : null;
+      const logadosMedios = diasUteis > 0 ? totalLogadosDia / diasUteis : 0;
+      const liquidasPorLogadoDia = totalLogadosDia > 0 ? metricas.liquidas / totalLogadosDia : 0;
+
+      return {
+        label: metricas.label,
+        brutas: metricas.brutas,
+        liquidas: metricas.liquidas,
+        meta,
+        metaTotalParcial: metricas.meta,
+        metaValida,
+        metaIncompleta: metricas.metaMeses.size > 0 && !metaValida,
+        gap,
+        aprovacao,
+        percentualMeta,
+        diasUteis,
+        logadosDistintos: metricas.operadoresLogados.size,
+        totalLogadosDia,
+        logadosMedios,
+        liquidasPorLogadoDia
+      };
+    }
+
+    function obterOuCriarMetricasYtdExecutivoPortal(map, chave, label) {
+      if (!map.has(chave)) map.set(chave, criarMetricasYtdExecutivoPortal(label || chave));
+      return map.get(chave);
+    }
+
+    function normalizarMetaMesYtdExecutivoPortal(row) {
+      return normalizarMesReferenciaMetas(row && row[4]) || normalizarMesFiltroCapa(row && row[4]);
+    }
+
+    function normalizarTextoYtdExecutivoPortal(valor) {
+      return String(valor || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim()
+        .toUpperCase();
+    }
+
+    function ehPerfilOperadorYtdExecutivoPortal(row) {
+      return normalizarTextoYtdExecutivoPortal(row && row[COLUNAS_BASE_TABELA.perfil]) === 'OPERADOR';
+    }
+
+    function obterFiltrosYtdExecutivoPortal() {
+      return {
+        ano: Number(document.getElementById('fYtdAno')?.value || YTD_EXECUTIVO_ANO_MINIMO),
+        unidade: document.getElementById('fYtdUnidade')?.value || 'TODAS',
+        produto: document.getElementById('fYtdProduto')?.value || 'TODOS',
+        visao: document.getElementById('fYtdVisao')?.value || 'CONSOLIDADO'
+      };
+    }
+
+    function linhaPassaFiltroYtdExecutivoPortal(item, filtros) {
+      if (!item || item.chaveMes < YTD_EXECUTIVO_CHAVE_MINIMA) return false;
+      if (item.ano !== Number(filtros.ano)) return false;
+      if (filtros.unidade !== 'TODAS' && item.unidade !== filtros.unidade) return false;
+      if (filtros.produto !== 'TODOS' && item.produto !== filtros.produto) return false;
+      return true;
+    }
+
+    function obterChaveMesCorteYtdExecutivoPortal(anoSelecionado, filtros, registrosBase) {
+      const ano = Number(anoSelecionado || 0);
+      const linhas = Array.isArray(registrosBase) ? registrosBase : obterRegistrosBaseYtdExecutivoPortal();
+      const dataCorte = obterDataCorteYtdExecutivoPortal(ano, filtros, linhas);
+      return dataCorte ? obterAnoMesDeDataYtdExecutivoPortal(dataCorte) : null;
+    }
+
+    function obterDataCorteYtdExecutivoPortal(anoSelecionado, filtros, registrosBase) {
+      const ano = Number(anoSelecionado || 0);
+      const linhas = Array.isArray(registrosBase) ? registrosBase : obterRegistrosBaseYtdExecutivoPortal();
+      return linhas.reduce((maior, item) => {
+        if (!item || item.ano !== ano || item.chaveMes < YTD_EXECUTIVO_CHAVE_MINIMA) return maior;
+        if (filtros && filtros.unidade !== 'TODAS' && item.unidade !== filtros.unidade) return maior;
+        if (filtros && filtros.produto !== 'TODOS' && item.produto !== filtros.produto) return maior;
+        if (!maior || item.data > maior) return item.data;
+        return maior;
+      }, null);
+    }
+
+    function obterRegistrosBaseYtdExecutivoPortal() {
+      return rawOperadoresNormalizadosPortal
+        .filter(row => ehPerfilOperadorYtdExecutivoPortal(row))
+        .map(row => {
+          const data = parseDataBase(row[COLUNAS_BASE_TABELA.data]);
+          const chaveMes = obterAnoMesDeDataYtdExecutivoPortal(data);
+          return {
+            row,
+            data,
+            chaveMes,
+            ano: data ? data.getFullYear() : 0,
+            mesIndex: data ? data.getMonth() : -1,
+            unidade: String(row[COLUNAS_BASE_TABELA.site] || '').trim(),
+            produto: String(row[COLUNAS_BASE_TABELA.produto] || '').trim(),
+            operador: String(row[COLUNAS_CURVA_ABC.operador] || '').trim(),
+            brutas: parseNumeroPlanilhaIndicadores(row[COLUNAS_BASE_TABELA.brutas]),
+            liquidas: parseNumeroPlanilhaIndicadores(row[COLUNAS_BASE_TABELA.liquidas]),
+            logado: normalizarTextoComparacao(row[COLUNAS_ZERADOS_LOGADOS.logado]) === 'logado'
+          };
+        })
+        .filter(item =>
+          item.data &&
+          item.chaveMes >= YTD_EXECUTIVO_CHAVE_MINIMA &&
+          item.data >= obterDataInicioOperacionalYtdExecutivoPortal(item.ano, item.mesIndex) &&
+          item.unidade &&
+          item.produto
+        );
+    }
+
+    function obterMetasYtdExecutivoPortal() {
+      return rawMetas.slice(1).map(row => {
+        const mesRef = normalizarMetaMesYtdExecutivoPortal(row);
+        const chaveMes = obterChaveMesYtdExecutivoPortal(mesRef);
+        return {
+          chaveMes,
+          ano: chaveMes ? Math.floor(chaveMes / 100) : 0,
+          mesIndex: chaveMes ? (chaveMes % 100) - 1 : -1,
+          unidade: String(row[1] || '').trim(),
+          produto: String(row[2] || '').trim(),
+          meta: parseNumeroPlanilhaIndicadores(row[3])
+        };
+      }).filter(item =>
+        item.chaveMes >= YTD_EXECUTIVO_CHAVE_MINIMA &&
+        item.unidade &&
+        item.produto
+      );
+    }
+
+    function popularSelectYtdExecutivoPortal(selectEl, valores, labelTodos, valorTodos) {
+      if (!selectEl) return;
+      selectEl.innerHTML = '';
+      selectEl.add(new Option(labelTodos, valorTodos));
+      valores.forEach(valor => selectEl.add(new Option(valor, valor)));
+    }
+
+    function inicializarFiltrosYtdExecutivoPortal() {
+      const selAno = document.getElementById('fYtdAno');
+      const selUnidade = document.getElementById('fYtdUnidade');
+      const selProduto = document.getElementById('fYtdProduto');
+      if (!selAno || !selUnidade || !selProduto) return;
+
+      const registros = obterRegistrosBaseYtdExecutivoPortal();
+      const metas = obterMetasYtdExecutivoPortal();
+      const anos = [...new Set([
+        ...registros.map(item => item.ano),
+        ...metas.map(item => item.ano),
+        YTD_EXECUTIVO_ANO_MINIMO
+      ].filter(ano => ano >= YTD_EXECUTIVO_ANO_MINIMO))].sort((a, b) => b - a);
+
+      selAno.innerHTML = '';
+      anos.forEach(ano => selAno.add(new Option(String(ano), String(ano))));
+      if (!selAno.value && anos.length) selAno.value = String(anos[0]);
+
+      atualizarFiltrosYtdExecutivoPortal('ano');
+    }
+
+    function atualizarFiltrosYtdExecutivoPortal(campoAlterado) {
+      const filtros = obterFiltrosYtdExecutivoPortal();
+      const selUnidade = document.getElementById('fYtdUnidade');
+      const selProduto = document.getElementById('fYtdProduto');
+      if (!selUnidade || !selProduto) return;
+
+      const registros = obterRegistrosBaseYtdExecutivoPortal();
+      const metas = obterMetasYtdExecutivoPortal();
+      const linhasAno = [
+        ...registros.filter(item => item.ano === Number(filtros.ano)),
+        ...metas.filter(item => item.ano === Number(filtros.ano))
+      ];
+
+      if (campoAlterado === 'ano') {
+        const unidades = [...new Set(linhasAno.map(item => item.unidade).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+        const produtos = [...new Set(linhasAno.map(item => item.produto).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+        popularSelectYtdExecutivoPortal(selUnidade, unidades, 'Todas', 'TODAS');
+        popularSelectYtdExecutivoPortal(selProduto, produtos, 'Todos', 'TODOS');
+        solicitarRenderYtdExecutivoPortal();
+        return;
+      }
+
+      if (campoAlterado === 'unidade') {
+        const produtos = [...new Set(linhasAno
+          .filter(item => filtros.unidade === 'TODAS' || item.unidade === filtros.unidade)
+          .map(item => item.produto)
+          .filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+        popularSelectYtdExecutivoPortal(selProduto, produtos, 'Todos', 'TODOS');
+        solicitarRenderYtdExecutivoPortal();
+        return;
+      }
+
+      solicitarRenderYtdExecutivoPortal();
+    }
+
+    function limparFiltrosYtdExecutivoPortal() {
+      const ano = document.getElementById('fYtdAno');
+      const unidade = document.getElementById('fYtdUnidade');
+      const produto = document.getElementById('fYtdProduto');
+      const visao = document.getElementById('fYtdVisao');
+      if (ano && ano.options.length) ano.value = ano.options[0].value;
+      if (unidade) unidade.value = 'TODAS';
+      if (produto) produto.value = 'TODOS';
+      if (visao) visao.value = 'CONSOLIDADO';
+      atualizarFiltrosYtdExecutivoPortal('ano');
+    }
+
+    function montarDadosYtdExecutivoPortal() {
+      const filtros = obterFiltrosYtdExecutivoPortal();
+      const chaveCache = montarChaveCachePortal('ytdExecutivo', filtros);
+      const cache = obterCachePortal('ytdExecutivo', chaveCache);
+      if (cache) return cache;
+
+      const registrosBase = obterRegistrosBaseYtdExecutivoPortal();
+      const dataCorte = obterDataCorteYtdExecutivoPortal(filtros.ano, filtros, registrosBase);
+      const chaveMesCorte = dataCorte ? obterAnoMesDeDataYtdExecutivoPortal(dataCorte) : null;
+      const meses = obterMesesAnoYtdExecutivoPortal(filtros.ano, chaveMesCorte);
+      const registros = registrosBase.filter(item =>
+        linhaPassaFiltroYtdExecutivoPortal(item, filtros) &&
+        chaveMesCorte &&
+        item.chaveMes <= chaveMesCorte &&
+        (!dataCorte || item.data <= dataCorte)
+      );
+      const metas = obterMetasYtdExecutivoPortal().filter(item =>
+        linhaPassaFiltroYtdExecutivoPortal(item, filtros) &&
+        chaveMesCorte &&
+        item.chaveMes <= chaveMesCorte
+      );
+      const feriados = obterFeriadosYtdExecutivoPortal();
+
+      const unidades = [...new Set([
+        ...registros.map(item => item.unidade),
+        ...metas.map(item => item.unidade)
+      ].filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+      const produtos = [...new Set([
+        ...registros.map(item => item.produto),
+        ...metas.map(item => item.produto)
+      ].filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+      const total = criarMetricasYtdExecutivoPortal('Total Geral');
+      const porUnidade = new Map();
+      const porProduto = new Map();
+      const porMes = new Map(meses.map(mes => [mes.chave, criarMetricasYtdExecutivoPortal(mes.label)]));
+      const matriz = new Map();
+      const diasUteisPorUnidadeMes = new Map();
+
+      unidades.forEach(unidade => {
+        const metricasUnidade = obterOuCriarMetricasYtdExecutivoPortal(porUnidade, unidade, unidade);
+        meses.forEach(mes => {
+          const dias = listarDiasUteisYtdExecutivoPortal(mes.ano, mes.mesIndex, unidade, feriados, dataCorte);
+          diasUteisPorUnidadeMes.set(`${unidade}__${mes.chave}`, new Set(dias.map(criarChaveData)));
+          dias.forEach(data => {
+            const chaveDia = criarChaveData(data);
+            adicionarDiaUtilYtdExecutivoPortal(total, chaveDia);
+            adicionarDiaUtilYtdExecutivoPortal(metricasUnidade, chaveDia);
+            adicionarDiaUtilYtdExecutivoPortal(porMes.get(mes.chave), chaveDia);
+          });
+        });
+      });
+
+      produtos.forEach(produto => {
+        const metricasProduto = obterOuCriarMetricasYtdExecutivoPortal(porProduto, produto, produto);
+        unidades.forEach(unidade => {
+          const chaveMatriz = `${unidade}__${produto}`;
+          const metricasMatriz = obterOuCriarMetricasYtdExecutivoPortal(matriz, chaveMatriz, chaveMatriz);
+          meses.forEach(mes => {
+            const diasSet = diasUteisPorUnidadeMes.get(`${unidade}__${mes.chave}`) || new Set();
+            diasSet.forEach(chaveDia => {
+              adicionarDiaUtilYtdExecutivoPortal(metricasProduto, chaveDia);
+              adicionarDiaUtilYtdExecutivoPortal(metricasMatriz, chaveDia);
+            });
+          });
+        });
+      });
+
+      registros.forEach(item => {
+        const chaveMatriz = `${item.unidade}__${item.produto}`;
+        const chaveDia = criarChaveData(item.data);
+        const diasSetUnidade = diasUteisPorUnidadeMes.get(`${item.unidade}__${item.chaveMes}`) || new Set();
+        const diaUtil = diasSetUnidade.has(chaveDia);
+        const chaveOperadorLogado = `${item.unidade}__${item.operador}`;
+        const metricas = [
+          total,
+          obterOuCriarMetricasYtdExecutivoPortal(porUnidade, item.unidade, item.unidade),
+          obterOuCriarMetricasYtdExecutivoPortal(porProduto, item.produto, item.produto),
+          obterOuCriarMetricasYtdExecutivoPortal(porMes, item.chaveMes, formatarMesYtdExecutivoPortal(item.ano, item.mesIndex)),
+          obterOuCriarMetricasYtdExecutivoPortal(matriz, chaveMatriz, chaveMatriz)
+        ];
+        metricas.forEach(metricasItem => adicionarVendaYtdExecutivoPortal(metricasItem, item.brutas, item.liquidas));
+        if (item.logado && diaUtil) {
+          metricas.forEach(metricasItem => adicionarLogadoYtdExecutivoPortal(metricasItem, chaveDia, chaveOperadorLogado));
+        }
+      });
+
+      metas.forEach(item => {
+        const chaveMatriz = `${item.unidade}__${item.produto}`;
+        [
+          total,
+          obterOuCriarMetricasYtdExecutivoPortal(porUnidade, item.unidade, item.unidade),
+          obterOuCriarMetricasYtdExecutivoPortal(porProduto, item.produto, item.produto),
+          obterOuCriarMetricasYtdExecutivoPortal(porMes, item.chaveMes, formatarMesYtdExecutivoPortal(item.ano, item.mesIndex)),
+          obterOuCriarMetricasYtdExecutivoPortal(matriz, chaveMatriz, chaveMatriz)
+        ].forEach(metricasItem => adicionarMetaYtdExecutivoPortal(metricasItem, item.meta, item.chaveMes));
+      });
+
+      let acumuladoLiquidas = 0;
+      let acumuladoMeta = 0;
+      let metaYtdCompleta = true;
+      let liquidasAnterior = null;
+      const mensal = meses.map(mes => {
+        const item = finalizarMetricasYtdExecutivoPortal(porMes.get(mes.chave) || criarMetricasYtdExecutivoPortal(mes.label));
+        acumuladoLiquidas += item.liquidas;
+        if (item.metaValida) acumuladoMeta += item.meta;
+        else metaYtdCompleta = false;
+        const variacaoMoM = liquidasAnterior !== null && liquidasAnterior > 0
+          ? ((item.liquidas - liquidasAnterior) / liquidasAnterior) * 100
+          : null;
+        liquidasAnterior = item.liquidas;
+        return {
+          ...item,
+          mes: mes.label,
+          chave: mes.chave,
+          variacaoMoM,
+          acumuladoLiquidas,
+          acumuladoMeta: metaYtdCompleta ? acumuladoMeta : null,
+          percentualMetaYtd: metaYtdCompleta && acumuladoMeta > 0 ? (acumuladoLiquidas / acumuladoMeta) * 100 : null,
+          gapAcumulado: metaYtdCompleta ? acumuladoLiquidas - acumuladoMeta : null,
+          metaYtdCompleta
+        };
+      });
+
+      const totalFinal = finalizarMetricasYtdExecutivoPortal(total, meses);
+      const resultado = {
+        filtros,
+        chaveMesCorte,
+        meses,
+        total: totalFinal,
+        unidades,
+        produtos,
+        porUnidade: [...porUnidade.values()].map(item => finalizarMetricasYtdExecutivoPortal(item, meses)).sort((a, b) => b.liquidas - a.liquidas),
+        porProduto: [...porProduto.values()].map(item => {
+          const finalizado = finalizarMetricasYtdExecutivoPortal(item, meses);
+          return {
+            ...finalizado,
+            participacao: totalFinal.liquidas > 0 ? (finalizado.liquidas / totalFinal.liquidas) * 100 : 0
+          };
+        }).sort((a, b) => b.liquidas - a.liquidas),
+        mensal,
+        matriz,
+        alertas: []
+      };
+      resultado.alertas = montarAlertasYtdExecutivoPortal(resultado);
+      return salvarCachePortal('ytdExecutivo', chaveCache, resultado);
+    }
+
+    function formatarInteiroYtdExecutivoPortal(valor) {
+      return Number(valor || 0).toLocaleString('pt-BR', { maximumFractionDigits: 0 });
+    }
+
+    function formatarDecimalYtdExecutivoPortal(valor, casas = 1) {
+      return Number(valor || 0).toLocaleString('pt-BR', { minimumFractionDigits: casas, maximumFractionDigits: casas });
+    }
+
+    function formatarPercentualYtdExecutivoPortal(valor, casas = 1) {
+      if (valor === null || valor === undefined) return '-';
+      return `${formatarDecimalYtdExecutivoPortal(valor, casas)}%`;
+    }
+
+    function formatarMetaYtdExecutivoPortal(item) {
+      if (!item || !item.metaValida) return item && item.metaIncompleta ? 'Meta incompleta' : 'Sem meta';
+      return formatarInteiroYtdExecutivoPortal(item.meta);
+    }
+
+    function formatarGapUnidadesYtdExecutivoPortal(item) {
+      if (!item || !item.metaValida || item.gap === null || item.gap === undefined) {
+        return item && item.metaIncompleta ? 'Meta incompleta' : 'Sem meta';
+      }
+      const valor = Math.abs(Number(item.gap || 0));
+      const sufixo = item.gap >= 0 ? ' vendas acima da meta' : ' vendas abaixo da meta';
+      return `${formatarInteiroYtdExecutivoPortal(valor)}${sufixo}`;
+    }
+
+    function obterClassePercentualYtdExecutivoPortal(valor) {
+      if (valor >= 100) return 'is-good';
+      if (valor >= 85) return 'is-warn';
+      return 'is-risk';
+    }
+
+    function renderizarCardsYtdExecutivoPortal(resultado) {
+      const container = document.getElementById('ytdExecutiveCards');
+      if (!container) return;
+      const total = resultado.total;
+      const cards = [
+        ['Vendas Líquidas YTD', formatarInteiroYtdExecutivoPortal(total.liquidas), 'Vendas aprovadas acumuladas', total.percentualMeta >= 100 ? 'is-good' : ''],
+        ['Meta YTD', formatarMetaYtdExecutivoPortal(total), total.metaValida ? 'Metas mensais acumuladas' : 'Sem meta completa no YTD', ''],
+        ['% da Meta YTD', total.metaValida ? formatarPercentualYtdExecutivoPortal(total.percentualMeta) : '-', total.metaValida ? 'Realizado dividido pela meta' : 'Sem meta cadastrada', total.metaValida ? obterClassePercentualYtdExecutivoPortal(total.percentualMeta) : ''],
+        ['Gap para Meta', formatarGapUnidadesYtdExecutivoPortal(total), total.metaValida ? (total.gap >= 0 ? 'Acima da curva YTD' : 'Abaixo da curva YTD') : 'Sem meta cadastrada', total.metaValida ? (total.gap >= 0 ? 'is-good' : 'is-risk') : ''],
+        ['Vendas Brutas YTD', formatarInteiroYtdExecutivoPortal(total.brutas), 'Vendas cadastradas acumuladas', ''],
+        ['Taxa de Aprovação YTD', formatarPercentualYtdExecutivoPortal(total.aprovacao), 'Líquidas sobre brutas', total.aprovacao >= 85 ? 'is-good' : 'is-risk'],
+        ['Logados Médios por Dia Útil', formatarDecimalYtdExecutivoPortal(total.logadosMedios, 1), `${total.logadosDistintos} operadores distintos`, ''],
+        ['Líquidas por Logado/Dia', formatarDecimalYtdExecutivoPortal(total.liquidasPorLogadoDia, 1), 'Produtividade operacional', '']
+      ];
+      aplicarHTMLSeMudouPortal(container, cards.map(([label, valor, foot, classe]) => `
+        <article class="ytd-kpi-card ${classe}">
+          <span class="ytd-kpi-label">${escapeHtmlPortal_(label)}</span>
+          <strong class="ytd-kpi-value">${escapeHtmlPortal_(valor)}</strong>
+          <span class="ytd-kpi-foot">${escapeHtmlPortal_(foot)}</span>
+        </article>
+      `).join(''));
+    }
+
+    function renderizarTabelaYtdExecutivoPortal(containerId, colunas, linhas) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      if (!linhas.length) {
+        aplicarHTMLSeMudouPortal(container, '<div class="ytd-empty">Não há dados para os filtros selecionados.</div>');
+        return;
+      }
+      const html = `
+        <table class="ytd-table">
+          <thead><tr>${colunas.map(col => `<th class="${col.num ? 'num' : ''}">${escapeHtmlPortal_(col.label)}</th>`).join('')}</tr></thead>
+          <tbody>
+            ${linhas.map(linha => `<tr>${colunas.map(col => `<td class="${col.num ? 'num' : ''}">${col.render(linha)}</td>`).join('')}</tr>`).join('')}
+          </tbody>
+        </table>
+      `;
+      aplicarHTMLSeMudouPortal(container, html);
+    }
+
+    function renderizarTabelasYtdExecutivoPortal(resultado) {
+      renderizarTabelaYtdExecutivoPortal('ytdTabelaUnidades', [
+        { label: 'Unidade', render: item => escapeHtmlPortal_(item.label) },
+        { label: 'Meta YTD', num: true, render: item => formatarMetaYtdExecutivoPortal(item) },
+        { label: 'Líquidas YTD', num: true, render: item => formatarInteiroYtdExecutivoPortal(item.liquidas) },
+        { label: '% Meta', num: true, render: item => item.metaValida ? formatarPercentualYtdExecutivoPortal(item.percentualMeta) : '-' },
+        { label: 'Gap', num: true, render: item => `<span class="${item.metaValida && item.gap >= 0 ? 'ytd-positive' : item.metaValida ? 'ytd-negative' : ''}">${formatarGapUnidadesYtdExecutivoPortal(item)}</span>` },
+        { label: 'Aprovação', num: true, render: item => formatarPercentualYtdExecutivoPortal(item.aprovacao) },
+        { label: 'Logados médios/dia', num: true, render: item => formatarDecimalYtdExecutivoPortal(item.logadosMedios, 1) },
+        { label: 'Líquidas/logado/dia', num: true, render: item => formatarDecimalYtdExecutivoPortal(item.liquidasPorLogadoDia, 1) }
+      ], resultado.porUnidade);
+
+      renderizarTabelaYtdExecutivoPortal('ytdTabelaProdutos', [
+        { label: 'Produto', render: item => escapeHtmlPortal_(item.label) },
+        { label: 'Meta YTD', num: true, render: item => formatarMetaYtdExecutivoPortal(item) },
+        { label: 'Líquidas YTD', num: true, render: item => formatarInteiroYtdExecutivoPortal(item.liquidas) },
+        { label: '% Meta', num: true, render: item => item.metaValida ? formatarPercentualYtdExecutivoPortal(item.percentualMeta) : '-' },
+        { label: 'Aprovação', num: true, render: item => formatarPercentualYtdExecutivoPortal(item.aprovacao) },
+        { label: 'Participação', num: true, render: item => formatarPercentualYtdExecutivoPortal(item.participacao) },
+        { label: 'Líquidas/logado/dia', num: true, render: item => formatarDecimalYtdExecutivoPortal(item.liquidasPorLogadoDia, 1) }
+      ], resultado.porProduto);
+
+      renderizarTabelaYtdExecutivoPortal('ytdTabelaMensal', [
+        { label: 'Mês', render: item => escapeHtmlPortal_(item.mes) },
+        { label: 'Dias úteis decorridos', num: true, render: item => item.diasUteis },
+        { label: 'Logados distintos', num: true, render: item => item.logadosDistintos },
+        { label: 'Logados médios/dia útil', num: true, render: item => formatarDecimalYtdExecutivoPortal(item.logadosMedios, 1) },
+        { label: 'Vendas brutas', num: true, render: item => formatarInteiroYtdExecutivoPortal(item.brutas) },
+        { label: 'Vendas líquidas', num: true, render: item => formatarInteiroYtdExecutivoPortal(item.liquidas) },
+        { label: 'Aprovação', num: true, render: item => formatarPercentualYtdExecutivoPortal(item.aprovacao) },
+        { label: 'Meta', num: true, render: item => formatarMetaYtdExecutivoPortal(item) },
+        { label: '% Meta', num: true, render: item => item.metaValida ? formatarPercentualYtdExecutivoPortal(item.percentualMeta) : '-' },
+        { label: 'Gap', num: true, render: item => item.metaValida ? `<span class="${item.gap >= 0 ? 'ytd-positive' : 'ytd-negative'}">${formatarGapUnidadesYtdExecutivoPortal(item)}</span>` : '-' },
+        { label: 'Líquidas/logado/dia', num: true, render: item => formatarDecimalYtdExecutivoPortal(item.liquidasPorLogadoDia, 1) },
+        { label: 'Var. líquidas MoM', num: true, render: item => item.variacaoMoM === null ? '-' : formatarPercentualYtdExecutivoPortal(item.variacaoMoM) },
+        { label: 'Acumulado líquidas YTD', num: true, render: item => formatarInteiroYtdExecutivoPortal(item.acumuladoLiquidas) },
+        { label: '% Meta YTD', num: true, render: item => item.metaYtdCompleta ? formatarPercentualYtdExecutivoPortal(item.percentualMetaYtd) : '-' }
+      ], resultado.mensal);
+    }
+
+    function renderizarMatrizYtdExecutivoPortal(resultado) {
+      const container = document.getElementById('ytdMatrizUnidadeProduto');
+      if (!container) return;
+      if (!resultado.unidades.length || !resultado.produtos.length) {
+        aplicarHTMLSeMudouPortal(container, '<div class="ytd-empty">Não há dados suficientes para montar a matriz.</div>');
+        return;
+      }
+      const html = `
+        <table class="ytd-table">
+          <thead><tr><th>Unidade</th>${resultado.produtos.map(produto => `<th class="num">${escapeHtmlPortal_(produto)}</th>`).join('')}</tr></thead>
+          <tbody>
+            ${resultado.unidades.map(unidade => `
+              <tr>
+                <td>${escapeHtmlPortal_(unidade)}</td>
+                ${resultado.produtos.map(produto => {
+                  const metricas = resultado.matriz.get(`${unidade}__${produto}`);
+                  const finalizado = metricas ? finalizarMetricasYtdExecutivoPortal(metricas, resultado.meses) : null;
+                  const valor = finalizado ? finalizado.percentualMeta : 0;
+                  const classe = !finalizado || !finalizado.metaValida ? 'ytd-matrix-empty' : valor >= 100 ? 'ytd-matrix-good' : valor >= 85 ? 'ytd-matrix-warn' : 'ytd-matrix-risk';
+                  return `<td class="ytd-matrix-cell ${classe}">${finalizado && finalizado.metaValida ? formatarPercentualYtdExecutivoPortal(valor, 0) : '-'}</td>`;
+                }).join('')}
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+      aplicarHTMLSeMudouPortal(container, html);
+    }
+
+    function montarAlertasYtdExecutivoPortal(resultado) {
+      const alertas = [];
+      resultado.porUnidade
+        .filter(item => item.metaValida && item.percentualMeta < 85)
+        .slice(0, 4)
+        .forEach(item => alertas.push({ tipo: 'risk', texto: `${item.label}: % da meta YTD abaixo de 85% (${formatarPercentualYtdExecutivoPortal(item.percentualMeta)})` }));
+      resultado.porProduto
+        .filter(item => item.metaValida && item.percentualMeta < 85)
+        .slice(0, 4)
+        .forEach(item => alertas.push({ tipo: 'risk', texto: `${item.label}: produto abaixo de 85% da meta YTD (${formatarPercentualYtdExecutivoPortal(item.percentualMeta)})` }));
+
+      const mesesComMovimento = resultado.mensal.filter(item => item.brutas > 0 || item.liquidas > 0 || item.totalLogadosDia > 0);
+      for (let i = 1; i < mesesComMovimento.length; i++) {
+        const anterior = mesesComMovimento[i - 1];
+        const atual = mesesComMovimento[i];
+        if (atual.liquidasPorLogadoDia < anterior.liquidasPorLogadoDia && anterior.liquidasPorLogadoDia > 0) {
+          alertas.push({ tipo: 'warn', texto: `Queda de produtividade em ${atual.mes} contra ${anterior.mes}.` });
+          break;
+        }
+      }
+      const mesAprovacaoBaixa = mesesComMovimento.find(item => item.brutas > 0 && item.aprovacao < 85);
+      if (mesAprovacaoBaixa) alertas.push({ tipo: 'warn', texto: `Aprovação em ${mesAprovacaoBaixa.mes} abaixo de 85% (${formatarPercentualYtdExecutivoPortal(mesAprovacaoBaixa.aprovacao)}).` });
+      for (let i = 1; i < mesesComMovimento.length; i++) {
+        const anterior = mesesComMovimento[i - 1];
+        const atual = mesesComMovimento[i];
+        if (atual.totalLogadosDia > anterior.totalLogadosDia && atual.liquidas <= anterior.liquidas) {
+          alertas.push({ tipo: 'warn', texto: `Aumento de logados em ${atual.mes} sem ganho proporcional de líquidas.` });
+          break;
+        }
+      }
+      for (let i = 1; i < mesesComMovimento.length; i++) {
+        const anterior = mesesComMovimento[i - 1];
+        const atual = mesesComMovimento[i];
+        if (atual.metaYtdCompleta && anterior.metaYtdCompleta && atual.gapAcumulado < anterior.gapAcumulado) {
+          alertas.push({ tipo: 'risk', texto: `Gap YTD aumentando em ${atual.mes}: ${formatarGapUnidadesYtdExecutivoPortal({ metaValida: true, gap: atual.gapAcumulado })} no acumulado.` });
+          break;
+        }
+      }
+      return alertas.slice(0, 8);
+    }
+
+    function renderizarAlertasYtdExecutivoPortal(resultado) {
+      const container = document.getElementById('ytdAlertasExecutivos');
+      if (!container) return;
+      if (!resultado.alertas.length) {
+        aplicarHTMLSeMudouPortal(container, '<div class="ytd-empty">Sem alertas executivos para o recorte atual.</div>');
+        return;
+      }
+      aplicarHTMLSeMudouPortal(container, `<div class="ytd-alert-list">${resultado.alertas.map(alerta => `
+        <div class="ytd-alert-item is-${alerta.tipo}">
+          <span class="ytd-alert-dot"></span>
+          <span>${escapeHtmlPortal_(alerta.texto)}</span>
+        </div>
+      `).join('')}</div>`);
+    }
+
+    function destruirGraficosYtdExecutivoPortal() {
+      [gYtdEvolucao, gYtdAcumulado, gYtdProdutividade].forEach(chart => {
+        if (chart) chart.destroy();
+      });
+      gYtdEvolucao = null;
+      gYtdAcumulado = null;
+      gYtdProdutividade = null;
+    }
+
+    function criarOpcoesGraficoYtdExecutivoPortal() {
+      const isDark = document.body.classList.contains('dark-theme');
+      const textColor = isDark ? '#e5eef8' : '#1f2937';
+      const gridColor = isDark ? 'rgba(255,255,255,0.10)' : 'rgba(31,41,55,0.10)';
+      return {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { color: textColor, boxWidth: 12, usePointStyle: true } },
+          datalabels: { display: false }
+        },
+        scales: {
+          x: { ticks: { color: textColor }, grid: { display: false } },
+          y: { beginAtZero: true, ticks: { color: textColor }, grid: { color: gridColor } }
+        }
+      };
+    }
+
+    function renderizarGraficosYtdExecutivoPortal(resultado) {
+      destruirGraficosYtdExecutivoPortal();
+      const labels = resultado.mensal.map(item => item.mes);
+      const opcoes = criarOpcoesGraficoYtdExecutivoPortal();
+      const evolucaoCanvas = document.getElementById('ytdChartEvolucao');
+      const acumuladoCanvas = document.getElementById('ytdChartAcumulado');
+      const produtividadeCanvas = document.getElementById('ytdChartProdutividade');
+
+      if (evolucaoCanvas) {
+        gYtdEvolucao = new Chart(evolucaoCanvas, {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [
+              { label: 'Vendas líquidas', data: resultado.mensal.map(item => item.liquidas), backgroundColor: 'rgba(59, 130, 246, 0.82)', borderRadius: 8 },
+              { label: 'Meta', data: resultado.mensal.map(item => item.metaValida ? item.meta : null), type: 'line', borderColor: '#e5e7eb', borderDash: [5, 4], tension: 0.28 },
+              { label: 'Taxa de aprovação (%)', data: resultado.mensal.map(item => item.aprovacao), type: 'line', yAxisID: 'y1', borderColor: '#a855f7', tension: 0.28 }
+            ]
+          },
+          options: { ...opcoes, scales: { ...opcoes.scales, y1: { beginAtZero: true, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: opcoes.scales.y.ticks.color, callback: value => `${value}%` } } } }
+        });
+      }
+
+      if (acumuladoCanvas) {
+        gYtdAcumulado = new Chart(acumuladoCanvas, {
+          type: 'line',
+          data: {
+            labels,
+            datasets: [
+              { label: 'Realizado acumulado', data: resultado.mensal.map(item => item.acumuladoLiquidas), borderColor: '#22c55e', backgroundColor: 'rgba(34,197,94,0.14)', tension: 0.28, fill: true },
+              { label: 'Meta acumulada', data: resultado.mensal.map(item => item.metaYtdCompleta ? item.acumuladoMeta : null), borderColor: '#e5e7eb', borderDash: [5, 4], tension: 0.28 }
+            ]
+          },
+          options: opcoes
+        });
+      }
+
+      if (produtividadeCanvas) {
+        gYtdProdutividade = new Chart(produtividadeCanvas, {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [
+              { label: 'Logados médios/dia útil', data: resultado.mensal.map(item => item.logadosMedios), backgroundColor: 'rgba(245, 158, 11, 0.85)', borderRadius: 8 },
+              { label: 'Líquidas por logado/dia', data: resultado.mensal.map(item => item.liquidasPorLogadoDia), type: 'line', yAxisID: 'y1', borderColor: '#22d3ee', tension: 0.28 }
+            ]
+          },
+          options: { ...opcoes, scales: { ...opcoes.scales, y1: { beginAtZero: true, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: opcoes.scales.y.ticks.color } } } }
+        });
+      }
+    }
+
+    function renderizarYtdExecutivoPortal() {
+      if (!perfilPodeVerYtdExecutivoPortal_()) return;
+      const resultado = montarDadosYtdExecutivoPortal();
+      renderizarCardsYtdExecutivoPortal(resultado);
+      renderizarGraficosYtdExecutivoPortal(resultado);
+      renderizarTabelasYtdExecutivoPortal(resultado);
+      renderizarMatrizYtdExecutivoPortal(resultado);
+      renderizarAlertasYtdExecutivoPortal(resultado);
+    }
+
     let authSession = null;
     let dashboardCarregado = false;
     let dashboardAccessContext = null;
@@ -10291,13 +11392,23 @@
 
     function aplicarPermissoesPortalFront_() {
       const navAdmin = document.getElementById('navAdminUsuarios');
+      const navYtd = document.getElementById('navYtdExecutivo');
+      const perfilAtual = String(authSession && authSession.user && authSession.user.perfil || '').trim().toUpperCase();
       const canViewUsers =
-        String(authSession && authSession.user && authSession.user.perfil || '').trim().toUpperCase() === 'ADMIN_MASTER' &&
+        perfilAtual === 'ADMIN_MASTER' &&
         temPermissaoPortal_('pode_ver_usuarios');
+      const canViewYtd = YTD_EXECUTIVO_PERFIS_AUTORIZADOS.includes(perfilAtual);
       if (navAdmin) navAdmin.style.display = canViewUsers ? 'flex' : 'none';
+      if (navYtd) navYtd.style.display = canViewYtd ? 'flex' : 'none';
 
       const adminView = document.getElementById('view-admin-usuarios');
       if (adminView && adminView.classList.contains('is-active') && !canViewUsers) {
+        const navResumo = document.querySelector('.nav-item[data-view-target="resumo-geral"]');
+        if (navResumo) trocarView('resumo-geral', navResumo);
+      }
+
+      const ytdView = document.getElementById('view-ytd-executivo');
+      if (ytdView && ytdView.classList.contains('is-active') && !canViewYtd) {
         const navResumo = document.querySelector('.nav-item[data-view-target="resumo-geral"]');
         if (navResumo) trocarView('resumo-geral', navResumo);
       }
@@ -10975,6 +12086,7 @@
       popularFiltrosZeradosLogados();
       popularOperadoresRaioX();
       popularFiltrosSimulador();
+      inicializarFiltrosYtdExecutivoPortal();
 
       document.getElementById('loading').style.display='none';
       
