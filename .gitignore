@@ -5,3 +5,6 @@ node_modules/
 *.log
 .clasprc.json
 backups_locais/
+
+# LLM Wiki raw inputs
+raw/
