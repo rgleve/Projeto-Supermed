@@ -5643,20 +5643,41 @@
     /* RAIO X DO OPERADOR */
     .raio-x-module {
       gap: 22px;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      overflow-x: hidden;
+      box-sizing: border-box;
     }
 
     .raio-x-filter-bar {
       align-items: flex-end;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
       overflow: visible;
       z-index: 30;
+      box-sizing: border-box;
+    }
+
+    .raio-x-filter-bar .filter-block,
+    .raio-x-filter-bar .select-wrap,
+    .raio-x-filter-bar .raio-x-month-picker,
+    .raio-x-filter-bar .raio-x-month-trigger {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
     }
 
     .raio-x-operator-filter {
-      min-width: min(520px, 100%);
+      grid-column: span 2;
+      min-width: 0;
     }
 
     .raio-x-month-filter {
-      min-width: min(320px, 100%);
+      min-width: 0;
       position: relative;
       z-index: 35;
     }
@@ -5782,7 +5803,10 @@
     }
 
     .raio-x-summary-grid {
-      grid-template-columns: repeat(5, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
     }
 
     .raio-x-table-shell {
@@ -5796,6 +5820,10 @@
     .raio-x-context-shell,
     .raio-x-analysis-shell,
     .raio-x-guidance-shell {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
       border: 1px solid var(--liquid-border);
       border-radius: 24px;
       padding: 18px 20px 20px;
@@ -5833,12 +5861,16 @@
       grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
       gap: 12px;
       margin-top: 14px;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
     }
 
     .raio-x-context-card,
     .raio-x-guidance-card,
     .raio-x-feedback-card,
     .raio-x-pdi-card {
+      min-width: 0;
       border: 1px solid rgba(255,255,255,0.34);
       border-radius: 16px;
       padding: 14px;
@@ -6041,9 +6073,13 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
       margin-top: 14px;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
     }
 
     .raio-x-analysis-item {
+      min-width: 0;
       border: 1px solid rgba(255,255,255,0.34);
       border-radius: 16px;
       padding: 14px;
@@ -6176,6 +6212,576 @@
     .raio-x-curve-chip.curva-c {
       background: rgba(220, 38, 38, 0.16);
       color: #b91c1c;
+    }
+
+    .raio-x-filter-bar .pdi-operador-actions {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 6px;
+      min-width: 0;
+      width: 100%;
+      max-width: 100%;
+      align-self: end;
+      position: relative;
+      z-index: 2;
+      box-sizing: border-box;
+    }
+
+    .raio-x-filter-bar .pdi-operador-button,
+    #pdiOperadorPanel .pdi-operador-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid rgba(37, 99, 235, 0.28);
+      border-radius: 14px;
+      padding: 11px 16px;
+      background:
+        linear-gradient(180deg, rgba(219, 234, 254, 0.72), rgba(191, 219, 254, 0.44)),
+        rgba(255,255,255,0.28);
+      color: #1d4ed8;
+      font-size: 13px;
+      font-weight: 950;
+      cursor: pointer;
+      box-shadow:
+        0 14px 34px rgba(37, 99, 235, 0.12),
+        inset 0 1px 0 rgba(255,255,255,0.58);
+    }
+
+    .raio-x-filter-bar .pdi-operador-button {
+      width: 100%;
+      max-width: 100%;
+      min-height: 42px;
+      white-space: nowrap;
+      box-sizing: border-box;
+    }
+
+    .raio-x-filter-bar .pdi-operador-button:hover,
+    #pdiOperadorPanel .pdi-operador-button:hover {
+      border-color: rgba(37, 99, 235, 0.42);
+      color: #1e40af;
+      transform: translateY(-1px);
+    }
+
+    #pdiOperadorPanel.pdi-operador-panel {
+      border: 1px solid var(--liquid-border);
+      border-radius: 24px;
+      padding: 18px;
+      background: var(--liquid-surface-strong);
+      box-shadow: var(--liquid-shadow-soft);
+      color: var(--text-main);
+    }
+
+    #pdiOperadorPanel .pdi-operador-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    #pdiOperadorPanel .pdi-operador-toolbar h2 {
+      margin: 0;
+      color: var(--text-main);
+      font-size: 18px;
+      font-weight: 950;
+    }
+
+    #pdiOperadorPanel .pdi-operador-toolbar p {
+      margin: 4px 0 0;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 760;
+    }
+
+    #pdiOperadorPanel .pdi-operador-toolbar-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    #pdiOperadorPanel .pdi-operador-secondary {
+      border-color: rgba(148, 163, 184, 0.32);
+      background: rgba(255,255,255,0.28);
+      color: var(--text-main);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.34);
+    }
+
+    #pdiOperadorPrintArea.pdi-print-area {
+      max-width: 210mm;
+      margin: 0 auto;
+      border: 1px solid rgba(148, 163, 184, 0.30);
+      border-radius: 12px;
+      padding: 18px;
+      background: #ffffff;
+      color: #111827;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    #pdiOperadorPrintArea.pdi-print-area h1,
+    #pdiOperadorPrintArea.pdi-print-area h2,
+    #pdiOperadorPrintArea.pdi-print-area h3 {
+      color: #0f172a;
+      margin: 0;
+      letter-spacing: 0;
+    }
+
+    #pdiOperadorPrintArea .pdi-print-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      border-bottom: 2px solid #1f2937;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+    }
+
+    #pdiOperadorPrintArea .pdi-print-header h1 {
+      font-size: 20px;
+      line-height: 1.1;
+    }
+
+    #pdiOperadorPrintArea .pdi-print-header p {
+      margin: 4px 0 0;
+      color: #475569;
+      font-weight: 700;
+    }
+
+    #pdiOperadorPrintArea .pdi-print-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    #pdiOperadorPrintArea .pdi-print-field {
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      padding: 7px 8px;
+      background: #ffffff;
+      min-height: 42px;
+    }
+
+    #pdiOperadorPrintArea .pdi-print-field span,
+    #pdiOperadorPrintArea .pdi-print-label {
+      display: block;
+      margin-bottom: 3px;
+      color: #64748b;
+      font-size: 9px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    #pdiOperadorPrintArea .pdi-print-field strong {
+      display: block;
+      color: #111827;
+      font-size: 12px;
+      font-weight: 850;
+      word-break: break-word;
+    }
+
+    #pdiOperadorPrintArea .pdi-print-section {
+      margin-top: 10px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    #pdiOperadorPrintArea .pdi-print-section h2 {
+      border-bottom: 1px solid #d0d7de;
+      padding-bottom: 4px;
+      margin-bottom: 6px;
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    #pdiOperadorPrintArea .pdi-print-note {
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      padding: 8px;
+      background: #f8fafc;
+      color: #1f2937;
+      font-size: 11px;
+    }
+
+    #pdiOperadorPrintArea .pdi-print-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    #pdiOperadorPrintArea .pdi-print-grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    #pdiOperadorPrintArea .pdi-print-input,
+    #pdiOperadorPrintArea .pdi-print-textarea {
+      width: 100%;
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      padding: 7px 8px;
+      background: #ffffff;
+      color: #111827;
+      font: inherit;
+      resize: vertical;
+    }
+
+    #pdiOperadorPrintArea .pdi-print-textarea {
+      min-height: 64px;
+    }
+
+    #pdiOperadorPrintArea .pdi-print-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    #pdiOperadorPrintArea .pdi-print-table th,
+    #pdiOperadorPrintArea .pdi-print-table td {
+      border: 1px solid #d0d7de;
+      padding: 5px;
+      vertical-align: top;
+    }
+
+    #pdiOperadorPrintArea .pdi-print-table th {
+      background: #f1f5f9;
+      color: #0f172a;
+      font-size: 9px;
+      text-transform: uppercase;
+    }
+
+    #pdiOperadorPrintArea .pdi-print-table textarea,
+    #pdiOperadorPrintArea .pdi-print-table input {
+      width: 100%;
+      min-height: 34px;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: #111827;
+      font: inherit;
+      resize: vertical;
+    }
+
+    #pdiOperadorPrintArea .pdi-editable-field {
+      min-height: 34px;
+      width: 100%;
+      padding: 6px 7px;
+      outline: none;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.35;
+      font-size: 11px;
+      color: #111827;
+      box-sizing: border-box;
+    }
+
+    #pdiOperadorPrintArea .pdi-editable-field:empty::before {
+      content: attr(data-placeholder);
+      color: #9ca3af;
+    }
+
+    #pdiOperadorPrintArea .pdi-date-field {
+      width: 100%;
+      min-height: 30px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 6px 8px;
+      font-size: 11px;
+      color: #111827;
+      background: #ffffff;
+      box-sizing: border-box;
+      outline: none;
+      font-family: inherit;
+    }
+
+    #pdiOperadorPrintArea .pdi-date-field::placeholder {
+      color: #9ca3af;
+    }
+
+    #pdiOperadorPrintArea .pdi-print-signatures {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 22px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    #pdiOperadorPrintArea .pdi-print-signature-line {
+      border-top: 1px solid #111827;
+      padding-top: 5px;
+      color: #111827;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 10mm;
+      }
+
+      html,
+      body {
+        display: block !important;
+        width: auto !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        overflow: visible !important;
+      }
+
+      body * {
+        visibility: hidden !important;
+      }
+
+      #pdiOperadorPrintArea,
+      #pdiOperadorPrintArea * {
+        visibility: visible !important;
+        box-sizing: border-box !important;
+      }
+
+      .main-content,
+      #view-raio-x-operador,
+      #view-raio-x-operador > .indicadores-module {
+        display: block !important;
+        position: static !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        transform: none !important;
+        background: transparent !important;
+      }
+
+      #pdiOperadorPanel {
+        display: block !important;
+        position: static !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        background: transparent !important;
+        overflow: visible !important;
+        transform: none !important;
+      }
+
+      #pdiOperadorPrintArea {
+        display: block !important;
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+        top: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        box-shadow: none !important;
+        background: #ffffff !important;
+        color: #111827 !important;
+        font-size: 10.5px !important;
+        overflow: visible !important;
+        transform: none !important;
+      }
+
+      .pdi-operador-toolbar,
+      .pdi-operador-actions,
+      .pdi-operador-no-print,
+      #view-raio-x-operador > .indicadores-module > :not(#pdiOperadorPanel),
+      .app-view:not(#view-raio-x-operador),
+      .view-export-actions,
+      .sidebar,
+      .top-bar,
+      .indicadores-filter-bar,
+      .app-header,
+      button:not(.hierarchy-toggle) {
+        display: none !important;
+      }
+
+      #pdiOperadorPrintArea .pdi-print-header,
+      #pdiOperadorPrintArea .pdi-print-section,
+      #pdiOperadorPrintArea .pdi-print-table,
+      #pdiOperadorPrintArea .pdi-print-grid,
+      #pdiOperadorPrintArea .pdi-print-meta,
+      #pdiOperadorPrintArea .pdi-print-signatures {
+        max-width: 100% !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        overflow: visible !important;
+      }
+
+      #pdiOperadorPrintArea,
+      #pdiOperadorPrintArea * {
+        word-break: normal !important;
+      }
+
+      #pdiOperadorPrintArea .pdi-print-header,
+      .pdi-print-section,
+      .pdi-print-field,
+      .pdi-print-signatures {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .pdi-print-area h1 {
+        font-size: 17px !important;
+      }
+
+      .pdi-print-section h2 {
+        font-size: 11.5px !important;
+      }
+
+      .pdi-print-header {
+        gap: 14px !important;
+      }
+
+      .pdi-print-meta {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        column-gap: 6px !important;
+        row-gap: 6px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+      }
+
+      .pdi-print-grid {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+        column-gap: 6px !important;
+        row-gap: 6px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+      }
+
+      .pdi-print-grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      }
+
+      #pdiOperadorPrintArea .pdi-print-grid > *,
+      #pdiOperadorPrintArea .pdi-print-meta > * {
+        min-width: 0 !important;
+        max-width: 100% !important;
+        overflow: visible !important;
+      }
+
+      .pdi-print-field,
+      .pdi-print-note {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+        overflow-wrap: anywhere !important;
+        word-break: break-word !important;
+      }
+
+      .pdi-print-table {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        table-layout: auto !important;
+        border-collapse: collapse !important;
+      }
+
+      #pdiOperadorPrintArea table {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        table-layout: auto !important;
+        border-collapse: collapse !important;
+      }
+
+      #pdiOperadorPrintArea th,
+      #pdiOperadorPrintArea td,
+      .pdi-print-table th,
+      .pdi-print-table td {
+        word-break: break-word !important;
+        overflow-wrap: anywhere !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        padding: 5px !important;
+        vertical-align: top !important;
+      }
+
+      .pdi-print-input,
+      .pdi-print-textarea,
+      .pdi-editable-field,
+      .pdi-date-field,
+      .pdi-print-field,
+      #pdiOperadorPrintArea input,
+      #pdiOperadorPrintArea textarea,
+      .pdi-print-table textarea,
+      .pdi-print-table input {
+        max-width: 100% !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+        overflow-wrap: anywhere !important;
+        word-break: break-word !important;
+        border-color: #9ca3af !important;
+        box-shadow: none !important;
+        outline: none !important;
+      }
+
+      .pdi-print-table textarea,
+      .pdi-print-table input {
+        border: 0 !important;
+      }
+
+      .pdi-editable-field {
+        min-height: 22px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: #111827;
+        font-size: 10.5px;
+        line-height: 1.3;
+        box-shadow: none;
+      }
+
+      .pdi-editable-field:empty::before {
+        content: "";
+      }
+
+      .pdi-date-field {
+        min-height: 20px;
+        border: none;
+        background: transparent;
+        padding: 0;
+        color: #111827;
+        font-size: 10.5px;
+        box-shadow: none;
+        appearance: none;
+        -webkit-appearance: none;
+        font-family: inherit;
+      }
+
+      .pdi-date-field::placeholder {
+        color: transparent;
+      }
+
+      .pdi-print-table,
+      .pdi-print-section,
+      .pdi-print-signatures {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
     }
 
     .dark-theme .raio-x-empty,
@@ -6878,6 +7484,10 @@
       .simulador-impact-grid,
       .raio-x-summary-grid {
         grid-template-columns: 1fr;
+      }
+
+      .raio-x-operator-filter {
+        grid-column: span 1;
       }
 
       .raio-x-indicator-line {
@@ -7583,6 +8193,51 @@
       display: none;
       flex: 1;
     }
+
+    #view-indicadores-operador .indicadores-module {
+      overflow: visible !important;
+    }
+
+    #view-indicadores-operador .indicadores-filter-bar {
+      position: relative;
+      z-index: 1000 !important;
+      overflow: visible !important;
+    }
+
+    #view-indicadores-operador .indicadores-filter-bar::before {
+      z-index: 0;
+    }
+
+    #view-indicadores-operador .indicadores-filter-bar > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    #view-indicadores-operador .indicadores-filter-bar .filter-block,
+    #view-indicadores-operador .indicadores-filter-bar .select-wrap,
+    #view-indicadores-operador .indicadores-filter-bar .multi-filter {
+      position: relative;
+      z-index: 1010;
+      overflow: visible !important;
+    }
+
+    #view-indicadores-operador .indicadores-filter-bar .multi-filter.is-open,
+    #view-indicadores-operador .indicadores-filter-bar .multi-filter.open {
+      z-index: 10000 !important;
+    }
+
+    #view-indicadores-operador .indicadores-filter-bar .multi-filter-dropdown {
+      z-index: 10001 !important;
+    }
+
+    #view-indicadores-operador .indicadores-summary-grid,
+    #view-indicadores-operador .indicadores-summary-card,
+    #view-indicadores-operador .indicadores-unit-compare-shell,
+    #view-indicadores-operador .indicadores-table-shell {
+      position: relative;
+      z-index: 1 !important;
+    }
+
     #loading { position: fixed; inset: 0; background: var(--bg-main); z-index: 9999; display: flex; justify-content: center; align-items: center; font-weight: 600; font-size: 15px; }
   </style>
 </head>
@@ -8467,6 +9122,10 @@
               </select>
             </div>
           </div>
+          <div class="filter-block pdi-operador-actions pdi-operador-no-print">
+            <span class="filter-label">Plano de desenvolvimento</span>
+            <button class="pdi-operador-button" type="button" onclick="abrirPdiOperador()">Gerar PDI do Operador</button>
+          </div>
         </section>
 
         <section class="raio-x-empty" id="raioXEmptyState">
@@ -8547,6 +9206,167 @@
             </div>
           </div>
           <div id="raioXGuidanceContent"></div>
+        </section>
+
+        <section class="pdi-operador-panel" id="pdiOperadorPanel" style="display:none;">
+          <div class="pdi-operador-toolbar pdi-operador-no-print">
+            <div>
+              <h2>Preparação do PDI</h2>
+              <p>Revise as informações automáticas, preencha os campos combinados e imprima em A4.</p>
+            </div>
+            <div class="pdi-operador-toolbar-actions">
+              <button class="pdi-operador-button pdi-operador-secondary" type="button" onclick="fecharPdiOperador()">Fechar</button>
+              <button class="pdi-operador-button" type="button" onclick="imprimirPdiOperador()">Imprimir PDI</button>
+            </div>
+          </div>
+
+          <div class="pdi-print-area" id="pdiOperadorPrintArea">
+            <header class="pdi-print-header">
+              <div>
+                <h1>Plano de Desenvolvimento Individual do Operador</h1>
+                <p>PDI baseado na análise da aba Raio X do Operador</p>
+              </div>
+              <div class="pdi-print-field">
+                <span>Data da impressão</span>
+                <strong data-pdi-field="dataImpressao">não informado</strong>
+              </div>
+            </header>
+
+            <section class="pdi-print-meta">
+              <div class="pdi-print-field"><span>Operador</span><strong data-pdi-field="operador">não informado</strong></div>
+              <div class="pdi-print-field"><span>Site</span><strong data-pdi-field="site">não informado</strong></div>
+              <div class="pdi-print-field"><span>Equipe/Supervisor</span><strong data-pdi-field="supervisor">não informado</strong></div>
+              <div class="pdi-print-field"><span>Período analisado</span><strong data-pdi-field="periodoAnalisado">não informado</strong></div>
+              <label class="pdi-print-field">
+                <span>Período do PDI</span>
+                <input class="pdi-print-input" id="pdiOperadorPeriodo" type="text" placeholder="Ex.: 30 dias, 45 dias, 60 dias">
+              </label>
+              <div class="pdi-print-field"><span>Auditoria de qualidade</span><strong data-pdi-field="qualidadeAuditoria">não informado</strong></div>
+            </section>
+
+            <section class="pdi-print-section">
+              <h2>Contexto da análise</h2>
+              <p class="pdi-print-note" data-pdi-field="contextoAnalise">Este PDI foi construído com base na análise do período selecionado no Raio X do Operador.</p>
+              <p class="pdi-print-note">Informa-se que este Plano de Desenvolvimento Individual foi construído com base na análise do período selecionado na aba Raio X do Operador. O objetivo é avaliar a evolução do operador ao longo do tempo, considerando seus resultados, sua regularidade e seus pontos de melhoria, e não apenas um dia ou uma semana isolada.</p>
+              <p class="pdi-print-note">O período analisado mostra o histórico usado para entender a evolução do operador. O período do PDI define o prazo futuro combinado para acompanhamento e melhoria.</p>
+            </section>
+
+            <section class="pdi-print-section">
+              <h2>Resumo da evolução</h2>
+              <div class="pdi-print-grid">
+                <div class="pdi-print-field"><span>Resultado no início do período analisado</span><strong data-pdi-field="resultadoInicial">não informado</strong></div>
+                <div class="pdi-print-field"><span>Resultado mais recente</span><strong data-pdi-field="resultadoRecente">não informado</strong></div>
+                <div class="pdi-print-field"><span>Tendência observada</span><strong data-pdi-field="tendenciaObservada">não informado</strong></div>
+                <div class="pdi-print-field"><span>Principal evolução percebida</span><strong data-pdi-field="principalEvolucao">não informado</strong></div>
+                <div class="pdi-print-field"><span>Vendas aprovadas</span><strong data-pdi-field="vendasAprovadas">não informado</strong></div>
+                <div class="pdi-print-field"><span>Média de vendas aprovadas por dia</span><strong data-pdi-field="mediaDiaria">não informado</strong></div>
+                <div class="pdi-print-field"><span>Evolução no período</span><strong data-pdi-field="evolucaoPeriodo">não informado</strong></div>
+                <div class="pdi-print-field"><span>Principal ponto de atenção</span><strong data-pdi-field="principalPontoAtencao">não informado</strong></div>
+              </div>
+            </section>
+
+            <section class="pdi-print-section">
+              <h2>Diagnóstico em linguagem simples</h2>
+              <textarea class="pdi-print-textarea" id="pdiOperadorDiagnostico" rows="4" placeholder="Descreva a situação atual do operador com linguagem simples."></textarea>
+            </section>
+
+            <section class="pdi-print-section">
+              <h2>Alinhamentos realizados</h2>
+              <textarea class="pdi-print-textarea" id="pdiOperadorAlinhamentos" rows="5" placeholder="Registre o que foi conversado com o operador, combinados e expectativas alinhadas."></textarea>
+            </section>
+
+            <section class="pdi-print-section">
+              <h2>Período do PDI</h2>
+              <div class="pdi-print-grid pdi-print-grid-3">
+                <label class="pdi-print-field"><span>Data de início</span><input class="pdi-date-field" id="pdiOperadorDataInicio" type="text" placeholder="dd/mm/aaaa" inputmode="numeric"></label>
+                <label class="pdi-print-field"><span>Revisão intermediária</span><input class="pdi-date-field" id="pdiOperadorDataRevisao" type="text" placeholder="dd/mm/aaaa" inputmode="numeric"></label>
+                <label class="pdi-print-field"><span>Encerramento previsto</span><input class="pdi-date-field" id="pdiOperadorDataEncerramento" type="text" placeholder="dd/mm/aaaa" inputmode="numeric"></label>
+              </div>
+            </section>
+
+            <section class="pdi-print-section">
+              <h2>Objetivos do PDI</h2>
+              <div class="pdi-print-grid">
+                <label><span class="pdi-print-label">Objetivo de curto prazo</span><textarea class="pdi-print-textarea" id="pdiOperadorObjetivoCurto" rows="3"></textarea></label>
+                <label><span class="pdi-print-label">Objetivo de médio prazo</span><textarea class="pdi-print-textarea" id="pdiOperadorObjetivoMedio" rows="3"></textarea></label>
+                <label><span class="pdi-print-label">Objetivo de longo prazo</span><textarea class="pdi-print-textarea" id="pdiOperadorObjetivoLongo" rows="3"></textarea></label>
+              </div>
+            </section>
+
+            <section class="pdi-print-section">
+              <h2>Ações combinadas</h2>
+              <table class="pdi-print-table">
+                <thead>
+                  <tr>
+                    <th>Ação combinada</th>
+                    <th>Como será feito</th>
+                    <th>Responsável</th>
+                    <th>Prazo</th>
+                    <th>Como será medido</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><div class="pdi-editable-field" contenteditable="true" data-placeholder="Digite aqui"></div></td>
+                    <td><div class="pdi-editable-field" contenteditable="true" data-placeholder="Digite aqui"></div></td>
+                    <td><div class="pdi-editable-field" contenteditable="true" data-placeholder="Digite aqui"></div></td>
+                    <td><div class="pdi-editable-field" contenteditable="true" data-placeholder="Digite aqui"></div></td>
+                    <td><div class="pdi-editable-field" contenteditable="true" data-placeholder="Digite aqui"></div></td>
+                  </tr>
+                  <tr>
+                    <td><div class="pdi-editable-field" contenteditable="true" data-placeholder="Digite aqui"></div></td>
+                    <td><div class="pdi-editable-field" contenteditable="true" data-placeholder="Digite aqui"></div></td>
+                    <td><div class="pdi-editable-field" contenteditable="true" data-placeholder="Digite aqui"></div></td>
+                    <td><div class="pdi-editable-field" contenteditable="true" data-placeholder="Digite aqui"></div></td>
+                    <td><div class="pdi-editable-field" contenteditable="true" data-placeholder="Digite aqui"></div></td>
+                  </tr>
+                  <tr>
+                    <td><div class="pdi-editable-field" contenteditable="true" data-placeholder="Digite aqui"></div></td>
+                    <td><div class="pdi-editable-field" contenteditable="true" data-placeholder="Digite aqui"></div></td>
+                    <td><div class="pdi-editable-field" contenteditable="true" data-placeholder="Digite aqui"></div></td>
+                    <td><div class="pdi-editable-field" contenteditable="true" data-placeholder="Digite aqui"></div></td>
+                    <td><div class="pdi-editable-field" contenteditable="true" data-placeholder="Digite aqui"></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section class="pdi-print-section">
+              <h2>Registros de acompanhamento</h2>
+              <table class="pdi-print-table">
+                <thead><tr><th>Data</th><th>Comentário do acompanhamento</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td><input class="pdi-date-field" type="text" placeholder="dd/mm/aaaa" inputmode="numeric"></td>
+                    <td><div class="pdi-editable-field" contenteditable="true" data-placeholder="Digite o comentário do acompanhamento"></div></td>
+                  </tr>
+                  <tr>
+                    <td><input class="pdi-date-field" type="text" placeholder="dd/mm/aaaa" inputmode="numeric"></td>
+                    <td><div class="pdi-editable-field" contenteditable="true" data-placeholder="Digite o comentário do acompanhamento"></div></td>
+                  </tr>
+                  <tr>
+                    <td><input class="pdi-date-field" type="text" placeholder="dd/mm/aaaa" inputmode="numeric"></td>
+                    <td><div class="pdi-editable-field" contenteditable="true" data-placeholder="Digite o comentário do acompanhamento"></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section class="pdi-print-section">
+              <h2>Ciência e assinatura</h2>
+              <p class="pdi-print-note">Declaro que participei da conversa de alinhamento, recebi orientação sobre os pontos de desenvolvimento e estou ciente dos objetivos definidos neste PDI.</p>
+              <div class="pdi-print-signatures">
+                <div>
+                  <div class="pdi-print-signature-line">Assinatura do operador</div>
+                  <label><span class="pdi-print-label">Data</span><input class="pdi-date-field" type="text" placeholder="dd/mm/aaaa" inputmode="numeric"></label>
+                </div>
+                <div>
+                  <div class="pdi-print-signature-line">Assinatura do Supervisor/Monitor</div>
+                  <label><span class="pdi-print-label">Data</span><input class="pdi-date-field" type="text" placeholder="dd/mm/aaaa" inputmode="numeric"></label>
+                </div>
+              </div>
+            </section>
+          </div>
         </section>
 
         <section class="indicadores-table-shell raio-x-table-shell" id="raioXTableShell" style="display:none;">
@@ -9533,6 +10353,34 @@
       if (typeof atualizarMultiSelectPortal === 'function') atualizarMultiSelectPortal(selectEl);
     }
 
+    function popularSelectCascataPortal(selectEl, options, firstOptionLabel, firstOptionValue, valorAtual) {
+      if (!selectEl) return firstOptionValue;
+
+      const opcoes = Array.isArray(options) ? options : [];
+      const valorPadrao = firstOptionValue;
+      const valoresAtuais = Array.isArray(valorAtual)
+        ? valorAtual
+        : (valorAtual && ![valorPadrao, 'TODOS', 'TODAS', ''].includes(valorAtual) ? [valorAtual] : []);
+
+      preencherSelect(selectEl, opcoes, firstOptionLabel, valorPadrao);
+
+      if (selectEl.dataset.multiFilter) {
+        const validos = new Set(opcoes);
+        const preservados = valoresAtuais.filter(valor => validos.has(valor));
+        window.filtrosMultiPortal[selectEl.id] = { valores: preservados, nenhum: false };
+        selectEl.value = preservados[0] || valorPadrao;
+        atualizarMultiSelectPortal(selectEl);
+        return preservados.length ? preservados : valorPadrao;
+      }
+
+      if (valoresAtuais.length && opcoes.includes(valoresAtuais[0])) {
+        selectEl.value = valoresAtuais[0];
+      } else {
+        selectEl.value = valorPadrao;
+      }
+      return selectEl.value;
+    }
+
     function trocarView(nomeView, navEl) {
       document.querySelectorAll('.app-view').forEach(view => {
         view.classList.toggle('is-active', view.id === `view-${nomeView}`);
@@ -9987,6 +10835,49 @@
       return maior;
     }
 
+    function obterDataLinhaPortal(item, indiceData) {
+      if (!item) return null;
+      if (item.data instanceof Date && !isNaN(item.data.getTime())) return item.data;
+      if (Array.isArray(item)) return parseDataBase(item[indiceData]);
+      if (item.row && Array.isArray(item.row)) return parseDataBase(item.row[indiceData]);
+      return null;
+    }
+
+    function obterUltimaDataLancamentoBaseFiltradaPortal(baseFiltrada, indiceData = COLUNAS_BASE_TABELA.data) {
+      return (baseFiltrada || []).reduce((maior, item) => {
+        const data = obterDataLinhaPortal(item, indiceData);
+        if (!data) return maior;
+        return !maior || data > maior ? data : maior;
+      }, null);
+    }
+
+    function obterInicioOperacionalMesPortal(ano, mesIndex) {
+      if (Number(ano) === 2026 && Number(mesIndex) === 0) return criarDataSegura(2026, 0, 12);
+      return criarDataSegura(ano, mesIndex, 1);
+    }
+
+    function limitarDataCorteAoMesPortal(mesSelecionado, ultimaDataLancamento) {
+      const [mesTxt, anoTxt] = String(mesSelecionado || '').toLowerCase().split('/');
+      const mes = MONTH_MAP[normalizarTextoComparacao(mesTxt)];
+      const ano = 2000 + Number(anoTxt);
+      if (mes === undefined || !Number.isFinite(ano) || !ultimaDataLancamento) return null;
+      if (ultimaDataLancamento.getFullYear() !== ano || ultimaDataLancamento.getMonth() !== mes) return null;
+      const ultimoDiaMes = criarDataSegura(ano, mes + 1, 0);
+      return ultimoDiaMes && ultimaDataLancamento > ultimoDiaMes ? ultimoDiaMes : ultimaDataLancamento;
+    }
+
+    function calcularDiasUteisPassadosPorUltimaDataLancamentoPortal(mesReferencia, unidade, ultimaDataLancamento, feriados) {
+      const corte = limitarDataCorteAoMesPortal(mesReferencia, ultimaDataLancamento);
+      const diasPorSite = calcularDiasUteisPorSite(mesReferencia, corte, feriados || []);
+      const info = diasPorSite[unidade] || Object.values(diasPorSite)[0] || { du: 0, dp: 0 };
+      return {
+        du: Number(info.du || 0),
+        dp: Number(info.dp || 0),
+        restantes: Math.max(0, Number(info.du || 0) - Number(info.dp || 0)),
+        dataCorte: corte
+      };
+    }
+
     function feriadoAplicaAoSite(feriado, site) {
       const mapa = SITE_MAP[site];
       if (!mapa || !feriado || !feriado.data) return false;
@@ -10008,7 +10899,8 @@
       const ano = 2000 + Number(anoTxt);
       if (mes === undefined || !anoTxt) return {};
 
-      const primeiroDia = new Date(ano, mes, 1);
+      const primeiroDia = obterInicioOperacionalMesPortal(ano, mes);
+      if (!primeiroDia) return {};
       const ultimoDia = new Date(ano, mes + 1, 0);
       const feriadosPorSite = {};
 
@@ -10108,14 +11000,10 @@
         municipio: row[5]
       })).filter(item => item.data);
 
-      const dataCorteBase = obterDataCorteBase(registrosBase);
+      const registrosMesSelecionado = registrosBase.filter(item => mesmoMesAno(item.data, mesRef));
+      const dataCorteBase = obterUltimaDataLancamentoBaseFiltradaPortal(registrosMesSelecionado);
       const mesAtualBase = obterMesAtualDaBase(registrosBase);
       const mesEhAtual = mesRef === mesAtualBase;
-      const diasUteisPorSite = calcularDiasUteisPorSite(
-        mesSelecionado,
-        mesEhAtual ? dataCorteBase : new Date(9999, 11, 31),
-        feriados
-      );
       const metasMap = obterMetasPorSiteProduto(rawMetas, mesSelecionado);
       const metasSupervisorMap = obterMetasPorSupervisorExecutivo(rawMetas, mesSelecionado);
 
@@ -10151,29 +11039,42 @@
         ];
 
         const linhasProdutos = [];
+        const linhasSiteMes = registrosMesSelecionado.filter(item => item.site === site);
+        const diasSite = calcularDiasUteisPassadosPorUltimaDataLancamentoPortal(
+          mesSelecionado,
+          site,
+          obterUltimaDataLancamentoBaseFiltradaPortal(linhasSiteMes),
+          feriados
+        );
         const totalSite = {
           realizadoBrutas: 0,
           realizadoLiquidas: 0,
           projecaoBrutas: 0,
           projecaoLiquidas: 0,
           meta: 0,
-          du: diasUteisPorSite[site] ? diasUteisPorSite[site].du : 0,
-          dp: diasUteisPorSite[site] ? diasUteisPorSite[site].dp : 0
+          du: diasSite.du,
+          dp: diasSite.dp
         };
 
         produtosDoSite.forEach(produto => {
-          const itens = registrosBase.filter(item =>
+          const itens = registrosMesSelecionado.filter(item =>
             item.site === site &&
-            item.produto === produto &&
-            mesmoMesAno(item.data, mesRef)
+            item.produto === produto
           );
           const realizadoBrutas = itens.reduce((acc, item) => acc + item.brutas, 0);
           const realizadoLiquidas = itens.reduce((acc, item) => acc + item.liquidas, 0);
           const meta = metasMap[`${site}__${produto}`] || 0;
-          const du = diasUteisPorSite[site] ? diasUteisPorSite[site].du : 0;
-          const dp = diasUteisPorSite[site] ? diasUteisPorSite[site].dp : 0;
-          const projecaoBrutas = mesEhAtual && dp > 0 ? Math.round(realizadoBrutas / dp * du) : realizadoBrutas;
-          const projecaoLiquidas = mesEhAtual && dp > 0 ? Math.round(realizadoLiquidas / dp * du) : realizadoLiquidas;
+          const diasProduto = calcularDiasUteisPassadosPorUltimaDataLancamentoPortal(
+            mesSelecionado,
+            site,
+            obterUltimaDataLancamentoBaseFiltradaPortal(itens),
+            feriados
+          );
+          const du = diasProduto.du;
+          const dp = diasProduto.dp;
+          const deveProjetar = dp > 0 && dp < du;
+          const projecaoBrutas = deveProjetar ? Math.round(realizadoBrutas / dp * du) : realizadoBrutas;
+          const projecaoLiquidas = deveProjetar ? Math.round(realizadoLiquidas / dp * du) : realizadoLiquidas;
           const atingimento = meta > 0 ? Math.round(projecaoLiquidas / meta * 100) : 0;
           const gruposSupervisor = new Map();
           itens.forEach(item => {
@@ -10184,7 +11085,7 @@
             const linhasSupervisor = [...gruposSupervisor.keys()].sort((a, b) => a.localeCompare(b, 'pt-BR')).map(supervisor => {
               const linhasSupervisorBase = gruposSupervisor.get(supervisor) || [];
               const realizado = linhasSupervisorBase.reduce((acc, item) => acc + item[campoValor], 0);
-              const projetadoExato = mesEhAtual && dp > 0 ? realizado / dp * du : realizado;
+              const projetadoExato = deveProjetar ? realizado / dp * du : realizado;
               return {
                 supervisor,
                 realizado,
@@ -10530,22 +11431,18 @@
     }
 
     function obterDataInicioOperacionalYtdExecutivoPortal(ano, mesIndex) {
-      if (Number(ano) === 2026 && Number(mesIndex) === 0) return criarDataSegura(2026, 0, 12);
-      return criarDataSegura(ano, mesIndex, 1);
+      return obterInicioOperacionalMesPortal(ano, mesIndex);
     }
 
     function listarDiasUteisYtdExecutivoPortal(ano, mesIndex, unidade, feriados, dataCorte) {
       const primeiroDia = obterDataInicioOperacionalYtdExecutivoPortal(ano, mesIndex);
-      if (!primeiroDia) return [];
+      if (!primeiroDia || !dataCorte) return [];
       const ultimoDiaMes = criarDataSegura(ano, mesIndex + 1, 0) || new Date(ano, mesIndex + 1, 0);
       const mesEhCorte = dataCorte && dataCorte.getFullYear() === Number(ano) && dataCorte.getMonth() === Number(mesIndex);
       const ultimoDia = mesEhCorte && dataCorte < ultimoDiaMes ? dataCorte : ultimoDiaMes;
       if (ultimoDia < primeiroDia) return [];
-      const mesRef = formatarMesYtdExecutivoPortal(ano, mesIndex);
-      const diasPorSite = calcularDiasUteisPorSite(mesRef, new Date(9999, 11, 31), feriados || []);
-      const unidadeConhecida = diasPorSite && diasPorSite[unidade];
 
-      if (unidadeConhecida && SITE_MAP[unidade]) {
+      if (SITE_MAP[unidade]) {
         const feriadosSite = new Set((feriados || [])
           .filter(feriado =>
             feriado.data &&
@@ -10790,9 +11687,12 @@
 
       if (campoAlterado === 'ano') {
         const unidades = [...new Set(linhasAno.map(item => item.unidade).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
-        const produtos = [...new Set(linhasAno.map(item => item.produto).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
-        popularSelectYtdExecutivoPortal(selUnidade, unidades, 'Todas', 'TODAS');
-        popularSelectYtdExecutivoPortal(selProduto, produtos, 'Todos', 'TODOS');
+        const unidade = popularSelectCascataPortal(selUnidade, unidades, 'Todas', 'TODAS', filtros.unidade);
+        const produtos = [...new Set(linhasAno
+          .filter(item => unidade === 'TODAS' || item.unidade === unidade)
+          .map(item => item.produto)
+          .filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+        popularSelectCascataPortal(selProduto, produtos, 'Todos', 'TODOS', filtros.produto);
         solicitarRenderYtdExecutivoPortal();
         return;
       }
@@ -10802,7 +11702,7 @@
           .filter(item => filtros.unidade === 'TODAS' || item.unidade === filtros.unidade)
           .map(item => item.produto)
           .filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
-        popularSelectYtdExecutivoPortal(selProduto, produtos, 'Todos', 'TODOS');
+        popularSelectCascataPortal(selProduto, produtos, 'Todos', 'TODOS', filtros.produto);
         solicitarRenderYtdExecutivoPortal();
         return;
       }
@@ -10860,11 +11760,18 @@
       const porMes = new Map(meses.map(mes => [mes.chave, criarMetricasYtdExecutivoPortal(mes.label)]));
       const matriz = new Map();
       const diasUteisPorUnidadeMes = new Map();
+      const dataCortePorUnidadeMes = new Map();
+      registros.forEach(item => {
+        const chave = `${item.unidade}__${item.chaveMes}`;
+        const atual = dataCortePorUnidadeMes.get(chave);
+        if (!atual || item.data > atual) dataCortePorUnidadeMes.set(chave, item.data);
+      });
 
       unidades.forEach(unidade => {
         const metricasUnidade = obterOuCriarMetricasYtdExecutivoPortal(porUnidade, unidade, unidade);
         meses.forEach(mes => {
-          const dias = listarDiasUteisYtdExecutivoPortal(mes.ano, mes.mesIndex, unidade, feriados, dataCorte);
+          const dataCorteUnidadeMes = dataCortePorUnidadeMes.get(`${unidade}__${mes.chave}`) || null;
+          const dias = listarDiasUteisYtdExecutivoPortal(mes.ano, mes.mesIndex, unidade, feriados, dataCorteUnidadeMes);
           diasUteisPorUnidadeMes.set(`${unidade}__${mes.chave}`, new Set(dias.map(criarChaveData)));
           dias.forEach(data => {
             const chaveDia = criarChaveData(data);
@@ -12994,82 +13901,15 @@
       const filtros = obterFiltrosIndicadoresSelecionados();
       const periodo = montarFiltrosPeriodoTimelineIndicadores(filtros);
 
-      if (campoAlterado === 'data' || campoAlterado === 'timeline' || campoAlterado === 'status') {
-        filtros.unidade = 'TODAS';
-        filtros.produto = 'TODOS';
-        filtros.supervisor = 'TODOS';
-        filtros.tempoCasa = 'TODOS';
-
-        const linhas = filtrarLinhasIndicadores({ ...periodo, status: filtros.status });
-        preencherSelect(selUnidade, extrairOpcoesIndicadores(linhas, 81), 'Todas', 'TODAS');
-        preencherSelect(selProduto, extrairOpcoesIndicadores(linhas, 106), 'Todos', 'TODOS');
-        preencherSelect(selSupervisor, extrairOpcoesIndicadores(linhas, 9), 'Todos', 'TODOS');
-        preencherSelect(selTempoCasa, extrairOpcoesIndicadores(linhas, 120, ordenarTempoCasaIndicadores), 'Todos', 'TODOS');
-        selUnidade.value = 'TODAS';
-        selProduto.value = 'TODOS';
-        selSupervisor.value = 'TODOS';
-        selTempoCasa.value = 'TODOS';
-        solicitarRenderIndicadoresOperador();
-        return;
-      }
-
-      if (campoAlterado === 'unidade') {
-        filtros.produto = 'TODOS';
-        filtros.supervisor = 'TODOS';
-        filtros.tempoCasa = 'TODOS';
-
-        const linhas = filtrarLinhasIndicadores({
-          ...periodo,
-          unidade: filtros.unidade,
-          status: filtros.status
-        });
-        preencherSelect(selProduto, extrairOpcoesIndicadores(linhas, 106), 'Todos', 'TODOS');
-        preencherSelect(selSupervisor, extrairOpcoesIndicadores(linhas, 9), 'Todos', 'TODOS');
-        preencherSelect(selTempoCasa, extrairOpcoesIndicadores(linhas, 120, ordenarTempoCasaIndicadores), 'Todos', 'TODOS');
-        selProduto.value = 'TODOS';
-        selSupervisor.value = 'TODOS';
-        selTempoCasa.value = 'TODOS';
-        solicitarRenderIndicadoresOperador();
-        return;
-      }
-
-      if (campoAlterado === 'produto') {
-        filtros.supervisor = 'TODOS';
-        filtros.tempoCasa = 'TODOS';
-
-        const linhas = filtrarLinhasIndicadores({
-          ...periodo,
-          unidade: filtros.unidade,
-          produto: filtros.produto,
-          status: filtros.status
-        });
-        preencherSelect(selSupervisor, extrairOpcoesIndicadores(linhas, 9), 'Todos', 'TODOS');
-        preencherSelect(selTempoCasa, extrairOpcoesIndicadores(linhas, 120, ordenarTempoCasaIndicadores), 'Todos', 'TODOS');
-        selSupervisor.value = 'TODOS';
-        selTempoCasa.value = 'TODOS';
-        solicitarRenderIndicadoresOperador();
-        return;
-      }
-
-      if (campoAlterado === 'supervisor') {
-        filtros.tempoCasa = 'TODOS';
-
-        const linhas = filtrarLinhasIndicadores({
-          ...periodo,
-          unidade: filtros.unidade,
-          produto: filtros.produto,
-          supervisor: filtros.supervisor,
-          status: filtros.status
-        });
-        preencherSelect(selTempoCasa, extrairOpcoesIndicadores(linhas, 120, ordenarTempoCasaIndicadores), 'Todos', 'TODOS');
-        selTempoCasa.value = 'TODOS';
-        solicitarRenderIndicadoresOperador();
-        return;
-      }
-
-      if (campoAlterado === 'tempoCasa') {
-        solicitarRenderIndicadoresOperador();
-      }
+      const linhasUnidade = filtrarLinhasIndicadores({ ...periodo, status: filtros.status });
+      const unidade = popularSelectCascataPortal(selUnidade, extrairOpcoesIndicadores(linhasUnidade, 81), 'Todas', 'TODAS', filtros.unidade);
+      const linhasProduto = filtrarLinhasIndicadores({ ...periodo, unidade, status: filtros.status });
+      const produto = popularSelectCascataPortal(selProduto, extrairOpcoesIndicadores(linhasProduto, 106), 'Todos', 'TODOS', filtros.produto);
+      const linhasSupervisor = filtrarLinhasIndicadores({ ...periodo, unidade, produto, status: filtros.status });
+      const supervisor = popularSelectCascataPortal(selSupervisor, extrairOpcoesIndicadores(linhasSupervisor, 9), 'Todos', 'TODOS', filtros.supervisor);
+      const linhasTempoCasa = filtrarLinhasIndicadores({ ...periodo, unidade, produto, supervisor, status: filtros.status });
+      popularSelectCascataPortal(selTempoCasa, extrairOpcoesIndicadores(linhasTempoCasa, 120, ordenarTempoCasaIndicadores), 'Todos', 'TODOS', filtros.tempoCasa);
+      solicitarRenderIndicadoresOperador();
     }
 
     function popularFiltrosIndicadores() {
@@ -14007,8 +14847,7 @@
     }
 
     function preservarValorSelectMaturidadeOperacao(selectEl, opcoes, labelPadrao, valorPadrao, valorAtual) {
-      preencherSelect(selectEl, opcoes, labelPadrao, valorPadrao);
-      selectEl.value = selectContemValorMaturidadeOperacao(selectEl, valorAtual) ? valorAtual : valorPadrao;
+      return popularSelectCascataPortal(selectEl, opcoes, labelPadrao, valorPadrao, valorAtual);
     }
 
     function popularFiltrosMaturidadeOperacao() {
@@ -14044,9 +14883,9 @@
       if (!selUnidade || !selProduto || !selSupervisor || !selStatus) return;
 
       const filtrosAtuais = obterFiltrosMaturidadeOperacaoSelecionados();
-      let unidadeAtual = campoAlterado === 'data' ? 'TODAS' : filtrosAtuais.unidade;
-      let produtoAtual = (campoAlterado === 'data' || campoAlterado === 'unidade') ? 'TODOS' : filtrosAtuais.produto;
-      let supervisorAtual = (campoAlterado === 'data' || campoAlterado === 'unidade' || campoAlterado === 'produto') ? 'TODOS' : filtrosAtuais.supervisor;
+      let unidadeAtual = filtrosAtuais.unidade;
+      let produtoAtual = filtrosAtuais.produto;
+      let supervisorAtual = filtrosAtuais.supervisor;
       const statusAtual = filtrosAtuais.status || 'ATIVOS';
 
       const linhasUnidade = filtrarLinhasMaturidadeOperacao({
@@ -14733,82 +15572,15 @@
       const filtros = obterFiltrosProdutividadeSelecionados();
       const periodo = montarFiltrosPeriodoTimelineProdutividade(filtros);
 
-      if (campoAlterado === 'data' || campoAlterado === 'timeline' || campoAlterado === 'status') {
-        filtros.unidade = 'TODAS';
-        filtros.produto = 'TODOS';
-        filtros.supervisor = 'TODOS';
-        filtros.tempoCasa = 'TODOS';
-
-        const linhas = filtrarLinhasProdutividade({ ...periodo, status: filtros.status });
-        preencherSelect(selUnidade, extrairOpcoesIndicadores(linhas, 81), 'Todas', 'TODAS');
-        preencherSelect(selProduto, extrairOpcoesIndicadores(linhas, 106), 'Todos', 'TODOS');
-        preencherSelect(selSupervisor, extrairOpcoesIndicadores(linhas, 9), 'Todos', 'TODOS');
-        preencherSelect(selTempoCasa, extrairOpcoesIndicadores(linhas, 120, ordenarTempoCasaIndicadores), 'Todos', 'TODOS');
-        selUnidade.value = 'TODAS';
-        selProduto.value = 'TODOS';
-        selSupervisor.value = 'TODOS';
-        selTempoCasa.value = 'TODOS';
-        solicitarRenderProdutividade();
-        return;
-      }
-
-      if (campoAlterado === 'unidade') {
-        filtros.produto = 'TODOS';
-        filtros.supervisor = 'TODOS';
-        filtros.tempoCasa = 'TODOS';
-
-        const linhas = filtrarLinhasProdutividade({
-          ...periodo,
-          unidade: filtros.unidade,
-          status: filtros.status
-        });
-        preencherSelect(selProduto, extrairOpcoesIndicadores(linhas, 106), 'Todos', 'TODOS');
-        preencherSelect(selSupervisor, extrairOpcoesIndicadores(linhas, 9), 'Todos', 'TODOS');
-        preencherSelect(selTempoCasa, extrairOpcoesIndicadores(linhas, 120, ordenarTempoCasaIndicadores), 'Todos', 'TODOS');
-        selProduto.value = 'TODOS';
-        selSupervisor.value = 'TODOS';
-        selTempoCasa.value = 'TODOS';
-        solicitarRenderProdutividade();
-        return;
-      }
-
-      if (campoAlterado === 'produto') {
-        filtros.supervisor = 'TODOS';
-        filtros.tempoCasa = 'TODOS';
-
-        const linhas = filtrarLinhasProdutividade({
-          ...periodo,
-          unidade: filtros.unidade,
-          produto: filtros.produto,
-          status: filtros.status
-        });
-        preencherSelect(selSupervisor, extrairOpcoesIndicadores(linhas, 9), 'Todos', 'TODOS');
-        preencherSelect(selTempoCasa, extrairOpcoesIndicadores(linhas, 120, ordenarTempoCasaIndicadores), 'Todos', 'TODOS');
-        selSupervisor.value = 'TODOS';
-        selTempoCasa.value = 'TODOS';
-        solicitarRenderProdutividade();
-        return;
-      }
-
-      if (campoAlterado === 'supervisor') {
-        filtros.tempoCasa = 'TODOS';
-
-        const linhas = filtrarLinhasProdutividade({
-          ...periodo,
-          unidade: filtros.unidade,
-          produto: filtros.produto,
-          supervisor: filtros.supervisor,
-          status: filtros.status
-        });
-        preencherSelect(selTempoCasa, extrairOpcoesIndicadores(linhas, 120, ordenarTempoCasaIndicadores), 'Todos', 'TODOS');
-        selTempoCasa.value = 'TODOS';
-        solicitarRenderProdutividade();
-        return;
-      }
-
-      if (campoAlterado === 'tempoCasa') {
-        solicitarRenderProdutividade();
-      }
+      const linhasUnidade = filtrarLinhasProdutividade({ ...periodo, status: filtros.status });
+      const unidade = popularSelectCascataPortal(selUnidade, extrairOpcoesIndicadores(linhasUnidade, 81), 'Todas', 'TODAS', filtros.unidade);
+      const linhasProduto = filtrarLinhasProdutividade({ ...periodo, unidade, status: filtros.status });
+      const produto = popularSelectCascataPortal(selProduto, extrairOpcoesIndicadores(linhasProduto, 106), 'Todos', 'TODOS', filtros.produto);
+      const linhasSupervisor = filtrarLinhasProdutividade({ ...periodo, unidade, produto, status: filtros.status });
+      const supervisor = popularSelectCascataPortal(selSupervisor, extrairOpcoesIndicadores(linhasSupervisor, 9), 'Todos', 'TODOS', filtros.supervisor);
+      const linhasTempoCasa = filtrarLinhasProdutividade({ ...periodo, unidade, produto, supervisor, status: filtros.status });
+      popularSelectCascataPortal(selTempoCasa, extrairOpcoesIndicadores(linhasTempoCasa, 120, ordenarTempoCasaIndicadores), 'Todos', 'TODOS', filtros.tempoCasa);
+      solicitarRenderProdutividade();
     }
 
     function atualizarProdutividade() {
@@ -15421,69 +16193,15 @@
 
       const filtros = obterFiltrosCurvaABCSelecionados();
 
-      if (campoAlterado === 'data' || campoAlterado === 'status') {
-        filtros.unidade = 'TODAS';
-        filtros.produto = 'TODOS';
-        filtros.supervisor = 'TODOS';
-        filtros.tempoCasa = 'TODOS';
-        const linhas = filtrarLinhasCurvaABC({ data: filtros.data, status: filtros.status });
-        preencherSelect(selUnidade, extrairOpcoesIndicadores(linhas, COLUNAS_CURVA_ABC.unidade), 'Todas', 'TODAS');
-        preencherSelect(selProduto, extrairOpcoesIndicadores(linhas, COLUNAS_CURVA_ABC.produto), 'Todos', 'TODOS');
-        preencherSelect(selSupervisor, extrairOpcoesIndicadores(linhas, COLUNAS_CURVA_ABC.supervisor), 'Todos', 'TODOS');
-        preencherSelect(selTempoCasa, extrairOpcoesIndicadores(linhas, COLUNAS_CURVA_ABC.tempoCasa, ordenarTempoCasaIndicadores), 'Todos', 'TODOS');
-        selUnidade.value = 'TODAS';
-        selProduto.value = 'TODOS';
-        selSupervisor.value = 'TODOS';
-        selTempoCasa.value = 'TODOS';
-        solicitarRenderCurvaABC();
-        return;
-      }
-
-      if (campoAlterado === 'unidade') {
-        filtros.produto = 'TODOS';
-        filtros.supervisor = 'TODOS';
-        filtros.tempoCasa = 'TODOS';
-        const linhas = filtrarLinhasCurvaABC({ data: filtros.data, unidade: filtros.unidade, status: filtros.status });
-        preencherSelect(selProduto, extrairOpcoesIndicadores(linhas, COLUNAS_CURVA_ABC.produto), 'Todos', 'TODOS');
-        preencherSelect(selSupervisor, extrairOpcoesIndicadores(linhas, COLUNAS_CURVA_ABC.supervisor), 'Todos', 'TODOS');
-        preencherSelect(selTempoCasa, extrairOpcoesIndicadores(linhas, COLUNAS_CURVA_ABC.tempoCasa, ordenarTempoCasaIndicadores), 'Todos', 'TODOS');
-        selProduto.value = 'TODOS';
-        selSupervisor.value = 'TODOS';
-        selTempoCasa.value = 'TODOS';
-        solicitarRenderCurvaABC();
-        return;
-      }
-
-      if (campoAlterado === 'produto') {
-        filtros.supervisor = 'TODOS';
-        filtros.tempoCasa = 'TODOS';
-        const linhas = filtrarLinhasCurvaABC({ data: filtros.data, unidade: filtros.unidade, produto: filtros.produto, status: filtros.status });
-        preencherSelect(selSupervisor, extrairOpcoesIndicadores(linhas, COLUNAS_CURVA_ABC.supervisor), 'Todos', 'TODOS');
-        preencherSelect(selTempoCasa, extrairOpcoesIndicadores(linhas, COLUNAS_CURVA_ABC.tempoCasa, ordenarTempoCasaIndicadores), 'Todos', 'TODOS');
-        selSupervisor.value = 'TODOS';
-        selTempoCasa.value = 'TODOS';
-        solicitarRenderCurvaABC();
-        return;
-      }
-
-      if (campoAlterado === 'supervisor') {
-        filtros.tempoCasa = 'TODOS';
-        const linhas = filtrarLinhasCurvaABC({
-          data: filtros.data,
-          unidade: filtros.unidade,
-          produto: filtros.produto,
-          supervisor: filtros.supervisor,
-          status: filtros.status
-        });
-        preencherSelect(selTempoCasa, extrairOpcoesIndicadores(linhas, COLUNAS_CURVA_ABC.tempoCasa, ordenarTempoCasaIndicadores), 'Todos', 'TODOS');
-        selTempoCasa.value = 'TODOS';
-        solicitarRenderCurvaABC();
-        return;
-      }
-
-      if (campoAlterado === 'tempoCasa') {
-        solicitarRenderCurvaABC();
-      }
+      const linhasUnidade = filtrarLinhasCurvaABC({ data: filtros.data, status: filtros.status });
+      const unidade = popularSelectCascataPortal(selUnidade, extrairOpcoesIndicadores(linhasUnidade, COLUNAS_CURVA_ABC.unidade), 'Todas', 'TODAS', filtros.unidade);
+      const linhasProduto = filtrarLinhasCurvaABC({ data: filtros.data, unidade, status: filtros.status });
+      const produto = popularSelectCascataPortal(selProduto, extrairOpcoesIndicadores(linhasProduto, COLUNAS_CURVA_ABC.produto), 'Todos', 'TODOS', filtros.produto);
+      const linhasSupervisor = filtrarLinhasCurvaABC({ data: filtros.data, unidade, produto, status: filtros.status });
+      const supervisor = popularSelectCascataPortal(selSupervisor, extrairOpcoesIndicadores(linhasSupervisor, COLUNAS_CURVA_ABC.supervisor), 'Todos', 'TODOS', filtros.supervisor);
+      const linhasTempoCasa = filtrarLinhasCurvaABC({ data: filtros.data, unidade, produto, supervisor, status: filtros.status });
+      popularSelectCascataPortal(selTempoCasa, extrairOpcoesIndicadores(linhasTempoCasa, COLUNAS_CURVA_ABC.tempoCasa, ordenarTempoCasaIndicadores), 'Todos', 'TODOS', filtros.tempoCasa);
+      solicitarRenderCurvaABC();
     }
 
     function classificarCurvaABC(mediaBruta) {
@@ -15974,50 +16692,13 @@
 
       const filtros = obterFiltrosZeradosLogadosSelecionados();
 
-      if (campoAlterado === 'data' || campoAlterado === 'status') {
-        filtros.unidade = 'TODAS';
-        filtros.produto = 'TODOS';
-        filtros.supervisor = 'TODOS';
-        const linhas = filtrarLinhasZeradosLogados({ data: filtros.data, status: filtros.status });
-        preencherSelect(selUnidade, extrairOpcoesIndicadores(linhas, COLUNAS_ZERADOS_LOGADOS.unidade), 'Todas', 'TODAS');
-        preencherSelect(selProduto, extrairOpcoesIndicadores(linhas, COLUNAS_ZERADOS_LOGADOS.produto), 'Todos', 'TODOS');
-        preencherSelect(selSupervisor, extrairOpcoesIndicadores(linhas, COLUNAS_ZERADOS_LOGADOS.supervisor), 'Todos', 'TODOS');
-        selUnidade.value = 'TODAS';
-        selProduto.value = 'TODOS';
-        selSupervisor.value = 'TODOS';
-        solicitarRenderZeradosLogados();
-        return;
-      }
-
-      if (campoAlterado === 'unidade') {
-        filtros.produto = 'TODOS';
-        filtros.supervisor = 'TODOS';
-        const linhas = filtrarLinhasZeradosLogados({ data: filtros.data, unidade: filtros.unidade, status: filtros.status });
-        preencherSelect(selProduto, extrairOpcoesIndicadores(linhas, COLUNAS_ZERADOS_LOGADOS.produto), 'Todos', 'TODOS');
-        preencherSelect(selSupervisor, extrairOpcoesIndicadores(linhas, COLUNAS_ZERADOS_LOGADOS.supervisor), 'Todos', 'TODOS');
-        selProduto.value = 'TODOS';
-        selSupervisor.value = 'TODOS';
-        solicitarRenderZeradosLogados();
-        return;
-      }
-
-      if (campoAlterado === 'produto') {
-        filtros.supervisor = 'TODOS';
-        const linhas = filtrarLinhasZeradosLogados({
-          data: filtros.data,
-          unidade: filtros.unidade,
-          produto: filtros.produto,
-          status: filtros.status
-        });
-        preencherSelect(selSupervisor, extrairOpcoesIndicadores(linhas, COLUNAS_ZERADOS_LOGADOS.supervisor), 'Todos', 'TODOS');
-        selSupervisor.value = 'TODOS';
-        solicitarRenderZeradosLogados();
-        return;
-      }
-
-      if (campoAlterado === 'supervisor') {
-        solicitarRenderZeradosLogados();
-      }
+      const linhasUnidade = filtrarLinhasZeradosLogados({ data: filtros.data, status: filtros.status });
+      const unidade = popularSelectCascataPortal(selUnidade, extrairOpcoesIndicadores(linhasUnidade, COLUNAS_ZERADOS_LOGADOS.unidade), 'Todas', 'TODAS', filtros.unidade);
+      const linhasProduto = filtrarLinhasZeradosLogados({ data: filtros.data, unidade, status: filtros.status });
+      const produto = popularSelectCascataPortal(selProduto, extrairOpcoesIndicadores(linhasProduto, COLUNAS_ZERADOS_LOGADOS.produto), 'Todos', 'TODOS', filtros.produto);
+      const linhasSupervisor = filtrarLinhasZeradosLogados({ data: filtros.data, unidade, produto, status: filtros.status });
+      popularSelectCascataPortal(selSupervisor, extrairOpcoesIndicadores(linhasSupervisor, COLUNAS_ZERADOS_LOGADOS.supervisor), 'Todos', 'TODOS', filtros.supervisor);
+      solicitarRenderZeradosLogados();
     }
 
     function calcularMetricasZeradosLogados(linhas) {
@@ -16531,87 +17212,26 @@
 
       const filtros = obterFiltrosRaioXSelecionados();
 
-      if (campoAlterado === 'status') {
-        filtros.operador = '';
-        preencherSelect(selSupervisor, obterSupervisoresAtuaisRaioX({
-          site: filtros.site,
-          status: filtros.status
-        }), 'Todos os supervisores', '');
-        if (filtros.supervisor && selectRaioXTemValor(selSupervisor, filtros.supervisor)) {
-          selSupervisor.value = filtros.supervisor;
-        } else {
-          filtros.supervisor = '';
-          selSupervisor.value = '';
-        }
+      const supervisor = popularSelectCascataPortal(selSupervisor, obterSupervisoresAtuaisRaioX({
+        site: filtros.site,
+        status: filtros.status
+      }), 'Todos os supervisores', '', filtros.supervisor);
 
-        atualizarFiltroMesesRaioX({
-          site: filtros.site,
-          supervisor: filtros.supervisor,
-          status: filtros.status
-        });
+      atualizarFiltroMesesRaioX({
+        site: filtros.site,
+        supervisor,
+        status: filtros.status
+      }, campoAlterado === 'operador' ? { preservarVazio: true } : {});
 
-        preencherSelect(selOperador, obterOperadoresRaioX({
-          site: filtros.site,
-          supervisor: filtros.supervisor,
-          status: filtros.status,
-          meses: obterMesesSelecionadosRaioX()
-        }), 'Selecione um operador', '');
-        selOperador.value = '';
-        solicitarRenderRaioXOperador();
-        return;
-      }
-
-      if (campoAlterado === 'site') {
-        filtros.supervisor = '';
-        filtros.operador = '';
-        atualizarFiltroMesesRaioX({
-          site: filtros.site,
-          status: filtros.status
-        });
-        preencherSelect(selSupervisor, obterSupervisoresAtuaisRaioX({ site: filtros.site, status: filtros.status }), 'Todos os supervisores', '');
-        preencherSelect(selOperador, obterOperadoresRaioX({ site: filtros.site, status: filtros.status, meses: obterMesesSelecionadosRaioX() }), 'Selecione um operador', '');
-        selSupervisor.value = '';
-        selOperador.value = '';
-        solicitarRenderRaioXOperador();
-        return;
-      }
-
-      if (campoAlterado === 'supervisor') {
-        filtros.operador = '';
-        atualizarFiltroMesesRaioX({
-          site: filtros.site,
-          supervisor: filtros.supervisor,
-          status: filtros.status
-        });
-        preencherSelect(selOperador, obterOperadoresRaioX({
-          site: filtros.site,
-          supervisor: filtros.supervisor,
-          status: filtros.status,
-          meses: obterMesesSelecionadosRaioX()
-        }), 'Selecione um operador', '');
-        selOperador.value = '';
-        solicitarRenderRaioXOperador();
-        return;
-      }
+      const operadoresCascata = obterOperadoresRaioX({
+        site: filtros.site,
+        supervisor,
+        status: filtros.status,
+        meses: obterMesesSelecionadosRaioX()
+      });
+      popularSelectCascataPortal(selOperador, operadoresCascata, 'Selecione um operador', '', filtros.operador);
 
       if (campoAlterado === 'meses') {
-        const operadores = obterOperadoresRaioX({
-          site: filtros.site,
-          supervisor: filtros.supervisor,
-          status: filtros.status,
-          meses: filtros.meses
-        });
-        preencherSelect(selOperador, operadores, 'Selecione um operador', '');
-        if (filtros.operador && operadores.includes(filtros.operador)) {
-          selOperador.value = filtros.operador;
-        } else {
-          selOperador.value = '';
-          atualizarFiltroMesesRaioX({
-            site: filtros.site,
-            supervisor: filtros.supervisor,
-            status: filtros.status
-          }, { preservarVazio: true });
-        }
         solicitarRenderRaioXOperador();
         return;
       }
@@ -16624,7 +17244,10 @@
           operador: filtros.operador
         });
         solicitarRenderRaioXOperador();
+        return;
       }
+
+      solicitarRenderRaioXOperador();
     }
 
     function classificarCurvaABCRaioX(produtividade) {
@@ -17362,6 +17985,167 @@
       aplicarHTMLSeMudouPortal(content, html);
     }
 
+    function textoSeguroPdiOperador(valor) {
+      const texto = String(valor ?? '').trim();
+      if (!texto || texto === '-' || texto === 'undefined' || texto === '0,00') return 'não informado';
+      return texto;
+    }
+
+    function aplicarLinguagemPdiOperador(texto) {
+      return textoSeguroPdiOperador(texto)
+        .replace(/vendas líquidas/gi, 'vendas aprovadas')
+        .replace(/\bCQ\b/gi, 'auditoria de qualidade')
+        .replace(/gap de performance/gi, 'diferença entre o resultado atual e o resultado esperado')
+        .replace(/produtividade diária/gi, 'média de vendas aprovadas por dia')
+        .replace(/desvio/gi, 'ponto que precisa ser ajustado')
+        .replace(/produtividade média geral/gi, 'média de vendas aprovadas por dia')
+        .replace(/produtividade/gi, 'resultado');
+    }
+
+    function formatarDataHoraPdiOperador(data = new Date()) {
+      return data.toLocaleString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    function preencherTextoPdiOperador(campo, valor) {
+      const el = document.querySelector(`#pdiOperadorPrintArea [data-pdi-field="${campo}"]`);
+      if (el) el.textContent = aplicarLinguagemPdiOperador(valor);
+    }
+
+    function preencherCampoEditavelPdiOperador(id, valor, forcar = false) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (forcar || !String(el.value || '').trim()) el.value = aplicarLinguagemPdiOperador(valor);
+    }
+
+    function obterPeriodoAnalisadoPdiOperador(resultado) {
+      const mesesSelecionados = obterMesesSelecionadosRaioX();
+      const quantidade = mesesSelecionados.length || Number(resultado?.resumo?.meses || 0);
+      if (!quantidade) return 'não informado';
+      if (quantidade === 1) return `1 mês selecionado (${mesesSelecionados[0] || 'mês não informado'})`;
+      return `últimos ${quantidade} meses selecionados`;
+    }
+
+    function descreverResultadoMensalPdiOperador(item) {
+      if (!item) return 'não informado';
+      const vendas = Number(item.totalAprovadas || 0);
+      const media = Number(item.vendasAprovadasMedia || 0);
+      const partes = [
+        item.mes || '',
+        `${vendas.toLocaleString('pt-BR')} vendas aprovadas`,
+        `média de ${formatarNumeroRaioX(media, 1)} vendas aprovadas por dia`,
+        `curva ${item.curva || '-'}`
+      ].filter(Boolean);
+      return partes.join(' · ');
+    }
+
+    function obterEvolucaoPercebidaPdiOperador(resultado, tendencia) {
+      const linhas = resultado?.linhasMensais || [];
+      if (linhas.length < 2) return 'Histórico curto para comparar evolução.';
+      const primeiro = linhas[0];
+      const ultimo = linhas[linhas.length - 1];
+      const diff = Number(ultimo.vendasAprovadasMedia || 0) - Number(primeiro.vendasAprovadasMedia || 0);
+      if (diff > 0.05) return `Houve evolução na média de vendas aprovadas por dia entre ${primeiro.mes} e ${ultimo.mes}.`;
+      if (diff < -0.05) return `A média de vendas aprovadas por dia ficou menor entre ${primeiro.mes} e ${ultimo.mes}.`;
+      return tendencia?.rotulo ? `Resultado ${String(tendencia.rotulo).toLowerCase()} no período analisado.` : 'Resultado estável no período analisado.';
+    }
+
+    function montarDadosPdiOperador(resultado) {
+      const analise = gerarAnaliseExecutivaRaioX(resultado);
+      const indicadores = identificarIndicadoresRaioX(resultado);
+      const principal = obterPrincipalOfensorRaioX(indicadores);
+      const linhas = resultado?.linhasMensais || [];
+      const primeiroMes = linhas[0] || null;
+      const mesRecente = linhas.length ? linhas[linhas.length - 1] : null;
+      const totalAprovadas = linhas.reduce((acc, item) => acc + Number(item.totalAprovadas || 0), 0);
+      const total = resultado?.total || {};
+      const vinculo = resultado?.vinculoAtual || {};
+      const periodoAnalisado = obterPeriodoAnalisadoPdiOperador(resultado);
+      const tendencia = indicadores.tendencia || obterTendenciaRaioX(linhas);
+      const principalPonto = principal
+        ? `${principal.nome}: ${principal.valor}. ${principal.explicacao}`
+        : 'Sem ponto crítico automático. Registrar manualmente se houver algo a acompanhar.';
+
+      return {
+        operador: resultado?.operador || 'não informado',
+        site: vinculo.site || total.siteMes || 'não informado',
+        supervisor: vinculo.supervisor || total.supervisorMes || 'não informado',
+        periodoAnalisado,
+        contexto: `Este PDI foi construído com base na análise dos ${periodoAnalisado} na aba Raio X do Operador.`,
+        resultadoInicial: descreverResultadoMensalPdiOperador(primeiroMes),
+        resultadoRecente: descreverResultadoMensalPdiOperador(mesRecente),
+        tendenciaObservada: tendencia?.rotulo || 'não informado',
+        principalEvolucao: obterEvolucaoPercebidaPdiOperador(resultado, tendencia),
+        vendasAprovadas: totalAprovadas ? totalAprovadas.toLocaleString('pt-BR') : 'não informado',
+        mediaDiaria: Number(total.vendasAprovadasMedia || 0) ? formatarNumeroRaioX(total.vendasAprovadasMedia, 1) : 'não informado',
+        evolucaoPeriodo: analise.indicadores?.find(item => item.rotulo === 'Evolução')?.valor || tendencia?.rotulo || 'não informado',
+        qualidadeAuditoria: Number(total.percentualAprovacao || 0) ? formatarPercentualIndicadores(total.percentualAprovacao) : 'não informado',
+        principalPontoAtencao: principalPonto,
+        diagnostico: analise.diagnostico || 'Preencher manualmente com base na conversa e nos dados disponíveis.'
+      };
+    }
+
+    function prepararPdiOperador(opcoes = {}) {
+      const resultado = calcularRaioXOperador();
+      if (!resultado) {
+        alert('Selecione um operador com dados no Raio X antes de gerar o PDI.');
+        return false;
+      }
+
+      const dados = montarDadosPdiOperador(resultado);
+      preencherTextoPdiOperador('dataImpressao', formatarDataHoraPdiOperador());
+      preencherTextoPdiOperador('operador', dados.operador);
+      preencherTextoPdiOperador('site', dados.site);
+      preencherTextoPdiOperador('supervisor', dados.supervisor);
+      preencherTextoPdiOperador('periodoAnalisado', dados.periodoAnalisado);
+      preencherTextoPdiOperador('qualidadeAuditoria', dados.qualidadeAuditoria);
+      preencherTextoPdiOperador('contextoAnalise', dados.contexto);
+      preencherTextoPdiOperador('resultadoInicial', dados.resultadoInicial);
+      preencherTextoPdiOperador('resultadoRecente', dados.resultadoRecente);
+      preencherTextoPdiOperador('tendenciaObservada', dados.tendenciaObservada);
+      preencherTextoPdiOperador('principalEvolucao', dados.principalEvolucao);
+      preencherTextoPdiOperador('vendasAprovadas', dados.vendasAprovadas);
+      preencherTextoPdiOperador('mediaDiaria', dados.mediaDiaria);
+      preencherTextoPdiOperador('evolucaoPeriodo', dados.evolucaoPeriodo);
+      preencherTextoPdiOperador('principalPontoAtencao', dados.principalPontoAtencao);
+
+      const forcar = !!opcoes.forcarCamposEditaveis;
+      preencherCampoEditavelPdiOperador('pdiOperadorDiagnostico', dados.diagnostico, forcar);
+      preencherCampoEditavelPdiOperador('pdiOperadorObjetivoCurto', 'Definir uma meta simples para melhorar o principal ponto de atenção nos próximos dias.', forcar);
+      preencherCampoEditavelPdiOperador('pdiOperadorObjetivoMedio', 'Acompanhar a evolução do resultado durante o período do PDI, com feedbacks e ajustes combinados.', forcar);
+      preencherCampoEditavelPdiOperador('pdiOperadorObjetivoLongo', 'Sustentar a melhoria alcançada e manter regularidade nos indicadores principais.', forcar);
+      return true;
+    }
+
+    function abrirPdiOperador() {
+      const panel = document.getElementById('pdiOperadorPanel');
+      if (!panel) return;
+      const estavaFechado = panel.style.display === 'none';
+      if (!prepararPdiOperador({ forcarCamposEditaveis: estavaFechado })) return;
+      panel.style.display = 'block';
+      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function fecharPdiOperador() {
+      const panel = document.getElementById('pdiOperadorPanel');
+      if (panel) panel.style.display = 'none';
+    }
+
+    function imprimirPdiOperador() {
+      if (!prepararPdiOperador()) return;
+      window.print();
+    }
+
+    window.abrirPdiOperador = abrirPdiOperador;
+    window.fecharPdiOperador = fecharPdiOperador;
+    window.prepararPdiOperador = prepararPdiOperador;
+    window.imprimirPdiOperador = imprimirPdiOperador;
+
     function renderLinhaRaioX(item, total = false) {
       const classe = total ? 'total-row' : 'lvl-4';
       const supervisor = item.supervisorMes || '-';
@@ -17396,6 +18180,7 @@
       const analysisShell = document.getElementById('raioXAnalysisShell');
       const guidanceShell = document.getElementById('raioXGuidanceShell');
       const tableShell = document.getElementById('raioXTableShell');
+      const pdiPanel = document.getElementById('pdiOperadorPanel');
       const tbody = document.getElementById('raioXTableBody');
 
       if (!filtrosRaioX.meses.length) {
@@ -17408,6 +18193,7 @@
         if (analysisShell) analysisShell.style.display = 'none';
         if (guidanceShell) guidanceShell.style.display = 'none';
         if (tableShell) tableShell.style.display = 'none';
+        if (pdiPanel) pdiPanel.style.display = 'none';
         aplicarHTMLSeMudouPortal(tbody, '<tr><td colspan="16" class="indicadores-name-cell">Selecione ao menos um mês com dados para gerar o Raio X do operador.</td></tr>');
         return;
       }
@@ -17424,6 +18210,7 @@
         if (analysisShell) analysisShell.style.display = 'none';
         if (guidanceShell) guidanceShell.style.display = 'none';
         if (tableShell) tableShell.style.display = 'none';
+        if (pdiPanel) pdiPanel.style.display = 'none';
         aplicarHTMLSeMudouPortal(tbody, '<tr><td colspan="16" class="indicadores-name-cell">Selecione um operador para gerar o Raio X.</td></tr>');
         return;
       }
@@ -17460,6 +18247,10 @@
         renderLinhaRaioX(resultado.total, true)
       ].join('');
       aplicarHTMLSeMudouPortal(tbody, html);
+
+      if (pdiPanel && pdiPanel.style.display !== 'none') {
+        prepararPdiOperador();
+      }
     }
 
     function formatarMoedaSimulador(valor) {
@@ -17554,39 +18345,17 @@
 
       const filtros = obterFiltrosSimuladorSelecionados();
 
-      if (campoAlterado === 'mes' || campoAlterado === 'status') {
-        const linhasMes = filtrarLinhasSimuladorPorFiltros({ mes: filtros.mes, status: filtros.status });
-        preencherSelect(selSite, obterOpcoesSimulador(linhasMes, COLUNAS_RAIO_X.site), 'Todos os sites', '');
-        preencherSelect(selSupervisor, obterOpcoesSimulador(linhasMes, COLUNAS_RAIO_X.supervisor), 'Todos os supervisores', '');
-        preencherSelect(selOperador, obterOperadoresSimulador({ mes: filtros.mes, status: filtros.status }), 'Selecione um operador', '');
-        selSite.value = '';
-        selSupervisor.value = '';
-        selOperador.value = '';
-        solicitarRenderSimulador();
-        return;
-      }
-
-      if (campoAlterado === 'site') {
-        const linhasSite = filtrarLinhasSimuladorPorFiltros({ mes: filtros.mes, site: filtros.site, status: filtros.status });
-        preencherSelect(selSupervisor, obterOpcoesSimulador(linhasSite, COLUNAS_RAIO_X.supervisor), 'Todos os supervisores', '');
-        preencherSelect(selOperador, obterOperadoresSimulador({ mes: filtros.mes, site: filtros.site, status: filtros.status }), 'Selecione um operador', '');
-        selSupervisor.value = '';
-        selOperador.value = '';
-        solicitarRenderSimulador();
-        return;
-      }
-
-      if (campoAlterado === 'supervisor') {
-        preencherSelect(selOperador, obterOperadoresSimulador({
-          mes: filtros.mes,
-          site: filtros.site,
-          supervisor: filtros.supervisor,
-          status: filtros.status
-        }), 'Selecione um operador', '');
-        selOperador.value = '';
-        solicitarRenderSimulador();
-        return;
-      }
+      const linhasSite = filtrarLinhasSimuladorPorFiltros({ mes: filtros.mes, status: filtros.status });
+      const site = popularSelectCascataPortal(selSite, obterOpcoesSimulador(linhasSite, COLUNAS_RAIO_X.site), 'Todos os sites', '', filtros.site);
+      const linhasSupervisor = filtrarLinhasSimuladorPorFiltros({ mes: filtros.mes, site, status: filtros.status });
+      const supervisor = popularSelectCascataPortal(selSupervisor, obterOpcoesSimulador(linhasSupervisor, COLUNAS_RAIO_X.supervisor), 'Todos os supervisores', '', filtros.supervisor);
+      const operadores = obterOperadoresSimulador({
+        mes: filtros.mes,
+        site,
+        supervisor,
+        status: filtros.status
+      });
+      popularSelectCascataPortal(selOperador, operadores, 'Selecione um operador', '', filtros.operador);
 
       solicitarRenderSimulador();
     }
@@ -17596,7 +18365,7 @@
       const mes = MONTH_MAP[normalizarTextoComparacao(mesTxt)];
       const ano = Number(anoTxt);
       if (mes === undefined || !Number.isFinite(ano)) return null;
-      return criarDataSegura(2000 + ano, mes, 1);
+      return obterInicioOperacionalMesPortal(2000 + ano, mes);
     }
 
     function obterFeriadosPortalSimulador() {
@@ -17610,31 +18379,34 @@
       })).filter(item => item.data);
     }
 
-    function obterUltimaDataAtualizacaoBaseSimulador(mesSelecionado, siteSelecionado, statusSelecionado) {
+    function obterUltimaDataAtualizacaoBaseSimulador(mesSelecionado, siteSelecionado, statusSelecionado, supervisorSelecionado = '', operadorSelecionado = '') {
       const linhas = rawOperadoresNormalizadosPortal.filter(row => {
         const mes = normalizarMesFiltroCapa(row[COLUNAS_RAIO_X.mes], row[COLUNAS_RAIO_X.dataFallback]);
         const site = String(row[COLUNAS_RAIO_X.site] || '').trim();
+        const supervisor = String(row[COLUNAS_RAIO_X.supervisor] || '').trim();
+        const operador = String(row[COLUNAS_RAIO_X.operador] || '').trim();
         if (mes !== mesSelecionado) return false;
         if (siteSelecionado && site !== siteSelecionado) return false;
+        if (supervisorSelecionado && supervisor !== supervisorSelecionado) return false;
+        if (operadorSelecionado && operador !== operadorSelecionado) return false;
         if (!passaFiltroStatusOperador(row, statusSelecionado)) return false;
         return true;
       });
-      return obterUltimaDataAtualizacaoBaseRaioX(linhas);
+      return obterUltimaDataLancamentoBaseFiltradaPortal(linhas, COLUNAS_RAIO_X.dataFallback);
     }
 
     function calcularDiasUteisSimulador(mesSelecionado, site, dataReferencia) {
-      const diasPorSite = calcularDiasUteisPorSite(
+      const dias = calcularDiasUteisPassadosPorUltimaDataLancamentoPortal(
         mesSelecionado,
+        site,
         dataReferencia,
         obterFeriadosPortalSimulador()
       );
-      const info = diasPorSite[site] || Object.values(diasPorSite)[0] || { du: 0, dp: 0 };
-      const du = Number(info.du || 0);
-      const dp = Math.min(du, Number(info.dp || 0));
       return {
-        du,
-        dp,
-        restantes: Math.max(0, du - dp)
+        du: dias.du,
+        dp: Math.min(dias.du, dias.dp),
+        restantes: Math.max(0, dias.du - dias.dp),
+        dataCorte: dias.dataCorte
       };
     }
 
@@ -17900,7 +18672,7 @@
 
       const linhaReferencia = linhasOperador.find(row => parseDataBase(row[COLUNAS_RAIO_X.contratacao])) || linhasOperador[0];
       const siteOperador = String(linhaReferencia[COLUNAS_RAIO_X.site] || filtros.site || '').trim();
-      const dataReferencia = obterUltimaDataAtualizacaoBaseSimulador(filtros.mes, filtros.site, filtros.status);
+      const dataReferencia = obterUltimaDataLancamentoBaseFiltradaPortal(linhasOperador, COLUNAS_RAIO_X.dataFallback);
       const dias = calcularDiasUteisSimulador(filtros.mes, siteOperador, dataReferencia);
       const cadastradasRealizadas = somaNumeroProdutividade(linhasOperador, COLUNAS_RAIO_X.vendasCadastradas);
       const confirmadasRealizadas = somaNumeroProdutividade(linhasOperador, COLUNAS_RAIO_X.vendasAprovadas);
